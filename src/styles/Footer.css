@@ -1,0 +1,267 @@
+/*=============================
+        FOOTER
+==============================*/
+
+.footer{
+
+    background:#081321;
+
+    padding:80px 8% 30px;
+
+    border-top:1px solid rgba(100,255,218,.15);
+
+}
+
+.footer .container{
+
+    max-width:1400px;
+
+    margin:auto;
+
+}
+
+/*=============================
+        GRID
+==============================*/
+
+.footer-grid{
+
+    display:grid;
+
+    grid-template-columns:2fr 1fr 1.5fr;
+
+    gap:60px;
+
+    margin-bottom:60px;
+
+}
+
+.footer-logo{
+
+    width:180px;
+
+    margin-bottom:20px;
+
+}
+
+.footer-about p{
+
+    color:#BFC9E0;
+
+    line-height:1.9;
+
+    max-width:420px;
+
+}
+
+/*=============================
+        LINKS
+==============================*/
+
+.footer-links h3,
+
+.footer-contact h3{
+
+    color:#64FFDA;
+
+    margin-bottom:25px;
+
+}
+
+.footer-links{
+
+    display:flex;
+
+    flex-direction:column;
+
+}
+
+.footer-links a{
+
+    color:#CCD6F6;
+
+    text-decoration:none;
+
+    margin-bottom:14px;
+
+    transition:.3s;
+
+}
+
+.footer-links a:hover{
+
+    color:#64FFDA;
+
+    padding-left:8px;
+
+}
+
+/*=============================
+        CONTACT
+==============================*/
+
+.footer-contact p{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+    color:#CCD6F6;
+
+    margin-bottom:18px;
+
+}
+
+.footer-contact svg{
+
+    color:#64FFDA;
+
+}
+
+/*=============================
+        SOCIAL
+==============================*/
+
+.footer-social{
+
+    display:flex;
+
+    justify-content:center;
+
+    gap:20px;
+
+    margin-bottom:45px;
+
+}
+
+.footer-social a{
+
+    width:55px;
+
+    height:55px;
+
+    border-radius:50%;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    background:#112240;
+
+    color:#64FFDA;
+
+    font-size:22px;
+
+    transition:.35s;
+
+}
+
+.footer-social a:hover{
+
+    background:#64FFDA;
+
+    color:#081321;
+
+    transform:translateY(-6px);
+
+    box-shadow:0 15px 35px rgba(100,255,218,.25);
+
+}
+
+/*=============================
+        BOTTOM
+==============================*/
+
+.footer-bottom{
+
+    border-top:1px solid rgba(100,255,218,.15);
+
+    padding-top:25px;
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+}
+
+.footer-bottom p{
+
+    color:#8892B0;
+
+}
+
+.back-top{
+
+    width:55px;
+
+    height:55px;
+
+    border-radius:50%;
+
+    background:#64FFDA;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    color:#081321;
+
+    text-decoration:none;
+
+    font-size:20px;
+
+    transition:.35s;
+
+}
+
+.back-top:hover{
+
+    transform:translateY(-6px);
+
+    box-shadow:0 15px 30px rgba(100,255,218,.25);
+
+}
+
+/*=============================
+        RESPONSIVE
+==============================*/
+
+@media(max-width:900px){
+
+.footer-grid{
+
+    grid-template-columns:1fr;
+
+    text-align:center;
+
+}
+
+.footer-about p{
+
+    margin:auto;
+
+}
+
+.footer-contact p{
+
+    justify-content:center;
+
+}
+
+.footer-bottom{
+
+    flex-direction:column;
+
+    gap:20px;
+
+}
+
+}

@@ -1,0 +1,209 @@
+/* ==========================================
+   MODAL
+========================================== */
+
+.modal-overlay{
+
+    position:fixed;
+
+    inset:0;
+
+    background:rgba(0,0,0,.7);
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    z-index:9999;
+
+    padding:25px;
+
+}
+
+.modal{
+
+    width:100%;
+
+    max-width:700px;
+
+    background:#112240;
+
+    border-radius:20px;
+
+    border:1px solid rgba(100,255,218,.12);
+
+    padding:35px;
+
+    max-height:90vh;
+
+    overflow-y:auto;
+
+}
+
+.modal-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:30px;
+
+}
+
+.modal-header h2{
+
+    color:#ffffff;
+
+}
+
+.close-btn{
+
+    width:40px;
+
+    height:40px;
+
+    border:none;
+
+    background:#ef4444;
+
+    color:white;
+
+    border-radius:10px;
+
+    cursor:pointer;
+
+}
+
+.project-form{
+
+    display:grid;
+
+    gap:20px;
+
+}
+
+.form-group{
+
+    display:flex;
+
+    flex-direction:column;
+
+}
+
+.form-group label{
+
+    color:#CCD6F6;
+
+    margin-bottom:8px;
+
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select{
+
+    background:#081321;
+
+    border:1px solid rgba(100,255,218,.12);
+
+    color:white;
+
+    padding:14px;
+
+    border-radius:12px;
+
+    outline:none;
+
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus{
+
+    border-color:#64FFDA;
+
+}
+
+.upload-box{
+
+    border:2px dashed rgba(100,255,218,.30);
+
+    border-radius:12px;
+
+    padding:30px;
+
+    text-align:center;
+
+    cursor:pointer;
+
+    color:#64FFDA;
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:10px;
+
+    align-items:center;
+
+}
+
+.modal-buttons{
+
+    display:flex;
+
+    justify-content:flex-end;
+
+    gap:15px;
+
+    margin-top:10px;
+
+}
+
+.cancel-btn{
+
+    padding:14px 25px;
+
+    background:#475569;
+
+    color:white;
+
+    border:none;
+
+    border-radius:10px;
+
+    cursor:pointer;
+
+}
+
+.save-btn{
+
+    padding:14px 25px;
+
+    background:#64FFDA;
+
+    color:#081321;
+
+    border:none;
+
+    border-radius:10px;
+
+    font-weight:700;
+
+    cursor:pointer;
+
+    transition:.3s;
+
+}
+
+.save-btn:hover{
+
+    transform:translateY(-2px);
+
+    box-shadow:0 15px 30px rgba(100,255,218,.25);
+
+}

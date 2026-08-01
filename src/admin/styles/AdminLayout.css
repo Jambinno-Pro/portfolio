@@ -1,0 +1,38 @@
+/* ==========================
+   ADMIN LAYOUT
+========================== */
+
+.admin-layout{
+    display:flex;
+    min-height:100vh;
+    background:#081321;
+}
+
+.admin-main{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    margin-left:260px;
+}
+
+.admin-content{
+    flex:1;
+    padding:35px;
+    background:#0A192F;
+}
+
+/* ==========================
+   RESPONSIVE
+========================== */
+
+@media(max-width:992px){
+
+.admin-main{
+    margin-left:0;
+}
+
+.admin-content{
+    padding:25px;
+}
+
+}

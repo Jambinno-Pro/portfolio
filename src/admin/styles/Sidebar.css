@@ -1,0 +1,17 @@
+.sidebar nav a.active{
+
+    background:#64FFDA;
+
+    color:#081321;
+
+    font-weight:700;
+
+}
+
+.logout a.active{
+
+    background:#ff5c5c;
+
+    color:white;
+
+}

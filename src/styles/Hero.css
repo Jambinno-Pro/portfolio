@@ -1,0 +1,385 @@
+/* ===================================================
+   HERO SECTION
+=================================================== */
+
+.hero{
+    width:100%;
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    padding:120px 6% 80px;
+    position:relative;
+    overflow:hidden;
+}
+
+/* ===================================================
+   BACKGROUND
+=================================================== */
+
+.hero-bg{
+    position:absolute;
+    inset:0;
+    overflow:hidden;
+    pointer-events:none;
+}
+
+/* ===================================================
+   GLOW EFFECTS
+=================================================== */
+
+.glow{
+    position:absolute;
+    border-radius:50%;
+    filter:blur(120px);
+    opacity:.25;
+    animation:pulse 8s ease-in-out infinite;
+}
+
+.glow1{
+    width:350px;
+    height:350px;
+    background:#64FFDA;
+    top:-120px;
+    right:-120px;
+}
+
+.glow2{
+    width:280px;
+    height:280px;
+    background:#00BCD4;
+    bottom:-80px;
+    left:-80px;
+}
+
+/* ===================================================
+   FLOATING DIAMONDS
+=================================================== */
+
+.diamond{
+    position:absolute;
+    background:linear-gradient(135deg,#64FFDA,#00BCD4);
+    transform:rotate(45deg);
+    border-radius:10px;
+    opacity:.18;
+    box-shadow:0 0 35px rgba(100,255,218,.4);
+    animation:float 8s ease-in-out infinite;
+}
+
+.d1{
+    width:80px;
+    height:80px;
+    top:10%;
+    left:5%;
+}
+
+.d2{
+    width:140px;
+    height:140px;
+    top:18%;
+    right:8%;
+    animation-delay:2s;
+}
+
+.d3{
+    width:100px;
+    height:100px;
+    bottom:10%;
+    left:12%;
+    animation-delay:4s;
+}
+
+.d4{
+    width:70px;
+    height:70px;
+    bottom:18%;
+    right:12%;
+    animation-delay:1s;
+}
+
+.d5{
+    width:55px;
+    height:55px;
+    top:50%;
+    left:48%;
+    animation-delay:3s;
+}
+
+/* ===================================================
+   CONTENT
+=================================================== */
+
+.hero-content{
+    width:100%;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:80px;
+    position:relative;
+    z-index:10;
+}
+
+.hero-text{
+    flex:1;
+}
+
+.hero-text h4{
+    color:#64FFDA;
+    font-size:22px;
+    font-weight:500;
+    margin-bottom:18px;
+}
+
+.hero-name{
+    font-size:72px;
+    font-weight:800;
+    text-transform:uppercase;
+    line-height:1.05;
+    color:#FFFFFF;
+    margin-bottom:15px;
+}
+
+.hero-text h2{
+    font-size:40px;
+    color:#64FFDA;
+    font-weight:700;
+    margin-bottom:25px;
+}
+
+.hero-text p{
+    max-width:650px;
+    color:#CCD6F6;
+    font-size:18px;
+    line-height:1.8;
+    margin-bottom:40px;
+}
+
+/* ===================================================
+   BUTTONS
+=================================================== */
+
+.hero-buttons{
+    display:flex;
+    gap:20px;
+    flex-wrap:wrap;
+}
+
+.hero-buttons .btn{
+    min-width:180px;
+    text-align:center;
+}
+
+.secondary{
+    background:#64FFDA;
+    color:#0A192F !important;
+    border:2px solid #64FFDA;
+}
+
+.secondary:hover{
+    background:transparent;
+    color:#64FFDA !important;
+}
+
+/* ===================================================
+   PROFILE IMAGE
+=================================================== */
+
+.hero-image{
+    flex:1;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.hero-image img{
+    width:420px;
+    height:420px;
+    object-fit:cover;
+    border-radius:50%;
+    border:6px solid #64FFDA;
+    box-shadow:
+        0 0 35px rgba(100,255,218,.35),
+        0 0 80px rgba(100,255,218,.15);
+    animation:profileFloat 5s ease-in-out infinite;
+}
+
+/* ===================================================
+   ANIMATIONS
+=================================================== */
+
+@keyframes float{
+
+    0%{
+        transform:translateY(0) rotate(45deg);
+    }
+
+    50%{
+        transform:translateY(-25px) rotate(45deg);
+    }
+
+    100%{
+        transform:translateY(0) rotate(45deg);
+    }
+
+}
+
+@keyframes pulse{
+
+    0%{
+        transform:scale(1);
+        opacity:.25;
+    }
+
+    50%{
+        transform:scale(1.2);
+        opacity:.45;
+    }
+
+    100%{
+        transform:scale(1);
+        opacity:.25;
+    }
+
+}
+
+@keyframes profileFloat{
+
+    0%{
+        transform:translateY(0);
+    }
+
+    50%{
+        transform:translateY(-15px);
+    }
+
+    100%{
+        transform:translateY(0);
+    }
+
+}
+
+/* ===================================================
+   TABLET
+=================================================== */
+
+@media (max-width:992px){
+
+.hero{
+    padding:140px 6% 70px;
+}
+
+.hero-content{
+    flex-direction:column-reverse;
+    text-align:center;
+    gap:50px;
+}
+
+.hero-text p{
+    margin:0 auto 35px;
+}
+
+.hero-buttons{
+    justify-content:center;
+}
+
+.hero-image img{
+    width:320px;
+    height:320px;
+}
+
+.hero-name{
+    font-size:56px;
+}
+
+.hero-text h2{
+    font-size:30px;
+}
+
+}
+
+/* ===================================================
+   MOBILE
+=================================================== */
+
+@media (max-width:768px){
+
+.hero{
+    min-height:auto;
+    padding:170px 6% 70px;
+    align-items:flex-start;
+}
+
+.hero-content{
+    flex-direction:column-reverse;
+    text-align:center;
+    gap:40px;
+}
+
+.hero-image{
+    width:100%;
+    justify-content:center;
+}
+
+.hero-image img{
+    width:250px;
+    height:250px;
+    margin-top:15px;
+}
+
+.hero-text h4{
+    font-size:18px;
+}
+
+.hero-name{
+    font-size:42px;
+}
+
+.hero-text h2{
+    font-size:24px;
+}
+
+.hero-text p{
+    margin:25px auto;
+    font-size:16px;
+}
+
+.hero-buttons{
+    width:100%;
+    flex-direction:column;
+    align-items:center;
+}
+
+.hero-buttons .btn{
+    width:260px;
+}
+
+}
+
+/* ===================================================
+   SMALL PHONES
+=================================================== */
+
+@media (max-width:480px){
+
+.hero{
+    padding-top:190px;
+}
+
+.hero-image img{
+    width:210px;
+    height:210px;
+}
+
+.hero-name{
+    font-size:34px;
+}
+
+.hero-text h2{
+    font-size:20px;
+}
+
+.hero-buttons .btn{
+    width:100%;
+    max-width:260px;
+}
+
+}

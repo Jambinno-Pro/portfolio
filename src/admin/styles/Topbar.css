@@ -1,0 +1,95 @@
+/* ==========================
+        TOPBAR
+========================== */
+
+.topbar{
+
+    height:80px;
+
+    background:#112240;
+
+    border-bottom:1px solid rgba(100,255,218,.10);
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding:0 35px;
+
+}
+
+.topbar h2{
+
+    color:#ffffff;
+
+    font-size:30px;
+
+}
+
+.topbar-right{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:25px;
+
+}
+
+.top-icon{
+
+    color:#64FFDA;
+
+    font-size:22px;
+
+    cursor:pointer;
+
+}
+
+.admin-user{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+
+    color:#ffffff;
+
+}
+
+.admin-user svg{
+
+    color:#64FFDA;
+
+    font-size:32px;
+
+}
+
+/* ==========================
+        RESPONSIVE
+========================== */
+
+@media(max-width:768px){
+
+.topbar{
+
+    padding:0 20px;
+
+}
+
+.topbar h2{
+
+    font-size:22px;
+
+}
+
+.admin-user span{
+
+    display:none;
+
+}
+
+}

@@ -1,0 +1,58 @@
+.project-filter{
+
+display:flex;
+justify-content:center;
+align-items:center;
+flex-wrap:wrap;
+
+gap:15px;
+
+margin-bottom:50px;
+
+}
+
+.project-filter button{
+
+padding:12px 25px;
+
+background:#112240;
+
+border:2px solid #233554;
+
+border-radius:50px;
+
+color:#CCD6F6;
+
+font-size:15px;
+
+cursor:pointer;
+
+transition:.35s;
+
+font-weight:600;
+
+}
+
+.project-filter button:hover{
+
+background:#64FFDA;
+
+color:#0A192F;
+
+border-color:#64FFDA;
+
+transform:translateY(-3px);
+
+}
+
+.project-filter button.active{
+
+background:#64FFDA;
+
+color:#0A192F;
+
+border-color:#64FFDA;
+
+box-shadow:0 0 18px rgba(100,255,218,.45);
+
+}
