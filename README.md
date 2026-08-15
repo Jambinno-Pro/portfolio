@@ -1,16 +1,29 @@
-# React + Vite
+Innocent Jambaya — Full-Stack Developer Portfolio
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern, responsive full-stack developer portfolio built from scratch to showcase my experience, technical skills, services, projects, and professional background.
 
-Currently, two official plugins are available:
+The project was developed as a real-world full-stack application rather than a simple static portfolio. The public website is connected to a backend REST API and database, allowing portfolio content to be managed dynamically through a dedicated admin dashboard.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Frontend
+React.js
+JavaScript
+HTML5
+CSS3
+React Router
+Axios
+React Icons
 
-## React Compiler
+Backend
+Node.js
+Express.js
+REST API
+Database
+MongoDB
+Mongoose
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Development Tools
+Git
+GitHub
+VS Code
+Postman
+npm
