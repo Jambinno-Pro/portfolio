@@ -280,54 +280,37 @@ function AddProjectModal({
           </div>
 
           {/* CATEGORY */}
+<div className="form-group">
 
-          <div className="form-group">
+  <label>
+    Category
+  </label>
 
-            <label>
-              Category
-            </label>
+  <select
+    name="category"
+    value={project.category}
+    onChange={handleChange}
+  >
 
-            <select
-              name="category"
-              value={project.category}
-              onChange={handleChange}
-            >
+    <option value="Web Development">
+      Web Development
+    </option>
 
-              <option value="Web Development">
-                Web Development
-              </option>
+    <option value="Graphic Design">
+      Graphic Design
+    </option>
 
-              <option value="Frontend">
-                Frontend
-              </option>
+    <option value="App Development">
+      App Development
+    </option>
 
-              <option value="Backend">
-                Backend
-              </option>
+    <option value="Database Development">
+      Database Development
+    </option>
 
-              <option value="Full Stack">
-                Full Stack
-              </option>
+  </select>
 
-              <option value="WordPress">
-                WordPress
-              </option>
-
-              <option value="Graphic Design">
-                Graphic Design
-              </option>
-
-              <option value="Application">
-                Application
-              </option>
-
-              <option value="Database">
-                Database
-              </option>
-
-            </select>
-
-          </div>
+</div>
 
           {/* DESCRIPTION */}
 

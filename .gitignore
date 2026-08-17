@@ -49,3 +49,5 @@ build/
 
 # Backend uploaded files
 backend/uploads/
+# Local Netlify folder
+.netlify
