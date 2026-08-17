@@ -1,126 +1,360 @@
-import "../styles/Contact.css";
+import { useState } from "react";
 
 import {
   FaEnvelope,
-  FaPhoneAlt,
+  FaPhone,
   FaMapMarkerAlt,
-  FaGithub,
-  FaLinkedin,
-  FaFacebookF,
-  FaWhatsapp,
+  FaPaperPlane,
 } from "react-icons/fa";
 
+import { sendMessage } from "../services/messageService";
+
+import "../styles/Contact.css";
+
 function Contact() {
+
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    subject: "",
+    message: "",
+  });
+
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState("");
+  const [error, setError] = useState("");
+
+  // ==========================
+  // HANDLE INPUT
+  // ==========================
+
+  const handleChange = (e) => {
+
+    const { name, value } = e.target;
+
+    setFormData((previous) => ({
+      ...previous,
+      [name]: value,
+    }));
+
+  };
+
+  // ==========================
+  // SEND MESSAGE
+  // ==========================
+
+  const handleSubmit = async (e) => {
+
+    // VERY IMPORTANT
+    e.preventDefault();
+
+    e.stopPropagation();
+
+    setLoading(true);
+    setSuccess("");
+    setError("");
+
+    console.log("Submitting contact form...");
+    console.log("Form data:", formData);
+
+    try {
+
+      const response = await sendMessage(formData);
+
+      console.log("Message API response:", response);
+
+      setSuccess(
+        response.message ||
+        "Your message has been sent successfully!"
+      );
+
+      setFormData({
+        name: "",
+        email: "",
+        phone: "",
+        subject: "",
+        message: "",
+      });
+
+    } catch (err) {
+
+      console.error("MESSAGE ERROR:", err);
+
+      console.error(
+        "Server response:",
+        err.response?.data
+      );
+
+      setError(
+        err.response?.data?.message ||
+        "Unable to send your message. Please try again."
+      );
+
+    } finally {
+
+      setLoading(false);
+
+    }
+
+  };
+
   return (
-    <section id="contact" className="contact-section">
+
+    <section
+      className="contact-section"
+      id="contact"
+    >
 
       <div className="container">
 
-        <h2 className="section-title">
-          Let's Work Together
-        </h2>
+        <div className="contact-header">
 
-        <p className="section-description">
-          Have a project in mind? Whether it's a modern website,
-          React application, graphic design, database solution or
-          WordPress website, I'd love to hear from you.
-        </p>
+          <h2 className="section-title">
+            Contact Me
+          </h2>
+
+          <p className="section-description">
+            Have a project in mind or want to work together?
+            Send me a message and I'll get back to you.
+          </p>
+
+        </div>
+
 
         <div className="contact-wrapper">
 
-          {/* LEFT */}
+          {/* ==========================
+              CONTACT INFORMATION
+          ========================== */}
 
           <div className="contact-info">
 
-            <div className="info-card">
+            <h3>
+              Let's Work Together
+            </h3>
 
-              <div className="icon">
-                <FaEnvelope />
+            <p>
+              Whether you need a website, web application,
+              WordPress solution or a complete digital
+              solution, I'd love to hear about your project.
+            </p>
+
+
+            <div className="contact-details">
+
+              <div className="contact-item">
+
+                <div className="contact-icon">
+                  <FaEnvelope />
+                </div>
+
+                <div>
+
+                  <span>Email</span>
+
+                  <a href="mailto:jambinnocreations@gmail.com">
+                    jambinnocreations@gmail.com
+                  </a>
+
+                </div>
+
               </div>
 
-              <div>
-                <h3>Email</h3>
-                <p>hello@inno.com</p>
+
+              <div className="contact-item">
+
+                <div className="contact-icon">
+                  <FaPhone />
+                </div>
+
+                <div>
+
+                  <span>Phone</span>
+
+                  <a href="tel:0614217057">
+                    0614217057
+                  </a>
+
+                </div>
+
               </div>
 
-            </div>
 
-            <div className="info-card">
+              <div className="contact-item">
 
-              <div className="icon">
-                <FaPhoneAlt />
+                <div className="contact-icon">
+                  <FaMapMarkerAlt />
+                </div>
+
+                <div>
+
+                  <span>Location</span>
+
+                  <p>
+                    Cape Town, South Africa
+                  </p>
+
+                </div>
+
               </div>
-
-              <div>
-                <h3>Phone</h3>
-                <p>+27 61 421 7057</p>
-              </div>
-
-            </div>
-
-            <div className="info-card">
-
-              <div className="icon">
-                <FaMapMarkerAlt />
-              </div>
-
-              <div>
-                <h3>Location</h3>
-                <p>Cape Town, South Africa</p>
-              </div>
-
-            </div>
-
-            <div className="social-icons">
-
-              <a href="https://www.linkedin.com/in/innocent-jambaya-93a64b189/">
-                <FaLinkedin />
-              </a>
-
-              <a href="https://github.com/Jambinno-Pro">
-                <FaGithub />
-              </a>
-
-              <a href="https://www.facebook.com/inno.jambaya/">
-                <FaFacebookF />
-              </a>
-
-              <a href="#">
-                <FaWhatsapp />
-              </a>
 
             </div>
 
           </div>
 
-          {/* RIGHT */}
 
-          <div className="contact-form">
+          {/* ==========================
+              FORM
+          ========================== */}
 
-            <form>
+          <div className="contact-form-container">
 
-              <input
-                type="text"
-                placeholder="Full Name"
-              />
+            <form
+              className="contact-form"
+              onSubmit={handleSubmit}
+              noValidate
+            >
 
-              <input
-                type="email"
-                placeholder="Email Address"
-              />
+              <div className="form-row">
 
-              <input
-                type="text"
-                placeholder="Subject"
-              />
+                <div className="form-group">
 
-              <textarea
-                rows="6"
-                placeholder="Your Message"
-              ></textarea>
+                  <label htmlFor="name">
+                    Name
+                  </label>
 
-              <button type="submit">
-                Send Message
+                  <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    placeholder="Your name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    required
+                  />
+
+                </div>
+
+
+                <div className="form-group">
+
+                  <label htmlFor="email">
+                    Email
+                  </label>
+
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    placeholder="your@email.com"
+                    value={formData.email}
+                    onChange={handleChange}
+                    required
+                  />
+
+                </div>
+
+              </div>
+
+
+              <div className="form-row">
+
+                <div className="form-group">
+
+                  <label htmlFor="phone">
+                    Phone
+                  </label>
+
+                  <input
+                    type="tel"
+                    id="phone"
+                    name="phone"
+                    placeholder="Optional"
+                    value={formData.phone}
+                    onChange={handleChange}
+                  />
+
+                </div>
+
+
+                <div className="form-group">
+
+                  <label htmlFor="subject">
+                    Subject
+                  </label>
+
+                  <input
+                    type="text"
+                    id="subject"
+                    name="subject"
+                    placeholder="What can I help you with?"
+                    value={formData.subject}
+                    onChange={handleChange}
+                    required
+                  />
+
+                </div>
+
+              </div>
+
+
+              <div className="form-group">
+
+                <label htmlFor="message">
+                  Message
+                </label>
+
+                <textarea
+                  id="message"
+                  name="message"
+                  rows="7"
+                  placeholder="Tell me about your project..."
+                  value={formData.message}
+                  onChange={handleChange}
+                  required
+                />
+
+              </div>
+
+
+              {/* SUCCESS */}
+
+              {success && (
+
+                <div className="form-success">
+                  {success}
+                </div>
+
+              )}
+
+
+              {/* ERROR */}
+
+              {error && (
+
+                <div className="form-error">
+                  {error}
+                </div>
+
+              )}
+
+
+              <button
+                type="submit"
+                className="send-message-btn"
+                disabled={loading}
+              >
+
+                {loading ? (
+                  "Sending..."
+                ) : (
+                  <>
+                    <FaPaperPlane />
+                    Send Message
+                  </>
+                )}
+
               </button>
 
             </form>
@@ -132,7 +366,9 @@ function Contact() {
       </div>
 
     </section>
+
   );
+
 }
 
 export default Contact;

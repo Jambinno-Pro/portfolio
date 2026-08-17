@@ -1,0 +1,129 @@
+/* ==========================================
+   SERVICES PAGE
+========================================== */
+
+.projects-page{
+    display:flex;
+    flex-direction:column;
+    gap:25px;
+}
+
+/* ==========================================
+   HEADER
+========================================== */
+
+.projects-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:20px;
+    flex-wrap:wrap;
+}
+
+.projects-header h1{
+    color:#ffffff;
+    font-size:32px;
+    margin-bottom:5px;
+}
+
+.projects-header p{
+    color:#8892B0;
+}
+
+.add-project-btn{
+
+    background:#64FFDA;
+    color:#081321;
+
+    border:none;
+    padding:14px 25px;
+
+    border-radius:12px;
+
+    cursor:pointer;
+
+    font-weight:700;
+
+    transition:.3s;
+
+}
+
+.add-project-btn:hover{
+
+    transform:translateY(-3px);
+
+    box-shadow:0 10px 25px rgba(100,255,218,.25);
+
+}
+
+/* ==========================================
+   SEARCH
+========================================== */
+
+.search-box input{
+
+    width:100%;
+
+    padding:15px 20px;
+
+    border:none;
+
+    border-radius:12px;
+
+    background:#112240;
+
+    color:#fff;
+
+    outline:none;
+
+    font-size:15px;
+
+    border:1px solid rgba(100,255,218,.08);
+
+}
+
+.search-box input:focus{
+
+    border:1px solid #64FFDA;
+
+}
+
+/* ==========================================
+   LOADING
+========================================== */
+
+.loading-projects{
+
+    background:#112240;
+
+    padding:80px;
+
+    border-radius:20px;
+
+    text-align:center;
+
+    color:#64FFDA;
+
+}
+
+/* ==========================================
+   RESPONSIVE
+========================================== */
+
+@media(max-width:768px){
+
+.projects-header{
+
+    flex-direction:column;
+
+    align-items:flex-start;
+
+}
+
+.add-project-btn{
+
+    width:100%;
+
+}
+
+}

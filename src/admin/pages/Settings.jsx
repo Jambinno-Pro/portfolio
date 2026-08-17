@@ -1,10 +1,14 @@
-import AdminLayout from "../components/AdminLayout";
+// import AdminLayout from "../components/AdminLayout";
 
 function Settings() {
   return (
-    <AdminLayout>
-      <h1 style={{ color: "#fff" }}>Settings Page</h1>
-    </AdminLayout>
+    <div className="settings-page">
+
+      <h1 style={{ color: "#fff" }}>
+        Settings Page
+      </h1>
+
+    </div>
   );
 }
 

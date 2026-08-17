@@ -8,15 +8,23 @@ import {
   FaFilePdf,
   FaCog,
   FaSignOutAlt,
+  FaUser,
 } from "react-icons/fa";
 
 import { NavLink } from "react-router-dom";
 
 import "../styles/Sidebar.css";
 
+
 function Sidebar() {
+
   return (
+
     <aside className="sidebar">
+
+      {/* ==========================
+          LOGO
+      ========================== */}
 
       <div className="sidebar-logo">
 
@@ -26,6 +34,11 @@ function Sidebar() {
 
       </div>
 
+
+      {/* ==========================
+          NAVIGATION
+      ========================== */}
+
       <nav>
 
         <NavLink to="/admin">
@@ -33,35 +46,48 @@ function Sidebar() {
           <span>Dashboard</span>
         </NavLink>
 
+
+        <NavLink to="/admin/about">
+          <FaUser />
+          <span>About</span>
+        </NavLink>
+
+
         <NavLink to="/admin/projects">
           <FaProjectDiagram />
           <span>Projects</span>
         </NavLink>
+
 
         <NavLink to="/admin/skills">
           <FaCode />
           <span>Skills</span>
         </NavLink>
 
+
         <NavLink to="/admin/graphics">
           <FaPaintBrush />
           <span>Graphics</span>
         </NavLink>
+
 
         <NavLink to="/admin/services">
           <FaBriefcase />
           <span>Services</span>
         </NavLink>
 
+
         <NavLink to="/admin/messages">
           <FaEnvelope />
           <span>Messages</span>
         </NavLink>
 
+
         <NavLink to="/admin/resume">
           <FaFilePdf />
           <span>Resume</span>
         </NavLink>
+
 
         <NavLink to="/admin/settings">
           <FaCog />
@@ -69,6 +95,11 @@ function Sidebar() {
         </NavLink>
 
       </nav>
+
+
+      {/* ==========================
+          LOGOUT
+      ========================== */}
 
       <div className="logout">
 
@@ -80,7 +111,9 @@ function Sidebar() {
       </div>
 
     </aside>
+
   );
+
 }
 
 export default Sidebar;

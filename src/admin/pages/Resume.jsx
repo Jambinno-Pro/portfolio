@@ -1,12 +1,14 @@
-import AdminLayout from "../components/AdminLayout";
+// import AdminLayout from "../components/AdminLayout";
 
 function Resume() {
   return (
-    <AdminLayout>
+    <div className="resume-page">
+
       <h1 style={{ color: "#fff" }}>
         Resume Page
       </h1>
-    </AdminLayout>
+
+    </div>
   );
 }
 

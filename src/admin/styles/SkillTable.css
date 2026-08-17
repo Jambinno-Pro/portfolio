@@ -1,0 +1,241 @@
+/* ==========================================
+   TABLE CONTAINER
+========================================== */
+
+.table-container{
+
+    background:#112240;
+
+    border-radius:20px;
+
+    overflow:hidden;
+
+    border:1px solid rgba(100,255,218,.08);
+
+}
+
+/* ==========================================
+   TABLE
+========================================== */
+
+.skills-table{
+
+    width:100%;
+
+    border-collapse:collapse;
+
+}
+
+.skills-table thead{
+
+    background:#081321;
+
+}
+
+.skills-table th{
+
+    padding:18px;
+
+    color:#64FFDA;
+
+    text-align:left;
+
+    font-size:15px;
+
+}
+
+.skills-table td{
+
+    padding:18px;
+
+    border-top:1px solid rgba(255,255,255,.05);
+
+    color:#CCD6F6;
+
+}
+
+.skills-table tbody tr{
+
+    transition:.3s;
+
+}
+
+.skills-table tbody tr:hover{
+
+    background:rgba(100,255,218,.05);
+
+}
+
+/* ==========================================
+   SKILL INFO
+========================================== */
+
+.skill-info h4{
+
+    color:#ffffff;
+
+    margin-bottom:5px;
+
+}
+
+.skill-info small{
+
+    color:#8892B0;
+
+}
+
+/* ==========================================
+   CATEGORY
+========================================== */
+
+.category-badge{
+
+    background:rgba(100,255,218,.15);
+
+    color:#64FFDA;
+
+    padding:8px 14px;
+
+    border-radius:30px;
+
+    font-size:13px;
+
+}
+
+/* ==========================================
+   LEVEL BAR
+========================================== */
+
+.level-wrapper{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+
+}
+
+.level-bar{
+
+    width:120px;
+
+    height:8px;
+
+    background:#1b2d4a;
+
+    border-radius:20px;
+
+    overflow:hidden;
+
+}
+
+.level-fill{
+
+    height:100%;
+
+    background:#64FFDA;
+
+    border-radius:20px;
+
+}
+
+/* ==========================================
+   STATUS
+========================================== */
+
+.status{
+
+    padding:8px 16px;
+
+    border-radius:30px;
+
+    font-size:13px;
+
+    font-weight:600;
+
+}
+
+.status.active{
+
+    background:#28a74533;
+
+    color:#3ddc84;
+
+}
+
+.status.inactive{
+
+    background:#dc354533;
+
+    color:#ff6b6b;
+
+}
+
+/* ==========================================
+   BUTTONS
+========================================== */
+
+.edit-btn,
+
+.delete-btn{
+
+    width:40px;
+
+    height:40px;
+
+    border:none;
+
+    border-radius:10px;
+
+    cursor:pointer;
+
+    margin-right:8px;
+
+    transition:.3s;
+
+}
+
+.edit-btn{
+
+    background:#64FFDA;
+
+    color:#081321;
+
+}
+
+.delete-btn{
+
+    background:#ef4444;
+
+    color:#ffffff;
+
+}
+
+.edit-btn:hover,
+
+.delete-btn:hover{
+
+    transform:translateY(-2px);
+
+}
+
+/* ==========================================
+   RESPONSIVE
+========================================== */
+
+@media(max-width:992px){
+
+.table-container{
+
+    overflow-x:auto;
+
+}
+
+.skills-table{
+
+    min-width:900px;
+
+}
+
+}

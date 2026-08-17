@@ -1,0 +1,185 @@
+/* ==========================================
+   SERVICE TABLE
+========================================== */
+
+.table-container{
+
+    background:#112240;
+
+    border-radius:20px;
+
+    overflow:hidden;
+
+    border:1px solid rgba(100,255,218,.08);
+
+}
+
+.projects-table{
+
+    width:100%;
+
+    border-collapse:collapse;
+
+}
+
+.projects-table thead{
+
+    background:#081321;
+
+}
+
+.projects-table th{
+
+    color:#64FFDA;
+
+    padding:18px;
+
+    text-align:left;
+
+    font-size:15px;
+
+    font-weight:600;
+
+}
+
+.projects-table td{
+
+    padding:18px;
+
+    color:#CCD6F6;
+
+    border-top:1px solid rgba(255,255,255,.05);
+
+    vertical-align:middle;
+
+}
+
+.projects-table tbody tr{
+
+    transition:.3s;
+
+}
+
+.projects-table tbody tr:hover{
+
+    background:rgba(100,255,218,.05);
+
+}
+
+.project-info h4{
+
+    color:#ffffff;
+
+    margin-bottom:6px;
+
+    font-size:17px;
+
+}
+
+.project-info small{
+
+    color:#8892B0;
+
+    display:block;
+
+    max-width:420px;
+
+    line-height:1.6;
+
+}
+
+/* ==========================================
+   STATUS
+========================================== */
+
+.status{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    padding:8px 16px;
+
+    border-radius:30px;
+
+    font-size:13px;
+
+    font-weight:600;
+
+}
+
+.status.active{
+
+    background:#28a74533;
+
+    color:#3ddc84;
+
+}
+
+/* ==========================================
+   BUTTONS
+========================================== */
+
+.edit-btn,
+.delete-btn{
+
+    width:40px;
+
+    height:40px;
+
+    border:none;
+
+    border-radius:10px;
+
+    cursor:pointer;
+
+    margin-right:10px;
+
+    transition:.3s;
+
+}
+
+.edit-btn{
+
+    background:#64FFDA;
+
+    color:#081321;
+
+}
+
+.delete-btn{
+
+    background:#ef4444;
+
+    color:#fff;
+
+}
+
+.edit-btn:hover,
+.delete-btn:hover{
+
+    transform:translateY(-3px);
+
+}
+
+/* ==========================================
+   RESPONSIVE
+========================================== */
+
+@media(max-width:992px){
+
+.table-container{
+
+    overflow-x:auto;
+
+}
+
+.projects-table{
+
+    min-width:800px;
+
+}
+
+}

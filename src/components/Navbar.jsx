@@ -1,5 +1,10 @@
 import { useState } from "react";
-import { FaBars, FaTimes } from "react-icons/fa";
+import {
+  FaBars,
+  FaTimes,
+  FaSignInAlt,
+} from "react-icons/fa";
+
 import "../styles/Navbar.css";
 import logo from "../assets/innologo.png";
 
@@ -12,58 +17,130 @@ function Navbar() {
 
   return (
     <nav className="navbar">
-      <div className="nav-container">
 
-        {/* Logo */}
-        <a href="#hero" className="logo" onClick={closeMenu}>
-          <img src={logo} alt="Innocent Jambaya Logo" />
+      <div className="container">
+
+        {/* ==========================
+            LOGO
+        ========================== */}
+
+        <a
+          href="/#hero"
+          className="logo"
+          onClick={closeMenu}
+        >
+          <img
+            src={logo}
+            alt="Innocent Jambaya Logo"
+          />
         </a>
 
-        {/* Navigation Links */}
-        <ul className={menuOpen ? "nav-links active" : "nav-links"}>
+
+        {/* ==========================
+            CENTER NAVIGATION
+        ========================== */}
+
+        <ul
+          className={
+            menuOpen
+              ? "nav-links active"
+              : "nav-links"
+          }
+        >
 
           <li>
-            <a href="#hero" onClick={closeMenu}>
+            <a
+              href="/#hero"
+              onClick={closeMenu}
+            >
               Home
             </a>
           </li>
 
           <li>
-            <a href="#about" onClick={closeMenu}>
+            <a
+              href="/#about"
+              onClick={closeMenu}
+            >
               About
             </a>
           </li>
 
           <li>
-            <a href="#skills" onClick={closeMenu}>
+            <a
+              href="/#skills"
+              onClick={closeMenu}
+            >
               Skills
             </a>
           </li>
 
           <li>
-            <a href="#projects" onClick={closeMenu}>
+            <a
+              href="/#services"
+              onClick={closeMenu}
+            >
+              Services
+            </a>
+          </li>
+
+          <li>
+            <a
+              href="/#projects"
+              onClick={closeMenu}
+            >
               Projects
             </a>
           </li>
 
           <li>
-            <a href="#contact" onClick={closeMenu}>
+            <a
+              href="/#contact"
+              onClick={closeMenu}
+            >
               Contact
             </a>
           </li>
 
         </ul>
 
-        {/* Mobile Menu Button */}
-        <button
-          className="menu-icon"
-          onClick={() => setMenuOpen(!menuOpen)}
-          aria-label="Toggle navigation menu"
+
+        {/* ==========================
+            LOGIN ICON
+        ========================== */}
+
+        <a
+          href="/login"
+          className="login-nav-link"
+          aria-label="Login"
+          title="Admin Login"
         >
-          {menuOpen ? <FaTimes /> : <FaBars />}
+          <FaSignInAlt />
+        </a>
+
+
+        {/* ==========================
+            MOBILE MENU BUTTON
+        ========================== */}
+
+        <button
+          type="button"
+          className="menu-icon"
+          onClick={() =>
+            setMenuOpen(!menuOpen)
+          }
+          aria-label="Toggle navigation menu"
+          aria-expanded={menuOpen}
+        >
+          {menuOpen ? (
+            <FaTimes />
+          ) : (
+            <FaBars />
+          )}
         </button>
 
       </div>
+
     </nav>
   );
 }

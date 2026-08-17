@@ -1,200 +1,427 @@
-/* ===========================
+/* =========================================================
    NAVBAR
-=========================== */
+========================================================= */
 
-.navbar{
-    position:fixed;
-    top:0;
-    left:0;
-    width:100%;
-    height:90px;
-    background:rgba(10,25,47,0.92);
-    backdrop-filter:blur(12px);
-    -webkit-backdrop-filter:blur(12px);
-    z-index:1000;
-    box-shadow:0 2px 20px rgba(0,0,0,.15);
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+
+    background: #08192F;
+
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
 }
 
-.nav-container{
-    max-width:1300px;
-    height:100%;
-    margin:auto;
-    padding:0 6%;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
+
+/* =========================================================
+   NAVBAR CONTAINER
+========================================================= */
+
+.navbar .container {
+    width: 90%;
+    max-width: 1300px;
+
+    height: 80px;
+
+    margin: 0 auto;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    position: relative;
 }
 
-/* ===========================
+
+/* =========================================================
    LOGO
-=========================== */
+========================================================= */
 
-.logo{
-    display:flex;
-    align-items:center;
-    margin: left -8px;
+.logo {
+    display: flex;
+    align-items: center;
+
+    text-decoration: none;
+
+    flex-shrink: 0;
+
+    z-index: 2;
 }
 
-.logo img{
-    height:65px;
-    width:auto;
-    object-fit:contain;
-    transition:.3s ease;
+.logo img {
+    height: 58px;
+    width: auto;
+
+    display: block;
 }
 
-.logo img:hover{
-    transform:scale(1.05);
+
+/* =========================================================
+   NAVIGATION
+   CENTERED
+========================================================= */
+
+.nav-links {
+    position: absolute;
+
+    left: 50%;
+    transform: translateX(-50%);
+
+    top: 0;
+
+    height: 80px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 35px;
+
+    list-style: none;
+
+    margin: 0;
+    padding: 0;
+
+    white-space: nowrap;
 }
 
-/* ===========================
-   NAV LINKS
-=========================== */
 
-.nav-links{
-    display:flex;
-    align-items:center;
-    gap:40px;
-    list-style:none;
+/* =========================================================
+   NAVIGATION ITEMS
+========================================================= */
+
+.nav-links li {
+    list-style: none;
+
+    display: flex;
+    align-items: center;
 }
 
-.nav-links li{
-    list-style:none;
+
+/* =========================================================
+   NAVIGATION LINKS
+========================================================= */
+
+.nav-links a {
+    position: relative;
+
+    color: #CFD8EA;
+
+    text-decoration: none;
+
+    font-family:
+        "Helvetica Neue",
+        Helvetica,
+        Arial,
+        sans-serif;
+
+    font-size: 1rem;
+
+    font-weight: 400;
+
+    transition:
+        color 0.3s ease;
 }
 
-.nav-links a{
-    color:#CCD6F6;
-    text-decoration:none;
-    font-size:16px;
-    font-weight:600;
-    transition:.3s ease;
-    position:relative;
+
+/* =========================================================
+   HOVER
+========================================================= */
+
+.nav-links a:hover {
+    color: #57F3D5;
 }
 
-.nav-links a:hover{
-    color:#64FFDA;
+
+/* =========================================================
+   UNDERLINE
+========================================================= */
+
+.nav-links a::after {
+    content: "";
+
+    position: absolute;
+
+    left: 0;
+    bottom: -8px;
+
+    width: 0;
+    height: 2px;
+
+    background: #57F3D5;
+
+    transition:
+        width 0.35s ease;
 }
 
-.nav-links a::after{
-    content:"";
-    position:absolute;
-    left:0;
-    bottom:-6px;
-    width:0;
-    height:2px;
-    background:#64FFDA;
-    transition:.3s;
+.nav-links a:hover::after {
+    width: 100%;
 }
 
-.nav-links a:hover::after{
-    width:100%;
+
+/* =========================================================
+   LOGIN ICON
+========================================================= */
+
+.login-nav-item {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    margin-left: 5px;
 }
 
-/* ===========================
-   MENU BUTTON
-=========================== */
 
-.menu-icon{
-    display:none;
-    background:none;
-    border:none;
-    color:#64FFDA;
-    font-size:28px;
-    cursor:pointer;
-    transition:.3s;
+/* =========================================================
+   LOGIN BUTTON
+========================================================= */
+
+.login-nav-link {
+    width: 38px;
+    height: 38px;
+
+    display: flex !important;
+
+    align-items: center;
+    justify-content: center;
+
+    color: #57F3D5 !important;
+
+    background: transparent;
+
+    border:
+        1px solid
+        rgba(87, 243, 213, 0.35);
+
+    border-radius: 50%;
+
+    font-size: 15px !important;
+
+    transition:
+        all 0.3s ease;
 }
 
-.menu-icon:hover{
-    transform:rotate(90deg);
+
+/* Remove underline from login */
+
+.login-nav-link::after {
+    display: none !important;
 }
 
-/* ===========================
-   TABLET
-=========================== */
 
-@media (max-width:992px){
+/* =========================================================
+   LOGIN HOVER
+========================================================= */
 
-.navbar{
-    height:85px;
+.login-nav-link:hover {
+    color: #08192F !important;
+
+    background: #57F3D5;
+
+    border-color: #57F3D5;
+
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 8px 20px
+        rgba(87, 243, 213, 0.20);
 }
 
-.logo img{
-    height:50px;
+
+/* =========================================================
+   LOGIN SVG
+========================================================= */
+
+.login-nav-link svg {
+    width: 15px;
+    height: 15px;
 }
 
-.nav-links{
-    gap:25px;
+
+/* =========================================================
+   MOBILE MENU BUTTON
+========================================================= */
+
+.menu-icon {
+    display: none;
+
+    background: none;
+
+    border: none;
+
+    color: #57F3D5;
+
+    font-size: 1.8rem;
+
+    cursor: pointer;
+
+    padding: 5px;
+
+    transition:
+        transform 0.3s ease,
+        color 0.3s ease;
 }
 
+.menu-icon:hover {
+    color: #FFFFFF;
+
+    transform: scale(1.05);
 }
 
-/* ===========================
-   MOBILE
-=========================== */
 
-@media (max-width:768px){
+/* =========================================================
+   TABLET / MOBILE
+========================================================= */
 
-.navbar{
-    height:80px;
+@media (max-width: 992px) {
+
+    .navbar .container {
+        height: 80px;
+    }
+
+
+    /* ==========================
+       MOBILE NAVIGATION
+    ========================== */
+
+    .nav-links {
+        position: absolute;
+
+        left: 0;
+        top: 80px;
+
+        transform: none;
+
+        width: 100%;
+
+        height: auto;
+
+        background: #08192F;
+
+        flex-direction: column;
+
+        align-items: center;
+
+        justify-content: flex-start;
+
+        gap: 25px;
+
+        padding: 35px 0;
+
+        display: none;
+
+        white-space: normal;
+
+        border-top:
+            1px solid
+            rgba(255, 255, 255, 0.05);
+
+        box-shadow:
+            0 15px 30px
+            rgba(0, 0, 0, 0.25);
+    }
+
+
+    /* ==========================
+       OPEN MOBILE MENU
+    ========================== */
+
+    .nav-links.active {
+        display: flex;
+    }
+
+
+    /* ==========================
+       MOBILE LINKS
+    ========================== */
+
+    .nav-links a {
+        font-size: 1rem;
+    }
+
+
+    /* ==========================
+       LOGIN
+    ========================== */
+
+    .login-nav-item {
+        margin-top: 5px;
+        margin-left: 0;
+    }
+
+
+    .login-nav-link {
+        width: 42px;
+        height: 42px;
+
+        font-size: 16px !important;
+    }
+
+
+    .login-nav-link svg {
+        width: 16px;
+        height: 16px;
+    }
+
+
+    /* ==========================
+       MENU BUTTON
+    ========================== */
+
+    .menu-icon {
+        display: block;
+
+        z-index: 2;
+    }
+
 }
 
-.nav-container{
-    padding:0 20px;
-}
 
-.logo img{
-    height:45px;
-}
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
 
-.menu-icon{
-    display:flex;
-    align-items:center;
-    justify-content:center;
-}
+@media (max-width: 480px) {
 
-.nav-links{
-    position:fixed;
-    top:80px;
-    right:-100%;
-    width:280px;
-    height:calc(100vh - 80px);
-    background:#112240;
-    flex-direction:column;
-    justify-content:flex-start;
-    align-items:center;
-    gap:35px;
-    padding-top:50px;
-    transition:.35s ease;
-    box-shadow:-5px 0 25px rgba(0,0,0,.3);
-}
+    .navbar .container {
+        width: 92%;
+        height: 72px;
+    }
 
-.nav-links.active{
-    right:0;
-}
 
-.nav-links a{
-    font-size:18px;
-}
+    .logo img {
+        height: 50px;
+    }
 
-}
 
-/* ===========================
-   SMALL PHONES
-=========================== */
+    .nav-links {
+        top: 72px;
 
-@media (max-width:480px){
+        padding: 30px 0;
 
-.navbar{
-    height:75px;
-}
+        gap: 22px;
+    }
 
-.logo img{
-    height:40px;
-}
 
-.nav-links{
-    width:100%;
-    top:75px;
-    height:calc(100vh - 75px);
-}
+    .nav-links a {
+        font-size: 0.95rem;
+    }
+
+
+    .menu-icon {
+        font-size: 1.6rem;
+    }
+
+
+    .login-nav-link {
+        width: 40px;
+        height: 40px;
+    }
 
 }

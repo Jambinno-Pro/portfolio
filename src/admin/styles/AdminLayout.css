@@ -1,38 +1,96 @@
-/* ==========================
+/* =========================================
    ADMIN LAYOUT
-========================== */
+========================================= */
 
-.admin-layout{
-    display:flex;
-    min-height:100vh;
-    background:#081321;
+.admin-layout {
+  width: 100%;
+
+  min-height: 100vh;
+
+  background: #081321;
 }
 
-.admin-main{
-    flex:1;
-    display:flex;
-    flex-direction:column;
-    margin-left:260px;
+
+/* =========================================
+   MAIN CONTENT
+========================================= */
+
+.admin-main {
+  width: calc(100% - 260px);
+
+  min-height: 100vh;
+
+  margin-left: 260px;
+
+  padding: 30px;
+
+  box-sizing: border-box;
+
+  background: #081321;
+
+  overflow-x: hidden;
 }
 
-.admin-content{
-    flex:1;
-    padding:35px;
-    background:#0A192F;
+
+/* =========================================
+   PAGE CONTENT
+========================================= */
+
+.admin-main > * {
+  width: 100%;
+
+  max-width: 100%;
+
+  box-sizing: border-box;
 }
 
-/* ==========================
-   RESPONSIVE
-========================== */
 
-@media(max-width:992px){
+/* =========================================
+   REMOVE GLOBAL PUBLIC SECTION PADDING
+========================================= */
 
-.admin-main{
-    margin-left:0;
+.admin-main section {
+  width: 100% !important;
+
+  max-width: 100% !important;
+
+  margin: 0 !important;
+
+  padding: 0 !important;
+
+  box-sizing: border-box;
 }
 
-.admin-content{
-    padding:25px;
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 992px) {
+
+  .admin-main {
+    width: calc(100% - 80px);
+
+    margin-left: 80px;
+
+    padding: 25px;
+  }
+
 }
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 768px) {
+
+  .admin-main {
+    width: 100%;
+
+    margin-left: 0;
+
+    padding: 20px;
+  }
 
 }

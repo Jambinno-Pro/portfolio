@@ -35,3 +35,17 @@ Thumbs.db
 *.njsproj
 *.sln
 *.sw?
+# Dependencies
+node_modules/
+
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# Build files
+dist/
+build/
+
+# Backend uploaded files
+backend/uploads/

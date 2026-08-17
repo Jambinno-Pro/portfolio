@@ -1,385 +1,951 @@
-/* ===================================================
+/* ==========================================
    HERO SECTION
-=================================================== */
+========================================== */
 
-.hero{
-    width:100%;
-    min-height:100vh;
-    display:flex;
-    align-items:center;
-    padding:120px 6% 80px;
-    position:relative;
-    overflow:hidden;
+.hero {
+  position: relative;
+
+  width: 100%;
+  min-height: 90vh;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 100px 8% 80px;
+
+  background:
+    radial-gradient(
+      circle at 50% 35%,
+      rgba(100, 255, 218, 0.08),
+      transparent 38%
+    ),
+    #081321;
+
+  overflow: hidden;
+
+  box-sizing: border-box;
+
+  font-family: Helvetica, Arial, sans-serif;
 }
 
-/* ===================================================
-   BACKGROUND
-=================================================== */
 
-.hero-bg{
-    position:absolute;
-    inset:0;
-    overflow:hidden;
-    pointer-events:none;
+/* ==========================================
+   VISIBLE SQUARE / GRID BACKGROUND
+========================================== */
+
+.hero-grid {
+  position: absolute;
+
+  inset: 0;
+
+  background-image:
+    linear-gradient(
+      rgba(100, 255, 218, 0.055) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      rgba(100, 255, 218, 0.055) 1px,
+      transparent 1px
+    );
+
+  background-size: 55px 55px;
+
+  opacity: 0.8;
+
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    black 12%,
+    black 88%,
+    transparent 100%
+  );
+
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    black 12%,
+    black 88%,
+    transparent 100%
+  );
+
+  pointer-events: none;
+
+  z-index: 1;
 }
 
-/* ===================================================
-   GLOW EFFECTS
-=================================================== */
 
-.glow{
-    position:absolute;
-    border-radius:50%;
-    filter:blur(120px);
-    opacity:.25;
-    animation:pulse 8s ease-in-out infinite;
+/* ==========================================
+   HERO CONTENT
+========================================== */
+
+.hero-content {
+  position: relative;
+
+  z-index: 10;
+
+  width: 100%;
+  max-width: 850px;
+
+  margin: 0 auto;
+
+  text-align: center;
 }
 
-.glow1{
-    width:350px;
-    height:350px;
-    background:#64FFDA;
-    top:-120px;
-    right:-120px;
+
+/* ==========================================
+   STATUS
+========================================== */
+
+.hero-status {
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 9px;
+
+  padding: 7px 15px;
+
+  margin-bottom: 22px;
+
+  border: 1px solid rgba(100, 255, 218, 0.3);
+
+  border-radius: 50px;
+
+  background: rgba(100, 255, 218, 0.04);
+
+  color: #64ffda;
+
+  font-size: 10px;
+
+  font-weight: 600;
+
+  letter-spacing: 1.8px;
+
+  font-family: Helvetica, Arial, sans-serif;
 }
 
-.glow2{
-    width:280px;
-    height:280px;
-    background:#00BCD4;
-    bottom:-80px;
-    left:-80px;
+
+/* ==========================================
+   STATUS DOT
+========================================== */
+
+.status-dot {
+  width: 7px;
+  height: 7px;
+
+  flex-shrink: 0;
+
+  border-radius: 50%;
+
+  background: #64ffda;
+
+  box-shadow:
+    0 0 0 4px rgba(100, 255, 218, 0.08),
+    0 0 12px rgba(100, 255, 218, 0.7);
+
+  animation: pulseDot 2s infinite;
 }
 
-/* ===================================================
-   FLOATING DIAMONDS
-=================================================== */
 
-.diamond{
-    position:absolute;
-    background:linear-gradient(135deg,#64FFDA,#00BCD4);
-    transform:rotate(45deg);
-    border-radius:10px;
-    opacity:.18;
-    box-shadow:0 0 35px rgba(100,255,218,.4);
-    animation:float 8s ease-in-out infinite;
+@keyframes pulseDot {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.4;
+  }
+
 }
 
-.d1{
-    width:80px;
-    height:80px;
-    top:10%;
-    left:5%;
+
+/* ==========================================
+   MAIN TITLE
+   MONTSERRAT SEMI BOLD 600
+========================================== */
+
+.hero-title {
+  margin: 0;
+
+  color: #ffffff;
+
+  font-family: "Montserrat", Helvetica, Arial, sans-serif;
+
+  font-size: clamp(36px, 5vw, 40px);
+
+  font-weight: 600;
+
+  line-height: 1.08;
+
+  letter-spacing: -1px;
+
+  text-transform: uppercase;
 }
 
-.d2{
-    width:140px;
-    height:140px;
-    top:18%;
-    right:8%;
-    animation-delay:2s;
+
+.hero-title span {
+  display: block;
+
+  margin-top: 6px;
+
+  color: #64ffda;
+
+  font-family: "Montserrat", Helvetica, Arial, sans-serif;
+
+  font-weight: 600;
+
+  text-transform: uppercase;
+
+  text-shadow:
+    0 0 25px rgba(100, 255, 218, 0.12);
 }
 
-.d3{
-    width:100px;
-    height:100px;
-    bottom:10%;
-    left:12%;
-    animation-delay:4s;
+
+/* ==========================================
+   TYPING JOB TITLE
+========================================== */
+
+.hero-typing {
+  min-height: 38px;
+
+  margin-top: 20px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  font-family: Helvetica, Arial, sans-serif;
+
+  font-size: clamp(16px, 2.2vw, 16px);
+
+  font-weight: 400;
+
+  letter-spacing: 2.5px;
+
+  color: #ccd6f6;
+
+  text-transform: uppercase;
 }
 
-.d4{
-    width:70px;
-    height:70px;
-    bottom:18%;
-    right:12%;
-    animation-delay:1s;
+
+.typing-text {
+  color: #ccd6f6;
+
+  font-weight: 400;
 }
 
-.d5{
-    width:55px;
-    height:55px;
-    top:50%;
-    left:48%;
-    animation-delay:3s;
+
+.typing-cursor {
+  margin-left: 3px;
+
+  color: #64ffda;
+
+  font-weight: 300;
+
+  animation: blinkCursor 0.8s infinite;
 }
 
-/* ===================================================
-   CONTENT
-=================================================== */
 
-.hero-content{
-    width:100%;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    gap:80px;
-    position:relative;
-    z-index:10;
+@keyframes blinkCursor {
+
+  0%,
+  50% {
+    opacity: 1;
+  }
+
+  51%,
+  100% {
+    opacity: 0;
+  }
+
 }
 
-.hero-text{
-    flex:1;
+
+/* ==========================================
+   DESCRIPTION
+========================================== */
+
+.hero-description {
+  width: 100%;
+  max-width: 620px;
+
+  margin: 16px auto 0;
+
+  color: #8892b0;
+
+  font-family: Helvetica, Arial, sans-serif;
+
+  font-size: 15px;
+
+  font-weight: 300;
+
+  line-height: 1.8;
+
+  letter-spacing: 0.2px;
 }
 
-.hero-text h4{
-    color:#64FFDA;
-    font-size:22px;
-    font-weight:500;
-    margin-bottom:18px;
-}
 
-.hero-name{
-    font-size:72px;
-    font-weight:800;
-    text-transform:uppercase;
-    line-height:1.05;
-    color:#FFFFFF;
-    margin-bottom:15px;
-}
-
-.hero-text h2{
-    font-size:40px;
-    color:#64FFDA;
-    font-weight:700;
-    margin-bottom:25px;
-}
-
-.hero-text p{
-    max-width:650px;
-    color:#CCD6F6;
-    font-size:18px;
-    line-height:1.8;
-    margin-bottom:40px;
-}
-
-/* ===================================================
+/* ==========================================
    BUTTONS
-=================================================== */
+========================================== */
 
-.hero-buttons{
-    display:flex;
-    gap:20px;
-    flex-wrap:wrap;
+.hero-buttons {
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 12px;
+
+  margin-top: 30px;
+
+  flex-wrap: wrap;
 }
 
-.hero-buttons .btn{
-    min-width:180px;
-    text-align:center;
+
+.hero-btn {
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 8px;
+
+  min-width: 155px;
+
+  padding: 10px 17px;
+
+  border-radius: 7px;
+
+  font-family: Helvetica, Arial, sans-serif;
+
+  font-size: 12px;
+
+  font-weight: 600;
+
+  text-decoration: none;
+
+  transition:
+    transform 0.3s ease,
+    background 0.3s ease,
+    color 0.3s ease,
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
+
+  box-sizing: border-box;
 }
 
-.secondary{
-    background:#64FFDA;
-    color:#0A192F !important;
-    border:2px solid #64FFDA;
+
+.hero-btn svg {
+  font-size: 11px;
 }
 
-.secondary:hover{
-    background:transparent;
-    color:#64FFDA !important;
+
+/* ==========================================
+   PRIMARY BUTTON
+========================================== */
+
+.hero-btn-primary {
+  background: #64ffda;
+
+  color: #081321;
+
+  border: 1px solid #64ffda;
 }
 
-/* ===================================================
-   PROFILE IMAGE
-=================================================== */
 
-.hero-image{
-    flex:1;
-    display:flex;
-    justify-content:center;
-    align-items:center;
+.hero-btn-primary:hover {
+  transform: translateY(-3px);
+
+  background: transparent;
+
+  color: #64ffda;
+
+  box-shadow:
+    0 10px 25px rgba(100, 255, 218, 0.12);
 }
 
-.hero-image img{
-    width:420px;
-    height:420px;
-    object-fit:cover;
-    border-radius:50%;
-    border:6px solid #64FFDA;
+
+.hero-btn-primary svg {
+  transition: transform 0.3s ease;
+}
+
+
+.hero-btn-primary:hover svg {
+  transform: translateX(4px);
+}
+
+
+/* ==========================================
+   SECONDARY BUTTON
+========================================== */
+
+.hero-btn-secondary {
+  background: rgba(255, 255, 255, 0.02);
+
+  color: #64ffda;
+
+  border: 1px solid rgba(100, 255, 218, 0.4);
+}
+
+
+.hero-btn-secondary:hover {
+  transform: translateY(-3px);
+
+  background: rgba(100, 255, 218, 0.06);
+
+  border-color: #64ffda;
+
+  box-shadow:
+    0 10px 25px rgba(100, 255, 218, 0.08);
+}
+
+
+/* ==========================================
+   TECHNOLOGY STACK
+========================================== */
+
+.hero-stack {
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  flex-wrap: wrap;
+
+  gap: 7px;
+
+  margin-top: 38px;
+}
+
+
+.hero-stack span {
+  padding: 6px 12px;
+
+  border: 1px solid rgba(255, 255, 255, 0.09);
+
+  border-radius: 50px;
+
+  background: rgba(255, 255, 255, 0.025);
+
+  color: #8892b0;
+
+  font-family: Helvetica, Arial, sans-serif;
+
+  font-size: 11px;
+
+  font-weight: 300;
+
+  transition: 0.3s ease;
+}
+
+
+.hero-stack span:hover {
+  color: #64ffda;
+
+  border-color: rgba(100, 255, 218, 0.4);
+
+  background: rgba(100, 255, 218, 0.05);
+
+  transform: translateY(-2px);
+}
+
+
+/* ==========================================
+   DIAMOND FIELD
+========================================== */
+
+.diamond-field {
+  position: absolute;
+
+  inset: 0;
+
+  z-index: 4;
+
+  pointer-events: none;
+}
+
+
+.diamond {
+  position: absolute;
+
+  width: 18px;
+  height: 18px;
+
+  border: 1.5px solid rgba(100, 255, 218, 0.75);
+
+  background: rgba(100, 255, 218, 0.025);
+
+  transform: rotate(45deg);
+
+  opacity: 0.8;
+
+  box-shadow:
+    0 0 12px rgba(100, 255, 218, 0.25);
+
+  animation:
+    diamondFloat 7s ease-in-out infinite,
+    diamondGlow 3s ease-in-out infinite alternate;
+}
+
+
+/* ==========================================
+   DIAMOND POSITIONS
+========================================== */
+
+.diamond-1 {
+  top: 16%;
+  left: 10%;
+
+  width: 24px;
+  height: 24px;
+
+  animation-delay: 0s;
+}
+
+
+.diamond-2 {
+  top: 27%;
+  right: 13%;
+
+  width: 18px;
+  height: 18px;
+
+  animation-delay: 1s;
+}
+
+
+.diamond-3 {
+  top: 64%;
+  left: 7%;
+
+  width: 28px;
+  height: 28px;
+
+  animation-delay: 2s;
+}
+
+
+.diamond-4 {
+  top: 72%;
+  right: 8%;
+
+  width: 22px;
+  height: 22px;
+
+  animation-delay: 3s;
+}
+
+
+.diamond-5 {
+  top: 40%;
+  left: 20%;
+
+  width: 15px;
+  height: 15px;
+
+  animation-delay: 1.5s;
+}
+
+
+.diamond-6 {
+  top: 52%;
+  right: 21%;
+
+  width: 25px;
+  height: 25px;
+
+  animation-delay: 2.5s;
+}
+
+
+.diamond-7 {
+  top: 82%;
+  left: 27%;
+
+  width: 17px;
+  height: 17px;
+
+  animation-delay: 4s;
+}
+
+
+.diamond-8 {
+  top: 14%;
+  right: 30%;
+
+  width: 14px;
+  height: 14px;
+
+  animation-delay: 3.5s;
+}
+
+
+/* ==========================================
+   DIAMOND FLOAT
+========================================== */
+
+@keyframes diamondFloat {
+
+  0% {
+    transform: translateY(0) rotate(45deg);
+  }
+
+  50% {
+    transform: translateY(-20px) rotate(135deg);
+  }
+
+  100% {
+    transform: translateY(0) rotate(225deg);
+  }
+
+}
+
+
+/* ==========================================
+   DIAMOND GLOW
+========================================== */
+
+@keyframes diamondGlow {
+
+  0% {
+    opacity: 0.45;
+
     box-shadow:
-        0 0 35px rgba(100,255,218,.35),
-        0 0 80px rgba(100,255,218,.15);
-    animation:profileFloat 5s ease-in-out infinite;
-}
+      0 0 8px rgba(100, 255, 218, 0.15);
+  }
 
-/* ===================================================
-   ANIMATIONS
-=================================================== */
+  100% {
+    opacity: 1;
 
-@keyframes float{
-
-    0%{
-        transform:translateY(0) rotate(45deg);
-    }
-
-    50%{
-        transform:translateY(-25px) rotate(45deg);
-    }
-
-    100%{
-        transform:translateY(0) rotate(45deg);
-    }
+    box-shadow:
+      0 0 22px rgba(100, 255, 218, 0.4);
+  }
 
 }
 
-@keyframes pulse{
 
-    0%{
-        transform:scale(1);
-        opacity:.25;
-    }
+/* ==========================================
+   BACKGROUND GLOW
+========================================== */
 
-    50%{
-        transform:scale(1.2);
-        opacity:.45;
-    }
+.hero-glow {
+  position: absolute;
 
-    100%{
-        transform:scale(1);
-        opacity:.25;
-    }
+  border-radius: 50%;
 
+  filter: blur(90px);
+
+  pointer-events: none;
+
+  z-index: 2;
 }
 
-@keyframes profileFloat{
 
-    0%{
-        transform:translateY(0);
-    }
+.hero-glow-one {
+  width: 360px;
+  height: 360px;
 
-    50%{
-        transform:translateY(-15px);
-    }
+  top: 5%;
+  left: 15%;
 
-    100%{
-        transform:translateY(0);
-    }
-
+  background: rgba(100, 255, 218, 0.055);
 }
 
-/* ===================================================
+
+.hero-glow-two {
+  width: 300px;
+  height: 300px;
+
+  right: 12%;
+  bottom: 5%;
+
+  background: rgba(50, 100, 255, 0.04);
+}
+
+
+/* ==========================================
    TABLET
-=================================================== */
+========================================== */
 
-@media (max-width:992px){
+@media (max-width: 992px) {
 
-.hero{
-    padding:140px 6% 70px;
-}
+  .hero {
+    padding: 95px 6% 75px;
+  }
 
-.hero-content{
-    flex-direction:column-reverse;
-    text-align:center;
-    gap:50px;
-}
 
-.hero-text p{
-    margin:0 auto 35px;
-}
+  .hero-title {
+    font-size: clamp(36px, 7vw, 54px);
+  }
 
-.hero-buttons{
-    justify-content:center;
-}
 
-.hero-image img{
-    width:320px;
-    height:320px;
-}
-
-.hero-name{
-    font-size:56px;
-}
-
-.hero-text h2{
-    font-size:30px;
-}
+  .hero-grid {
+    background-size: 50px 50px;
+  }
 
 }
 
-/* ===================================================
+
+/* ==========================================
    MOBILE
-=================================================== */
+========================================== */
 
-@media (max-width:768px){
+@media (max-width: 768px) {
 
-.hero{
-    min-height:auto;
-    padding:170px 6% 70px;
-    align-items:flex-start;
+  .hero {
+    min-height: 88vh;
+
+    padding: 90px 20px 65px;
+  }
+
+
+  .hero-content {
+    max-width: 100%;
+  }
+
+
+  .hero-status {
+    margin-bottom: 18px;
+
+    font-size: 9px;
+
+    letter-spacing: 1.4px;
+
+    padding: 6px 13px;
+  }
+
+
+  .hero-title {
+    font-size: 27px;
+
+    line-height: 1.15;
+
+    letter-spacing: -0.5px;
+  }
+
+
+  .hero-title span {
+    margin-top: 4px;
+  }
+
+
+  .hero-typing {
+    min-height: 32px;
+
+    margin-top: 17px;
+
+    font-size: 14px;
+
+    letter-spacing: 1.5px;
+
+    line-height: 1.5;
+  }
+
+
+  .hero-description {
+    max-width: 500px;
+
+    margin-top: 14px;
+
+    font-size: 13.5px;
+
+    line-height: 1.7;
+  }
+
+
+  .hero-buttons {
+    flex-direction: row;
+
+    gap: 10px;
+
+    margin-top: 25px;
+  }
+
+
+  .hero-btn {
+    min-width: 140px;
+
+    padding: 10px 14px;
+
+    font-size: 11px;
+  }
+
+
+  .hero-stack {
+    gap: 6px;
+
+    margin-top: 30px;
+  }
+
+
+  .hero-stack span {
+    padding: 5px 9px;
+
+    font-size: 10px;
+  }
+
+
+  .hero-grid {
+    background-size: 42px 42px;
+
+    opacity: 0.65;
+  }
+
+
+  .diamond-5,
+  .diamond-6,
+  .diamond-7,
+  .diamond-8 {
+    display: none;
+  }
+
+
+  .diamond-1 {
+    top: 17%;
+    left: 7%;
+
+    width: 18px;
+    height: 18px;
+  }
+
+
+  .diamond-2 {
+    top: 24%;
+    right: 7%;
+
+    width: 15px;
+    height: 15px;
+  }
+
+
+  .diamond-3 {
+    top: 67%;
+    left: 5%;
+
+    width: 21px;
+    height: 21px;
+  }
+
+
+  .diamond-4 {
+    top: 72%;
+    right: 5%;
+
+    width: 18px;
+    height: 18px;
+  }
+
 }
 
-.hero-content{
-    flex-direction:column-reverse;
-    text-align:center;
-    gap:40px;
+
+/* ==========================================
+   SMALL MOBILE
+========================================== */
+
+@media (max-width: 480px) {
+
+  .hero {
+    min-height: 90vh;
+
+    padding: 80px 15px 55px;
+  }
+
+
+  .hero-title {
+    font-size: 28px;
+
+    letter-spacing: -0.3px;
+  }
+
+
+  .hero-typing {
+    font-size: 12px;
+
+    letter-spacing: 1px;
+  }
+
+
+  .hero-description {
+    font-size: 12.5px;
+
+    line-height: 1.65;
+  }
+
+
+  .hero-buttons {
+    gap: 8px;
+  }
+
+
+  .hero-btn {
+    min-width: 130px;
+
+    padding: 9px 12px;
+
+    font-size: 10px;
+  }
+
+
+  .hero-stack {
+    max-width: 330px;
+
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+
+  .hero-stack span {
+    font-size: 9px;
+
+    padding: 5px 8px;
+  }
+
+
+  .hero-grid {
+    background-size: 35px 35px;
+
+    opacity: 0.55;
+  }
+
 }
 
-.hero-image{
-    width:100%;
-    justify-content:center;
-}
 
-.hero-image img{
-    width:250px;
-    height:250px;
-    margin-top:15px;
-}
+/* ==========================================
+   VERY SMALL DEVICES
+========================================== */
 
-.hero-text h4{
-    font-size:18px;
-}
+@media (max-width: 360px) {
 
-.hero-name{
-    font-size:42px;
-}
+  .hero-title {
+    font-size: 25px;
+  }
 
-.hero-text h2{
-    font-size:24px;
-}
 
-.hero-text p{
-    margin:25px auto;
-    font-size:16px;
-}
+  .hero-typing {
+    font-size: 11px;
+  }
 
-.hero-buttons{
-    width:100%;
-    flex-direction:column;
-    align-items:center;
-}
 
-.hero-buttons .btn{
-    width:260px;
-}
+  .hero-description {
+    font-size: 12px;
+  }
 
-}
 
-/* ===================================================
-   SMALL PHONES
-=================================================== */
+  .hero-buttons {
+    flex-direction: column;
+  }
 
-@media (max-width:480px){
 
-.hero{
-    padding-top:190px;
-}
-
-.hero-image img{
-    width:210px;
-    height:210px;
-}
-
-.hero-name{
-    font-size:34px;
-}
-
-.hero-text h2{
-    font-size:20px;
-}
-
-.hero-buttons .btn{
-    width:100%;
-    max-width:260px;
-}
+  .hero-btn {
+    width: 150px;
+  }
 
 }

@@ -1,93 +1,543 @@
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap");
+/* =========================================================
+   GLOBAL CSS
+   Portfolio - Innocent Jambaya
+========================================================= */
 
-/* Existing CSS */
 
-/* ==========================
+/* =========================================================
+   GOOGLE FONT
+========================================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400&display=swap');
+
+
+/* =========================================================
+   RESET
+========================================================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   HTML
+========================================================= */
+
+html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 80px;
+}
+
+
+/* =========================================================
+   BODY
+========================================================= */
+
+body {
+    background: #0A192F;
+    color: #CCD6F6;
+
+    /* BODY / DESCRIPTION FONT */
+    font-family: "Helvetica", Helvetica, Arial, sans-serif;
+
+    overflow-x: hidden;
+
+    line-height: 1.6;
+}
+
+
+/* =========================================================
+   HEADINGS
+   POPPINS — WEIGHT 400
+========================================================= */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: "Montserrat", sans-serif;
+    font-weight: 400;
+}
+
+
+/* =========================================================
+   LINKS
+========================================================= */
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+
+/* =========================================================
+   LISTS
+========================================================= */
+
+ul,
+ol {
+    list-style: none;
+}
+
+
+/* =========================================================
+   IMAGES
+========================================================= */
+
+img {
+    max-width: 100%;
+}
+
+
+/* =========================================================
+   BUTTONS / FORM ELEMENTS
+========================================================= */
+
+button,
+input,
+textarea,
+select {
+    font-family: inherit;
+}
+
+
+/* =========================================================
+   HOME PAGE
+========================================================= */
+
+.home-page {
+    width: 100%;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+
+/* =========================================================
+   SECTIONS
+========================================================= */
+
+section {
+    width: 100%;
+    padding: 100px 10%;
+}
+
+
+/* =========================================================
+   CONTAINER
+========================================================= */
+
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+
+/* =========================================================
+   GENERAL TITLE
+========================================================= */
+
+.title {
+    color: #64FFDA;
+
+    font-family: "Poppins", sans-serif;
+
+    font-size: 42px;
+
+    font-weight: 400;
+
+    line-height: 1.2;
+
+    margin-bottom: 40px;
+}
+
+
+/* =========================================================
+   ABOUT ME TITLE
+========================================================= */
+
+.about-page .title,
+.about-section .title {
+    color: #64FFDA;
+
+    font-family: "Poppins", sans-serif;
+
+    font-size: 36px;
+
+    font-weight: 400;
+
+    text-transform: uppercase;
+
+    letter-spacing: 3px;
+
+    line-height: 1.2;
+
+    text-align: center;
+
+    margin-bottom: 40px;
+
+    /* Removed rotation because it can cause
+       unwanted movement around the section */
+}
+
+
+/* =========================================================
+   GENERAL DESCRIPTION TEXT
+========================================================= */
+
+.section-description,
+.section-description p,
+.description {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+    font-weight: 400;
+
+    line-height: 1.7;
+}
+
+
+/* =========================================================
+   GENERAL BUTTON
+========================================================= */
+
+.btn {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 12px 28px;
+
+    border: 1.5px solid #64FFDA;
+
+    color: #64FFDA;
+
+    background: transparent;
+
+    border-radius: 6px;
+
+    transition: all 0.3s ease;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+}
+
+
+.btn:hover {
+    background: #64FFDA;
+
+    color: #0A192F;
+
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 10px 25px rgba(100, 255, 218, 0.18);
+}
+
+
+/* =========================================================
    GLASS EFFECT
-========================== */
+========================================================= */
 
 .glass {
     background: rgba(255, 255, 255, 0.08);
+
     backdrop-filter: blur(18px);
+
     -webkit-backdrop-filter: blur(18px);
 
-    border: 1px solid rgba(255,255,255,0.18);
+    border: 1px solid rgba(255, 255, 255, 0.18);
 
     box-shadow:
-        0 8px 32px rgba(0,0,0,.25),
-        inset 0 1px 0 rgba(255,255,255,.15);
+        0 8px 32px rgba(0, 0, 0, 0.25),
+        inset 0 1px 0 rgba(255, 255, 255, 0.15);
 
-    border-radius:20px;
+    border-radius: 20px;
 
-    transition:.4s ease;
+    transition: all 0.4s ease;
 }
 
-.glass:hover{
-    background:rgba(255,255,255,.12);
-    transform:translateY(-4px);
+
+.glass:hover {
+    background: rgba(255, 255, 255, 0.11);
+
+    transform: translateY(-4px);
 
     box-shadow:
-        0 15px 40px rgba(0,0,0,.35),
-        inset 0 1px 0 rgba(255,255,255,.2);
+        0 15px 40px rgba(0, 0, 0, 0.35),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    scroll-behavior:smooth;
+
+/* =========================================================
+   PROFILE PHOTO DIVIDER
+========================================================= */
+
+.profile-photo-divider {
+    position: relative;
+
+    width: 100%;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    /* Keep the photo overlapping sections */
+    margin-top: -65px;
+
+    margin-bottom: -65px;
+
+    z-index: 20;
+
+    pointer-events: none;
 }
 
-body{
-    font-family:'Poppins',sans-serif;
-    background:#0A192F;
-    color:#CCD6F6;
-    overflow-x:hidden;
+
+/* =========================================================
+   PROFILE PHOTO RING
+========================================================= */
+
+.profile-photo-ring {
+    width: 130px;
+
+    height: 130px;
+
+    padding: 5px;
+
+    border-radius: 50%;
+
+    background: #0A192F;
+
+    border: 2px solid #64FFDA;
+
+    box-shadow:
+        0 0 0 6px rgba(100, 255, 218, 0.08),
+        0 12px 35px rgba(0, 0, 0, 0.40);
+
+    overflow: hidden;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    /* IMPORTANT */
+    flex-shrink: 0;
 }
 
-a{
-    text-decoration:none;
-    color:inherit;
+
+/* =========================================================
+   PROFILE IMAGE
+========================================================= */
+
+.profile-photo-ring img {
+    width: 100%;
+
+    height: 100%;
+
+    max-width: none;
+
+    object-fit: cover;
+
+    object-position: center;
+
+    border-radius: 50%;
+
+    display: block;
 }
 
-ul{
-    list-style:none;
+
+/* =========================================================
+   PROFILE PHOTO — MOBILE
+========================================================= */
+
+@media (max-width: 768px) {
+
+    .profile-photo-divider {
+        margin-top: -50px;
+
+        margin-bottom: -50px;
+    }
+
+
+    .profile-photo-ring {
+        width: 105px;
+
+        height: 105px;
+
+        padding: 4px;
+    }
+
 }
 
-img{
-    max-width:100%;
+
+/* =========================================================
+   PROFILE PHOTO — SMALL MOBILE
+========================================================= */
+
+@media (max-width: 480px) {
+
+    .profile-photo-divider {
+        margin-top: -42px;
+
+        margin-bottom: -42px;
+    }
+
+
+    .profile-photo-ring {
+        width: 90px;
+
+        height: 90px;
+    }
+
 }
 
-section{
-    padding:100px 10%;
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 992px) {
+
+    section {
+        padding: 80px 7%;
+    }
+
+
+    .container {
+        max-width: 100%;
+    }
+
+
+    .title {
+        font-size: 36px;
+    }
+
+
+    .about-page .title,
+    .about-section .title {
+        font-size: 32px;
+
+        font-weight: 400;
+
+        letter-spacing: 2.5px;
+    }
+
 }
 
-.container{
-    max-width:1200px;
-    margin:auto;
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 768px) {
+
+    section {
+        padding: 70px 6%;
+    }
+
+
+    .title {
+        font-size: 32px;
+
+        margin-bottom: 30px;
+    }
+
+
+    .btn {
+        padding: 10px 22px;
+
+        font-size: 13px;
+    }
+
+
+    .about-page .title,
+    .about-section .title {
+        font-size: 28px;
+
+        font-weight: 400;
+
+        letter-spacing: 2px;
+
+        margin-bottom: 30px;
+    }
+
 }
 
-.title{
-    color:#64FFDA;
-    font-size:42px;
-    margin-bottom:40px;
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 480px) {
+
+    section {
+        padding: 60px 5%;
+    }
+
+
+    .title {
+        font-size: 28px;
+    }
+
+
+    .about-page .title,
+    .about-section .title {
+        font-size: 24px;
+
+        font-weight: 400;
+
+        letter-spacing: 1.5px;
+
+        margin-bottom: 25px;
+    }
+
 }
 
-.btn{
-    display:inline-block;
-    padding:14px 35px;
-    border:2px solid #64FFDA;
-    color:#64FFDA;
-    border-radius:6px;
-    transition:.3s;
-    font-weight:600;
+
+/* =========================================================
+   SELECTION
+========================================================= */
+
+::selection {
+    background: #64FFDA;
+
+    color: #0A192F;
 }
 
-.btn:hover{
-    background:#64FFDA;
-    color:#0A192F;
+
+/* =========================================================
+   SCROLLBAR
+========================================================= */
+
+::-webkit-scrollbar {
+    width: 8px;
 }
 
-html{
-    scroll-behavior:smooth;
+
+::-webkit-scrollbar-track {
+    background: #081321;
+}
+
+
+::-webkit-scrollbar-thumb {
+    background: #233554;
+
+    border-radius: 10px;
+}
+
+
+::-webkit-scrollbar-thumb:hover {
+    background: #64FFDA;
 }

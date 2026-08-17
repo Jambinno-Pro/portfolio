@@ -1,15 +1,44 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import "../../styles/projects/Projects.css";
 
+import { getProjects } from "../../services/projectService";
 import ProjectCard from "./ProjectCard";
 import ProjectFilter from "./ProjectFilter";
 
-import projects from "../../data/projectsData";
-
 function Projects() {
-
   const [filter, setFilter] = useState("All");
+  const [projects, setProjects] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // ==========================
+  // LOAD PROJECTS
+  // ==========================
+
+  useEffect(() => {
+    loadProjects();
+  }, []);
+
+  const loadProjects = async () => {
+    try {
+      setLoading(true);
+
+      const data = await getProjects();
+
+      console.log("Projects:", data);
+
+      setProjects(Array.isArray(data) ? data : []);
+    } catch (error) {
+      console.error("Failed to load projects:", error);
+      setProjects([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // ==========================
+  // FILTER PROJECTS
+  // ==========================
 
   const filteredProjects =
     filter === "All"
@@ -19,58 +48,78 @@ function Projects() {
         );
 
   return (
-
     <section
       className="projects-section"
       id="projects"
     >
+      <div className="projects-container">
 
-      <div className="container">
+        {/* ==========================
+            HEADER
+        ========================== */}
 
-        <h2 className="section-title">
+        <div className="projects-heading">
 
-          Featured Projects
+          <h2 className="projects-title">
+            Featured Projects
+          </h2>
 
-        </h2>
+          <p className="projects-description">
+            Explore a collection of real-world projects
+            showcasing my expertise in web development,
+            graphic design, application development and
+            database solutions.
+          </p>
 
-        <p className="section-description">
+        </div>
 
-          Explore a collection of real-world projects showcasing
-          my expertise in web development, graphic design,
-          application development and database solutions.
 
-        </p>
+        {/* ==========================
+            FILTER
+        ========================== */}
 
         <ProjectFilter
-
           filter={filter}
-
           setFilter={setFilter}
-
         />
+
+
+        {/* ==========================
+            PROJECT GRID
+        ========================== */}
 
         <div className="projects-grid">
 
-          {filteredProjects.map((project) => (
+          {loading ? (
 
-            <ProjectCard
+            <div className="projects-message">
+              <h3>Loading Projects...</h3>
+            </div>
 
-              key={project.id}
+          ) : filteredProjects.length > 0 ? (
 
-              project={project}
+            filteredProjects.map((project) => (
 
-            />
+              <ProjectCard
+                key={project._id}
+                project={project}
+              />
 
-          ))}
+            ))
+
+          ) : (
+
+            <div className="projects-message">
+              <h3>No Projects Found</h3>
+            </div>
+
+          )}
 
         </div>
 
       </div>
-
     </section>
-
   );
-
 }
 
 export default Projects;

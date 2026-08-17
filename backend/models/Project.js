@@ -13,15 +13,31 @@ const projectSchema = new mongoose.Schema(
       required: true,
     },
 
+category: {
+  type: String,
+  enum: [
+    "Web Development",
+    "Frontend",
+    "Backend",
+    "Full Stack",
+    "WordPress",
+    "Graphic Design",
+    "Application",
+    "Database",
+  ],
+  default: "Web Development",
+},
+
     image: {
       type: String,
       default: "",
     },
 
-    technologies: {
-      type: [String],
-      default: [],
-    },
+    technologies: [
+      {
+        type: String,
+      },
+    ],
 
     github: {
       type: String,
@@ -36,6 +52,12 @@ const projectSchema = new mongoose.Schema(
     featured: {
       type: Boolean,
       default: false,
+    },
+
+    status: {
+      type: String,
+      enum: ["Active", "Inactive"],
+      default: "Active",
     },
   },
   {

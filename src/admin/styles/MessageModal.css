@@ -1,0 +1,257 @@
+/* =========================================
+   MESSAGE MODAL OVERLAY
+========================================= */
+
+.message-modal-overlay {
+  position: fixed;
+
+  inset: 0;
+
+  z-index: 9999;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  padding: 20px;
+
+  background: rgba(2, 10, 24, 0.78);
+}
+
+
+/* =========================================
+   MODAL
+========================================= */
+
+.message-modal {
+  width: 100%;
+  max-width: 750px;
+
+  max-height: 90vh;
+
+  overflow-y: auto;
+
+  background: #11294b;
+
+  border: 1px solid #28527d;
+
+  border-radius: 16px;
+
+  box-shadow:
+    0 25px 80px rgba(0, 0, 0, 0.45);
+}
+
+
+/* =========================================
+   MODAL HEADER
+========================================= */
+
+.message-modal-header {
+  display: flex;
+
+  align-items: flex-start;
+
+  justify-content: space-between;
+
+  gap: 20px;
+
+  padding: 25px;
+
+  border-bottom: 1px solid #1d426b;
+}
+
+.message-modal-header h2 {
+  margin: 0 0 6px;
+
+  color: #ffffff;
+
+  font-size: 22px;
+}
+
+.message-modal-header span {
+  color: #8fa3bf;
+
+  font-size: 13px;
+}
+
+
+/* =========================================
+   CLOSE BUTTON
+========================================= */
+
+.close-message-btn {
+  width: 38px;
+  height: 38px;
+
+  flex-shrink: 0;
+
+  border: none;
+
+  border-radius: 8px;
+
+  background: #193453;
+
+  color: #ffffff;
+
+  cursor: pointer;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  transition: 0.2s ease;
+}
+
+.close-message-btn:hover {
+  background: #25496e;
+}
+
+
+/* =========================================
+   MODAL BODY
+========================================= */
+
+.message-modal-body {
+  padding: 25px;
+}
+
+
+/* =========================================
+   MESSAGE INFORMATION
+========================================= */
+
+.message-information {
+  display: grid;
+
+  grid-template-columns: repeat(2, 1fr);
+
+  gap: 20px;
+
+  margin-bottom: 30px;
+}
+
+.message-information div {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 5px;
+}
+
+.message-information strong {
+  color: #8fa3bf;
+
+  font-size: 12px;
+}
+
+.message-information span {
+  color: #ffffff;
+
+  word-break: break-word;
+}
+
+
+/* =========================================
+   MESSAGE CONTENT
+========================================= */
+
+.message-content {
+  padding: 20px;
+
+  margin-bottom: 25px;
+
+  background: #0a1d36;
+
+  border-radius: 12px;
+}
+
+.message-content h3 {
+  margin: 0 0 12px;
+
+  color: #55f5d4;
+
+  font-size: 15px;
+}
+
+.message-content p {
+  margin: 0;
+
+  color: #d0dbea;
+
+  line-height: 1.8;
+
+  white-space: pre-wrap;
+}
+
+
+/* =========================================
+   STATUS CONTROLS
+========================================= */
+
+.message-status-controls {
+  display: flex;
+
+  align-items: center;
+
+  flex-wrap: wrap;
+
+  gap: 10px;
+}
+
+.message-status-controls > span {
+  color: #8fa3bf;
+
+  margin-right: 5px;
+}
+
+.message-status-controls button {
+  padding: 8px 14px;
+
+  border: 1px solid #2a4b70;
+
+  border-radius: 7px;
+
+  background: #0c203b;
+
+  color: #aebed3;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.message-status-controls button:hover,
+.message-status-controls button.active-status {
+  background: #55f5d4;
+
+  border-color: #55f5d4;
+
+  color: #06182c;
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 600px) {
+
+  .message-modal-overlay {
+    padding: 10px;
+  }
+
+  .message-modal-header {
+    padding: 20px;
+  }
+
+  .message-modal-body {
+    padding: 20px;
+  }
+
+  .message-information {
+    grid-template-columns: 1fr;
+  }
+
+}

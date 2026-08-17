@@ -1,0 +1,93 @@
+/* =========================================
+   ADMIN LAYOUT
+========================================= */
+
+.admin-layout {
+  display: flex;
+
+  width: 100%;
+  min-height: 100vh;
+
+  background: #081321;
+}
+
+
+/* =========================================
+   MAIN CONTENT
+========================================= */
+
+.admin-main {
+  flex: 1;
+
+  min-width: 0;
+  min-height: 100vh;
+
+  margin-left: 260px;
+
+  padding: 30px;
+
+  box-sizing: border-box;
+
+  background: #081321;
+
+  overflow-x: hidden;
+}
+
+
+/* =========================================
+   ADMIN PAGE CONTENT
+========================================= */
+
+.admin-main > * {
+  width: 100%;
+  max-width: 100%;
+
+  box-sizing: border-box;
+}
+
+
+/* =========================================
+   REMOVE PUBLIC SITE SECTION SPACING
+========================================= */
+
+.admin-main section {
+  padding: 0 !important;
+
+  margin: 0 !important;
+
+  width: 100% !important;
+
+  max-width: 100% !important;
+
+  box-sizing: border-box;
+}
+
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 992px) {
+
+  .admin-main {
+    margin-left: 80px;
+
+    padding: 25px;
+  }
+
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 768px) {
+
+  .admin-main {
+    margin-left: 0;
+
+    padding: 20px;
+  }
+
+}

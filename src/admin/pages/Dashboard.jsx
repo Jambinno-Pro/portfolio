@@ -1,120 +1,108 @@
-import AdminLayout from "../components/AdminLayout";
-
 import "../styles/Dashboard.css";
 
 import {
-
-FaProjectDiagram,
-FaEnvelope,
-FaCode,
-FaEye
-
+  FaProjectDiagram,
+  FaEnvelope,
+  FaCode,
+  FaEye,
 } from "react-icons/fa";
 
-function Dashboard(){
+function Dashboard() {
 
-const stats=[
+  const stats = [
+    {
+      title: "Projects",
+      number: 18,
+      icon: <FaProjectDiagram />,
+    },
 
-{
+    {
+      title: "Messages",
+      number: 52,
+      icon: <FaEnvelope />,
+    },
 
-title:"Projects",
+    {
+      title: "Skills",
+      number: 26,
+      icon: <FaCode />,
+    },
 
-number:18,
+    {
+      title: "Visitors",
+      number: "5,431",
+      icon: <FaEye />,
+    },
+  ];
 
-icon:<FaProjectDiagram/>
+  return (
+    <div className="dashboard">
 
-},
+      {/* ==========================
+          DASHBOARD HEADER
+      ========================== */}
 
-{
+      <div className="dashboard-header">
 
-title:"Messages",
+        <div>
+          <span className="dashboard-label">
+            ADMIN DASHBOARD
+          </span>
 
-number:52,
+          <h1>
+            Welcome Back <span>👋</span>
+          </h1>
 
-icon:<FaEnvelope/>
+          <p>
+            Here's an overview of your portfolio.
+          </p>
+        </div>
 
-},
+      </div>
 
-{
 
-title:"Skills",
+      {/* ==========================
+          STATISTICS
+      ========================== */}
 
-number:26,
+      <div className="stats-grid">
 
-icon:<FaCode/>
+        {stats.map((card, index) => (
 
-},
+          <div
+            className="stat-card"
+            key={index}
+          >
 
-{
+            <div className="stat-top">
 
-title:"Visitors",
+              <div className="stat-icon">
+                {card.icon}
+              </div>
 
-number:"5,431",
+            </div>
 
-icon:<FaEye/>
 
-}
+            <div className="stat-content">
 
-];
+              <h2>
+                {card.number}
+              </h2>
 
-return(
+              <p>
+                {card.title}
+              </p>
 
-<AdminLayout>
+            </div>
 
-<div className="dashboard">
+          </div>
 
-<h1>
+        ))}
 
-Welcome Back 👋
+      </div>
 
-</h1>
-
-<div className="stats-grid">
-
-{
-
-stats.map((card,index)=>(
-
-<div
-
-className="stat-card"
-
-key={index}
-
->
-
-<div className="stat-icon">
-
-{card.icon}
-
-</div>
-
-<h2>
-
-{card.number}
-
-</h2>
-
-<p>
-
-{card.title}
-
-</p>
-
-</div>
-
-))
-
-}
-
-</div>
-
-</div>
-
-</AdminLayout>
-
-)
-
+    </div>
+  );
 }
 
 export default Dashboard;

@@ -6,7 +6,15 @@ import {
 
 import "../styles/ProjectTable.css";
 
-function ProjectTable({ projects }) {
+function ProjectTable({
+
+  projects = [],
+
+  editProject,
+
+  deleteProject,
+
+}) {
 
   return (
 
@@ -19,15 +27,10 @@ function ProjectTable({ projects }) {
           <tr>
 
             <th>Image</th>
-
-            <th>Project</th>
-
+            <th>Title</th>
             <th>Category</th>
-
             <th>Status</th>
-
             <th>Preview</th>
-
             <th>Actions</th>
 
           </tr>
@@ -36,85 +39,144 @@ function ProjectTable({ projects }) {
 
         <tbody>
 
-          {projects.map((project) => (
+          {
 
-            <tr key={project.id}>
+            projects.length > 0 ? (
 
-              <td>
+              projects.map((project) => (
 
-                <img
-                  src={project.image}
-                  alt={project.name}
-                  className="project-thumb"
-                />
+                <tr key={project._id}>
 
-              </td>
+                  <td>
 
-              <td>
+                    <img
+                      src={
+                        project.image
+                          ? `http://localhost:5000${project.image}`
+                          : "/no-image.png"
+                      }
+                      alt={project.title}
+                      className="project-thumb"
+                      onError={(e) => {
+                        e.target.src = "/no-image.png";
+                      }}
+                    />
 
-                <div className="project-info">
+                  </td>
 
-                  <h4>{project.name}</h4>
+                  <td>
 
-                  <small>ID #{project.id}</small>
+                    <div className="project-info">
 
-                </div>
+                      <h4>{project.title}</h4>
 
-              </td>
+                      <small>
 
-              <td>
+                        {project.description}
 
-                <span className="category-badge">
+                      </small>
 
-                  {project.category}
+                    </div>
 
-                </span>
+                  </td>
 
-              </td>
+                  <td>
 
-              <td>
+                    {project.category}
 
-                <span className="status active">
+                  </td>
 
-                  {project.status}
+                  <td>
 
-                </span>
+                    <span
+                      className={
+                        project.status === "Active"
+                          ? "status active"
+                          : "status inactive"
+                      }
+                    >
 
-              </td>
+                      {project.status}
 
-              <td>
+                    </span>
 
-                <button className="preview-btn">
+                  </td>
 
-                  <FaExternalLinkAlt />
+                  <td>
 
-                </button>
+                    {
 
-              </td>
+                      project.liveDemo && (
 
-              <td>
+                        <a
+                          href={project.liveDemo}
+                          target="_blank"
+                          rel="noreferrer"
+                        >
 
-                <div className="action-buttons">
+                          <FaExternalLinkAlt />
 
-                  <button className="edit-btn">
+                        </a>
 
-                    <FaEdit />
+                      )
 
-                  </button>
+                    }
 
-                  <button className="delete-btn">
+                  </td>
 
-                    <FaTrash />
+                  <td className="action-buttons">
 
-                  </button>
+                    <button
 
-                </div>
+                      className="edit-btn"
 
-              </td>
+                      onClick={() => editProject(project)}
 
-            </tr>
+                    >
 
-          ))}
+                      <FaEdit />
+
+                    </button>
+
+                    <button
+
+                      className="delete-btn"
+
+                      onClick={() => deleteProject(project._id)}
+
+                    >
+
+                      <FaTrash />
+
+                    </button>
+
+                  </td>
+
+                </tr>
+
+              ))
+
+            ) : (
+
+              <tr>
+
+                <td
+                  colSpan="6"
+                  style={{
+                    textAlign: "center",
+                    padding: "30px",
+                  }}
+                >
+
+                  No Projects Found
+
+                </td>
+
+              </tr>
+
+            )
+
+          }
 
         </tbody>
 

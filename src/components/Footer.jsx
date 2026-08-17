@@ -15,13 +15,19 @@ import logo from "../assets/innologo.png";
 
 function Footer() {
   return (
-    <footer className="footer">
+    <footer className="footer" id="footer">
 
       <div className="container">
 
+        {/* ==========================================
+            FOOTER GRID
+        ========================================== */}
+
         <div className="footer-grid">
 
-          {/* Logo */}
+          {/* ==========================================
+              ABOUT
+          ========================================== */}
 
           <div className="footer-about">
 
@@ -40,7 +46,10 @@ function Footer() {
 
           </div>
 
-          {/* Navigation */}
+
+          {/* ==========================================
+              QUICK LINKS
+          ========================================== */}
 
           <div className="footer-links">
 
@@ -52,60 +61,91 @@ function Footer() {
 
             <a href="#skills">Skills</a>
 
+            <a href="#services">Services</a>
+
             <a href="#projects">Projects</a>
 
             <a href="#contact">Contact</a>
 
           </div>
 
-          {/* Contact */}
+
+          {/* ==========================================
+              CONTACT
+          ========================================== */}
 
           <div className="footer-contact">
 
             <h3>Contact</h3>
 
-            <p>
+            <a href="mailto:jambinnocreations@gmail.com">
               <FaEnvelope />
-              hello@inno.com
-            </p>
+              <span>jambinnocreations@gmail.com</span>
+            </a>
 
-            <p>
+            <a href="tel:+27614217057">
               <FaPhoneAlt />
-              +27 61 421 7057
-            </p>
+              <span>+27 61 421 7057</span>
+            </a>
 
-            <p>
+            <div className="footer-location">
               <FaMapMarkerAlt />
-              Cape Town, South Africa
-            </p>
+              <span>Cape Town, South Africa</span>
+            </div>
 
           </div>
 
         </div>
 
-        {/* Social */}
+
+        {/* ==========================================
+            SOCIAL MEDIA
+        ========================================== */}
 
         <div className="footer-social">
 
-          <a href="#" aria-label="LinkedIn">
+          <a
+            href="#"
+            aria-label="LinkedIn"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             <FaLinkedin />
           </a>
 
-          <a href="#" aria-label="GitHub">
+          <a
+            href="#"
+            aria-label="GitHub"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             <FaGithub />
           </a>
 
-          <a href="#" aria-label="Facebook">
+          <a
+            href="#"
+            aria-label="Facebook"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             <FaFacebookF />
           </a>
 
-          <a href="#" aria-label="WhatsApp">
+          <a
+            href="#"
+            aria-label="WhatsApp"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             <FaWhatsapp />
           </a>
 
         </div>
 
-        {/* Bottom */}
+
+        {/* ==========================================
+            FOOTER BOTTOM
+        ========================================== */}
 
         <div className="footer-bottom">
 
@@ -114,7 +154,11 @@ function Footer() {
             All Rights Reserved.
           </p>
 
-          <a href="#hero" className="back-top">
+          <a
+            href="#hero"
+            className="back-top"
+            aria-label="Back to top"
+          >
             <FaArrowUp />
           </a>
 

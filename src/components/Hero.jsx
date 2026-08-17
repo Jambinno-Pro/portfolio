@@ -1,73 +1,225 @@
-import { TypeAnimation } from "react-type-animation";
+import { useEffect, useState } from "react";
+import {
+  FaArrowRight,
+  FaDownload,
+} from "react-icons/fa";
+
 import "../styles/Hero.css";
-import profile from "../assets/inno.jpg";
 
 function Hero() {
-  return (
-    <section id="hero" className="hero">
+  const titles = [
+    "WEB DEVELOPER",
+    "FULL STACK DEVELOPER",
+    "REACT DEVELOPER",
+    "WORDPRESS DEVELOPER",
+    "UI/UX DEVELOPER",
+    "GRAPHIC DESIGNER",
+    "AI ENTHUSIAST"
+  ];
 
-      {/* Animated Background */}
-      <div className="hero-bg">
+  const [titleIndex, setTitleIndex] = useState(0);
+  const [displayText, setDisplayText] = useState("");
+  const [isDeleting, setIsDeleting] = useState(false);
 
-        <span className="diamond d1"></span>
-        <span className="diamond d2"></span>
-        <span className="diamond d3"></span>
-        <span className="diamond d4"></span>
-        <span className="diamond d5"></span>
+  useEffect(() => {
+    const currentTitle = titles[titleIndex];
 
-        <span className="glow glow1"></span>
-        <span className="glow glow2"></span>
+    const typingSpeed = isDeleting ? 45 : 90;
 
-      </div>
+    const timer = setTimeout(() => {
+      if (!isDeleting) {
+        setDisplayText(
+          currentTitle.substring(0, displayText.length + 1)
+        );
+
+        if (displayText.length + 1 === currentTitle.length) {
+          setTimeout(() => {
+            setIsDeleting(true);
+          }, 1800);
+        }
+      } else {
+        setDisplayText(
+          currentTitle.substring(0, displayText.length - 1)
+        );
+
+        if (displayText.length === 0) {
+          setIsDeleting(false);
+
+          setTitleIndex(
+            (prev) => (prev + 1) % titles.length
+          );
+        }
+      }
+    }, typingSpeed);
+
+    return () => clearTimeout(timer);
+  }, [displayText, isDeleting, titleIndex]);
+
+
+return (
+
+  <section
+    id="hero"
+    className="hero"
+  >
+
+    {/* =================================
+        DIAMOND BACKGROUND
+    ================================= */}
+
+    <div className="diamond-field">
+
+      <span className="diamond diamond-1"></span>
+      <span className="diamond diamond-2"></span>
+      <span className="diamond diamond-3"></span>
+      <span className="diamond diamond-4"></span>
+      <span className="diamond diamond-5"></span>
+      <span className="diamond diamond-6"></span>
+      <span className="diamond diamond-7"></span>
+      <span className="diamond diamond-8"></span>
+
+    </div>
+
+
+      {/* =================================
+          BACKGROUND GLOWS
+      ================================= */}
+
+      <div className="hero-glow hero-glow-one"></div>
+
+      <div className="hero-glow hero-glow-two"></div>
+
+
+      {/* =================================
+          GRID
+      ================================= */}
+
+      <div className="hero-grid"></div>
+
+
+      {/* =================================
+          CONTENT
+      ================================= */}
 
       <div className="hero-content">
 
-        <div className="hero-text">
+        <div className="hero-status">
 
-          <h4>Hello, my name is</h4>
+          <span className="status-dot"></span>
 
-         <h1 className="hero-name">
-      INNOCENT JAMBAYA,
-</h1>
-
-          <h2>
-  <TypeAnimation
-    sequence={[
-      "Frontend Developer", 2000,
-      "React Developer", 2000,
-      "WordPress Developer", 2000,
-      "Graphic Designer", 2000,
-      "UI/UX Designer", 2000,
-      "AI Enthusiast", 2000,
-    ]}
-    wrapper="span"
-    speed={50}
-    repeat={Infinity}
-  />
-</h2>
-
-          <p>
-            I build modern, responsive and user-friendly websites using
-            React, WordPress, JavaScript and modern web technologies.
-            I also specialize in Graphic Design, UI/UX Design and AI-powered solutions.
-          </p>
-
-          <div className="hero-buttons">
-
-            <a href="#projects" className="btn">
-              View Projects
-            </a>
-
-            <a href="#contact" className="btn secondary">
-              Hire Me
-            </a>
-
-          </div>
+          AVAILABLE FOR WORK
 
         </div>
 
-        <div className="hero-image">
-          <img src={profile} alt="Innocent Jambaya" />
+
+        <h1 className="hero-title">
+
+          Hi, I'm
+
+          <span>
+            Innocent Jambaya
+          </span>
+
+        </h1>
+
+
+        {/* =================================
+            TYPING TITLE
+        ================================= */}
+
+        <div className="hero-typing">
+
+          <span className="typing-text">
+            {displayText}
+          </span>
+
+          <span className="typing-cursor">
+            |
+          </span>
+
+        </div>
+
+
+        <p className="hero-description">
+
+          I build modern websites and web applications
+          that combine clean code, intuitive user
+          experiences, and powerful technology.
+
+        </p>
+
+
+        {/* =================================
+            BUTTONS
+        ================================= */}
+
+        <div className="hero-buttons">
+
+          <a
+            href="#projects"
+            className="hero-btn hero-btn-primary"
+          >
+
+            View My Projects
+
+            <FaArrowRight />
+
+          </a>
+
+
+          <a
+            href="#resume"
+            className="hero-btn hero-btn-secondary"
+          >
+
+            Download Resume
+
+            <FaDownload />
+
+          </a>
+
+        </div>
+
+
+        {/* =================================
+            TECHNOLOGIES
+        ================================= */}
+
+        <div className="hero-stack">
+
+          <span>React</span>
+
+          <span>JavaScript</span>
+
+          <span>Node.js</span>
+
+          <span>PHP</span>
+
+          <span>WordPress</span>
+
+          <span>MongoDB</span>
+
+          <span>Angular</span>
+
+          <span>Express.js</span>
+
+          <span>TypeScript</span>
+
+          <span>HTML</span>
+
+          <span>CSS</span>
+
+          <span>Photoshop</span>
+
+          <span>Illustrator</span>
+
+          <span>Corel Draw</span>
+
+          <span>Figma</span>
+
+          <span>AI Tools</span>
+          
+
         </div>
 
       </div>

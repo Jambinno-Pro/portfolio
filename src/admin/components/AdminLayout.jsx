@@ -1,7 +1,7 @@
 import Sidebar from "./Sidebar";
 import Topbar from "./Topbar";
 
-import "../styles/AdminLayout.css";
+// import "../styles/AdminLayout.css";
 
 function AdminLayout({ children }) {
   return (
