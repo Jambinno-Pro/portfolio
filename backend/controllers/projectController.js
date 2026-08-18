@@ -1,4 +1,5 @@
 const Project = require("../models/Project");
+const cloudinary = require("../config/cloudinary");
 
 /* ===========================
    NORMALIZE TECHNOLOGIES
@@ -42,6 +43,34 @@ const normalizeTechnologies = (technologies) => {
 
 
 /* ===========================
+   UPLOAD IMAGE TO CLOUDINARY
+=========================== */
+
+const uploadToCloudinary = (fileBuffer) => {
+  return new Promise((resolve, reject) => {
+
+    const uploadStream = cloudinary.uploader.upload_stream(
+      {
+        folder: "portfolio/projects",
+        resource_type: "image",
+      },
+
+      (error, result) => {
+
+        if (error) {
+          return reject(error);
+        }
+
+        resolve(result);
+      }
+    );
+
+    uploadStream.end(fileBuffer);
+  });
+};
+
+
+/* ===========================
    GET ALL PROJECTS
 =========================== */
 
@@ -56,7 +85,9 @@ exports.getProjects = async (req, res) => {
       count: projects.length,
       projects,
     });
+
   } catch (error) {
+
     console.error("GET PROJECTS ERROR:", error);
 
     res.status(500).json({
@@ -73,6 +104,7 @@ exports.getProjects = async (req, res) => {
 
 exports.getProject = async (req, res) => {
   try {
+
     const project = await Project.findById(req.params.id);
 
     if (!project) {
@@ -86,7 +118,9 @@ exports.getProject = async (req, res) => {
       success: true,
       project,
     });
+
   } catch (error) {
+
     console.error("GET PROJECT ERROR:", error);
 
     res.status(500).json({
@@ -103,11 +137,29 @@ exports.getProject = async (req, res) => {
 
 exports.createProject = async (req, res) => {
   try {
+
     console.log("CREATE PROJECT BODY:", req.body);
 
+    /* ===========================
+       UPLOAD IMAGE
+    =========================== */
+
     if (req.file) {
-      req.body.image = `/uploads/projects/${req.file.filename}`;
+
+      const uploadedImage =
+        await uploadToCloudinary(req.file.buffer);
+
+      req.body.image = uploadedImage.secure_url;
+
+      console.log(
+        "CLOUDINARY IMAGE:",
+        uploadedImage.secure_url
+      );
     }
+
+    /* ===========================
+       PROJECT DATA
+    =========================== */
 
     const projectData = {
       ...req.body,
@@ -122,15 +174,25 @@ exports.createProject = async (req, res) => {
       projectData.technologies
     );
 
-    const project = await Project.create(projectData);
+    /* ===========================
+       CREATE PROJECT
+    =========================== */
+
+    const project =
+      await Project.create(projectData);
 
     res.status(201).json({
       success: true,
       message: "Project created successfully",
       project,
     });
+
   } catch (error) {
-    console.error("CREATE PROJECT ERROR:", error);
+
+    console.error(
+      "CREATE PROJECT ERROR:",
+      error
+    );
 
     res.status(500).json({
       success: false,
@@ -146,7 +208,9 @@ exports.createProject = async (req, res) => {
 
 exports.updateProject = async (req, res) => {
   try {
-    const project = await Project.findById(req.params.id);
+
+    const project =
+      await Project.findById(req.params.id);
 
     if (!project) {
       return res.status(404).json({
@@ -155,11 +219,32 @@ exports.updateProject = async (req, res) => {
       });
     }
 
-    console.log("UPDATE PROJECT BODY:", req.body);
+    console.log(
+      "UPDATE PROJECT BODY:",
+      req.body
+    );
+
+    /* ===========================
+       UPLOAD NEW IMAGE
+    =========================== */
 
     if (req.file) {
-      req.body.image = `/uploads/projects/${req.file.filename}`;
+
+      const uploadedImage =
+        await uploadToCloudinary(req.file.buffer);
+
+      req.body.image =
+        uploadedImage.secure_url;
+
+      console.log(
+        "NEW CLOUDINARY IMAGE:",
+        uploadedImage.secure_url
+      );
     }
+
+    /* ===========================
+       PROJECT DATA
+    =========================== */
 
     const projectData = {
       ...req.body,
@@ -173,6 +258,10 @@ exports.updateProject = async (req, res) => {
       "UPDATED TECHNOLOGIES:",
       projectData.technologies
     );
+
+    /* ===========================
+       UPDATE PROJECT
+    =========================== */
 
     const updatedProject =
       await Project.findByIdAndUpdate(
@@ -189,8 +278,13 @@ exports.updateProject = async (req, res) => {
       message: "Project updated successfully",
       project: updatedProject,
     });
+
   } catch (error) {
-    console.error("UPDATE PROJECT ERROR:", error);
+
+    console.error(
+      "UPDATE PROJECT ERROR:",
+      error
+    );
 
     res.status(500).json({
       success: false,
@@ -206,9 +300,9 @@ exports.updateProject = async (req, res) => {
 
 exports.deleteProject = async (req, res) => {
   try {
-    const project = await Project.findById(
-      req.params.id
-    );
+
+    const project =
+      await Project.findById(req.params.id);
 
     if (!project) {
       return res.status(404).json({
@@ -223,8 +317,13 @@ exports.deleteProject = async (req, res) => {
       success: true,
       message: "Project deleted successfully",
     });
+
   } catch (error) {
-    console.error("DELETE PROJECT ERROR:", error);
+
+    console.error(
+      "DELETE PROJECT ERROR:",
+      error
+    );
 
     res.status(500).json({
       success: false,
