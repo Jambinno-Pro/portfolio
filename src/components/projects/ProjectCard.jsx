@@ -17,10 +17,9 @@ function ProjectCard({ project }) {
     // PROJECT IMAGE
     // ==========================================
 
-  const imageUrl = project.image
+ const imageUrl = project.image
     ? `https://innocent-portfolio-api.onrender.com${project.image}`
     : "/images/no-image.png";
-
 
     // ==========================================
     // TECHNOLOGIES
