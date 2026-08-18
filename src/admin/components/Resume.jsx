@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 
+import "../../styles/Resume.css";
+
 function Resume() {
 
   const [resume, setResume] = useState({
