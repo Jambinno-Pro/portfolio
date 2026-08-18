@@ -49,18 +49,18 @@ function ProjectTable({
 
                   <td>
 
-                    <img
-                      src={
-                        project.image
-                          ? `http://localhost:5000${project.image}`
-                          : "/no-image.png"
-                      }
-                      alt={project.title}
-                      className="project-thumb"
-                      onError={(e) => {
-                        e.target.src = "/no-image.png";
-                      }}
-                    />
+                   <img
+  src={
+    project.image
+      ? `https://innocent-portfolio-api.onrender.com${project.image}`
+      : "/no-image.png"
+  }
+  alt={project.title}
+  className="project-thumb"
+  onError={(e) => {
+    e.target.src = "/no-image.png";
+  }}
+/>
 
                   </td>
 
