@@ -17,9 +17,9 @@ function ProjectCard({ project }) {
     // PROJECT IMAGE
     // ==========================================
 
-    const imageUrl = project.image
-        ? `http://localhost:5000${project.image}`
-        : "/images/no-image.png";
+  const imageUrl = project.image
+    ? `https://innocent-portfolio-api.onrender.com${project.image}`
+    : "/images/no-image.png";
 
 
     // ==========================================
