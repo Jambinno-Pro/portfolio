@@ -58,7 +58,7 @@ function ProjectTable({
   alt={project.title}
   className="project-thumb"
   onError={(e) => {
-    e.target.src = "/no-image.png";
+    e.target.style.display = "none";
   }}
 />
 

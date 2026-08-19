@@ -33,47 +33,13 @@ const getResume = async (req, res) => {
 // =======================================
 // CREATE / UPDATE RESUME
 // =======================================
-
 const saveResume = async (req, res) => {
   try {
 
-    console.log(
-      "RESUME BODY:",
-      req.body
-    );
-
-    console.log(
-      "RESUME FILE:",
-      req.file
-    );
-
-
     let resume = await Resume.findOne();
 
-
-    // ===================================
-    // PREPARE DATA
-    // ===================================
-
     const resumeData = {
-
-      fullName: req.body.fullName,
-
-      title: req.body.title,
-
-      bio: req.body.bio,
-
-      email: req.body.email,
-
-      phone: req.body.phone,
-
-      location: req.body.location,
-
-      website: req.body.website,
-
-      github: req.body.github,
-
-      linkedin: req.body.linkedin,
+      ...req.body,
 
       experience: req.body.experience
         ? JSON.parse(req.body.experience)
@@ -90,70 +56,52 @@ const saveResume = async (req, res) => {
       languages: req.body.languages
         ? JSON.parse(req.body.languages)
         : [],
-
     };
 
-
-    // ===================================
+    // =======================================
     // CV UPLOAD
-    // ===================================
+    // =======================================
 
     if (req.file) {
 
       resumeData.cv =
-        `/uploads/resume/${req.file.filename}`;
+        req.file.path;
 
     }
 
-
-    // ===================================
+    // =======================================
     // CREATE
-    // ===================================
+    // =======================================
 
     if (!resume) {
 
-      resume = await Resume.create(
-        resumeData
-      );
+      resume =
+        await Resume.create(resumeData);
 
     }
 
-
-    // ===================================
+    // =======================================
     // UPDATE
-    // ===================================
+    // =======================================
 
     else {
 
-      resume = await Resume.findByIdAndUpdate(
-
-        resume._id,
-
-        resumeData,
-
-        {
-          new: true,
-          runValidators: true,
-        }
-
-      );
+      resume =
+        await Resume.findByIdAndUpdate(
+          resume._id,
+          resumeData,
+          {
+            returnDocument: "after",
+            runValidators: true,
+          }
+        );
 
     }
 
-
-    // ===================================
-    // RESPONSE
-    // ===================================
-
     res.status(200).json({
-
       success: true,
-
-      message:
-        "Resume saved successfully.",
-
+      message: "Resume saved successfully.",
       resume,
-
     });
 
   } catch (error) {
@@ -164,11 +112,8 @@ const saveResume = async (req, res) => {
     );
 
     res.status(500).json({
-
       success: false,
-
       message: error.message,
-
     });
 
   }
