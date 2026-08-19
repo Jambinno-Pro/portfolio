@@ -365,16 +365,14 @@ section {
 @media (max-width: 768px) {
 
     .profile-photo-divider {
-        margin-top: -50px;
-
-        margin-bottom: -50px;
+        margin-top: -60px;
+        margin-bottom: -60px;
     }
 
 
     .profile-photo-ring {
-        width: 105px;
-
-        height: 105px;
+        width: 125px;
+        height: 125px;
 
         padding: 4px;
     }
@@ -389,16 +387,14 @@ section {
 @media (max-width: 480px) {
 
     .profile-photo-divider {
-        margin-top: -42px;
-
-        margin-bottom: -42px;
+        margin-top: -55px;
+        margin-bottom: -55px;
     }
 
 
     .profile-photo-ring {
-        width: 90px;
-
-        height: 90px;
+        width: 115px;
+        height: 115px;
     }
 
 }
