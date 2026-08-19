@@ -1,4 +1,12 @@
 const Project = require("../models/Project");
+const supabase = require("../config/supabase");
+
+/* ===========================
+   SUPABASE BUCKET
+=========================== */
+
+const PROJECT_BUCKET = "inno-project-images";
+
 
 /* ===========================
    NORMALIZE TECHNOLOGIES
@@ -44,6 +52,135 @@ const normalizeTechnologies = (technologies) => {
   }
 
   return [];
+};
+
+
+/* ===========================
+   GENERATE FILE NAME
+=========================== */
+
+const generateFileName = (originalName) => {
+
+  const extension =
+    originalName.includes(".")
+      ? originalName.substring(
+          originalName.lastIndexOf(".")
+        )
+      : "";
+
+  return `${Date.now()}-${Math.round(
+    Math.random() * 1e9
+  )}${extension}`;
+};
+
+
+/* ===========================
+   UPLOAD IMAGE TO SUPABASE
+=========================== */
+
+const uploadImageToSupabase = async (file) => {
+
+  if (!file) {
+    return null;
+  }
+
+  const fileName =
+    generateFileName(file.originalname);
+
+  const filePath =
+    `projects/${fileName}`;
+
+  const { error } =
+    await supabase.storage
+      .from(PROJECT_BUCKET)
+      .upload(
+        filePath,
+        file.buffer,
+        {
+          contentType: file.mimetype,
+          upsert: false,
+        }
+      );
+
+  if (error) {
+    throw new Error(
+      `Supabase upload failed: ${error.message}`
+    );
+  }
+
+  const { data } =
+    supabase.storage
+      .from(PROJECT_BUCKET)
+      .getPublicUrl(filePath);
+
+  return {
+    url: data.publicUrl,
+    path: filePath,
+  };
+};
+
+
+/* ===========================
+   DELETE SUPABASE IMAGE
+=========================== */
+
+const deleteImageFromSupabase = async (imageUrl) => {
+
+  if (!imageUrl) {
+    return;
+  }
+
+  // Only delete files belonging to our
+  // Supabase project-images bucket.
+
+  if (!imageUrl.includes(PROJECT_BUCKET)) {
+    return;
+  }
+
+  try {
+
+    const marker =
+      `/storage/v1/object/public/${PROJECT_BUCKET}/`;
+
+    const index =
+      imageUrl.indexOf(marker);
+
+    if (index === -1) {
+      return;
+    }
+
+    const filePath =
+      imageUrl.substring(
+        index + marker.length
+      );
+
+    if (!filePath) {
+      return;
+    }
+
+    const { error } =
+      await supabase.storage
+        .from(PROJECT_BUCKET)
+        .remove([filePath]);
+
+    if (error) {
+
+      console.error(
+        "SUPABASE IMAGE DELETE ERROR:",
+        error.message
+      );
+
+    }
+
+  } catch (error) {
+
+    console.error(
+      "SUPABASE IMAGE DELETE ERROR:",
+      error.message
+    );
+
+  }
+
 };
 
 
@@ -158,10 +295,17 @@ exports.createProject = async (req, res) => {
        IMAGE
     =========================== */
 
+    let imageUrl = req.body.image || "";
+
     if (req.file) {
 
-      req.body.image =
-        `/uploads/projects/${req.file.filename}`;
+      const uploadedImage =
+        await uploadImageToSupabase(
+          req.file
+        );
+
+      imageUrl =
+        uploadedImage.url;
 
     }
 
@@ -172,6 +316,8 @@ exports.createProject = async (req, res) => {
     const projectData = {
 
       ...req.body,
+
+      image: imageUrl,
 
       technologies:
         normalizeTechnologies(
@@ -254,17 +400,6 @@ exports.updateProject = async (req, res) => {
     );
 
     /* ===========================
-       NEW IMAGE
-    =========================== */
-
-    if (req.file) {
-
-      req.body.image =
-        `/uploads/projects/${req.file.filename}`;
-
-    }
-
-    /* ===========================
        PROJECT DATA
     =========================== */
 
@@ -279,10 +414,30 @@ exports.updateProject = async (req, res) => {
 
     };
 
-    console.log(
-      "UPDATED PROJECT DATA:",
-      projectData
-    );
+
+    /* ===========================
+       NEW IMAGE
+    =========================== */
+
+    if (req.file) {
+
+      const uploadedImage =
+        await uploadImageToSupabase(
+          req.file
+        );
+
+      projectData.image =
+        uploadedImage.url;
+
+      // Delete old Supabase image
+      // after successful new upload.
+
+      await deleteImageFromSupabase(
+        project.image
+      );
+
+    }
+
 
     /* ===========================
        UPDATE
@@ -357,6 +512,19 @@ exports.deleteProject = async (req, res) => {
       });
 
     }
+
+    /* ===========================
+       DELETE SUPABASE IMAGE
+    =========================== */
+
+    await deleteImageFromSupabase(
+      project.image
+    );
+
+
+    /* ===========================
+       DELETE PROJECT
+    =========================== */
 
     await project.deleteOne();
 
