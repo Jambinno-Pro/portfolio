@@ -18,9 +18,10 @@ function ProjectCard({ project }) {
     // ==========================================
 
  const imageUrl = project.image
-    ? `https://innocent-portfolio-api.onrender.com${project.image}`
+    ? project.image.startsWith("http")
+        ? project.image
+        : `https://innocent-portfolio-api.onrender.com${project.image}`
     : "/images/no-image.png";
-
     // ==========================================
     // TECHNOLOGIES
     // Supports:

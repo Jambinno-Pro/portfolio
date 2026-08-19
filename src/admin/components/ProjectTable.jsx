@@ -49,10 +49,12 @@ function ProjectTable({
 
                   <td>
 
-                   <img
+<img
   src={
     project.image
-      ? `https://innocent-portfolio-api.onrender.com${project.image}`
+      ? project.image.startsWith("http")
+        ? project.image
+        : `https://innocent-portfolio-api.onrender.com${project.image}`
       : "/no-image.png"
   }
   alt={project.title}
