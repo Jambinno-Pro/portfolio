@@ -43,7 +43,7 @@ router.get("/download", async (req, res) => {
       });
     }
 
-    res.download(resume.cv, "Innocent-Jambaya-CV.pdf");
+    return res.redirect(resume.cv);
 
   } catch (error) {
 

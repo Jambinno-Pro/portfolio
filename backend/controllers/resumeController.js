@@ -1,4 +1,5 @@
 const Resume = require("../models/Resume");
+const supabase = require("../config/supabase");
 
 // =======================================
 // GET RESUME
@@ -59,13 +60,56 @@ const saveResume = async (req, res) => {
     };
 
     // =======================================
-    // CV UPLOAD
+    // CV UPLOAD TO SUPABASE
     // =======================================
 
     if (req.file) {
 
+      const fileName =
+        `cv-${Date.now()}.pdf`;
+
+      const filePath =
+        `resumes/${fileName}`;
+
+      const { error: uploadError } =
+        await supabase.storage
+          .from("inno-resume")
+          .upload(
+            filePath,
+            req.file.buffer,
+            {
+              contentType: "application/pdf",
+              upsert: true,
+            }
+          );
+
+      if (uploadError) {
+
+        console.error(
+          "SUPABASE CV UPLOAD ERROR:",
+          uploadError
+        );
+
+        return res.status(500).json({
+          success: false,
+          message:
+            "CV upload failed: " +
+            uploadError.message,
+        });
+
+      }
+
+      // =======================================
+      // GET PUBLIC URL
+      // =======================================
+
+      const { data: publicUrlData } =
+        supabase.storage
+          .from("inno-resume")
+          .getPublicUrl(filePath);
+
       resumeData.cv =
-        req.file.path;
+        publicUrlData.publicUrl;
 
     }
 
