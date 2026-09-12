@@ -1,0 +1,450 @@
+/* =========================================================
+   GLOBAL DARK / LIGHT MODE
+========================================================= */
+
+:root {
+  color-scheme: dark;
+  --theme-bg: #0A192F;
+  --theme-bg-deep: #081321;
+  --theme-bg-alt: #0B1E36;
+  --theme-card: #112240;
+  --theme-card-2: #132746;
+  --theme-text: #CCD6F6;
+  --theme-muted: #8FA3BF;
+  --theme-heading: #64FFDA;
+  --theme-border: rgba(100, 255, 218, 0.12);
+}
+
+html[data-theme="light"] {
+  color-scheme: light;
+  --theme-bg: #F5F8FC;
+  --theme-bg-deep: #FFFFFF;
+  --theme-bg-alt: #EEF4F8;
+  --theme-card: #FFFFFF;
+  --theme-card-2: #F8FBFD;
+  --theme-text: #193047;
+  --theme-muted: #60758A;
+  --theme-heading: #007A68;
+  --theme-border: rgba(8, 127, 112, 0.16);
+}
+
+html[data-theme="light"] body {
+  background: var(--theme-bg);
+  color: var(--theme-text);
+}
+
+html[data-theme="light"] .home-page,
+html[data-theme="light"] .about-section,
+html[data-theme="light"] #skills,
+html[data-theme="light"] .projects-section,
+html[data-theme="light"] .contact-section {
+  background: var(--theme-bg) !important;
+  color: var(--theme-text) !important;
+}
+
+html[data-theme="light"] .hero {
+  background: radial-gradient(circle at 50% 35%, rgba(8,127,112,.10), transparent 38%), var(--theme-bg-deep) !important;
+}
+
+html[data-theme="light"] .services-section {
+  background: var(--theme-bg-alt) !important;
+}
+
+html[data-theme="light"] .navbar {
+  background: rgba(255,255,255,.88) !important;
+  border-bottom-color: rgba(8,127,112,.12) !important;
+  box-shadow: 0 8px 28px rgba(20,45,65,.07) !important;
+}
+
+html[data-theme="light"] .nav-links a { color: #52687C !important; }
+html[data-theme="light"] .nav-links a:hover { color: #087F70 !important; }
+html[data-theme="light"] .nav-links a::after { background: #087F70 !important; }
+html[data-theme="light"] .menu-icon { color: #087F70 !important; }
+
+html[data-theme="light"] .about-bio,
+html[data-theme="light"] .about-info,
+html[data-theme="light"] .contact-info,
+html[data-theme="light"] .contact-form-container {
+  background: #FFFFFF !important;
+  border-color: var(--theme-border) !important;
+  box-shadow: 0 12px 35px rgba(20,45,65,.06);
+}
+
+html[data-theme="light"] .about-bio p,
+html[data-theme="light"] .about-info-item strong,
+html[data-theme="light"] .about-info-item a,
+html[data-theme="light"] .contact-header .section-description,
+html[data-theme="light"] .contact-info > p,
+html[data-theme="light"] .contact-item span,
+html[data-theme="light"] .projects-description,
+html[data-theme="light"] #skills .section-description,
+html[data-theme="light"] .service-description {
+  color: #60758A !important;
+}
+
+html[data-theme="light"] .about-title,
+html[data-theme="light"] .projects-title,
+html[data-theme="light"] #skills .section-title,
+html[data-theme="light"] .contact-header .section-title,
+html[data-theme="light"] .services-heading .section-title {
+  color: #087F70 !important;
+}
+
+html[data-theme="light"] #skills .skill-card,
+html[data-theme="light"] .service-card,
+html[data-theme="light"] .projects-message {
+  background: #FFFFFF !important;
+  border-color: rgba(8,127,112,.12) !important;
+  box-shadow: 0 12px 32px rgba(20,45,65,.06);
+}
+
+html[data-theme="light"] #skills .skill-card h3,
+html[data-theme="light"] .service-title,
+html[data-theme="light"] .contact-info h3,
+html[data-theme="light"] .form-group label {
+  color: #193047 !important;
+}
+
+html[data-theme="light"] #skills .skill-level,
+html[data-theme="light"] #skills .skill-footer,
+html[data-theme="light"] .service-description,
+html[data-theme="light"] .projects-message h3 {
+  color: #60758A !important;
+}
+
+html[data-theme="light"] #skills .skill-icon,
+html[data-theme="light"] #skills .progress-bar,
+html[data-theme="light"] .service-icon {
+  background: #E8F3F2 !important;
+}
+
+html[data-theme="light"] .form-group input,
+html[data-theme="light"] .form-group textarea {
+  background: #F7FAFC !important;
+  color: #193047 !important;
+  border-color: #D8E3EA !important;
+}
+
+html[data-theme="light"] .form-group input:focus,
+html[data-theme="light"] .form-group textarea:focus {
+  background: #FFFFFF !important;
+  border-color: #087F70 !important;
+}
+
+html[data-theme="light"] .footer {
+  background: #EAF1F5 !important;
+}
+html[data-theme="light"] .footer-about p,
+html[data-theme="light"] .footer-links a,
+html[data-theme="light"] .footer-contact > a,
+html[data-theme="light"] .footer-location {
+  color: #53697D !important;
+}
+html[data-theme="light"] .footer-social a {
+  background: #FFFFFF !important;
+  color: #087F70 !important;
+}
+html[data-theme="light"] .footer-bottom p { color: #728496 !important; }
+
+/* Resume is intentionally a light document in BOTH modes for maximum readability. */
+.resume-document,
+html[data-theme="light"] .resume-document {
+  background: linear-gradient(145deg, #FFFFFF 0%, #F2F7FA 100%) !important;
+  color: #10253A !important;
+}
+.resume-section-title h4,
+html[data-theme="light"] .resume-section-title h4 {
+  color: #10253A !important;
+  background: transparent !important;
+  text-shadow: none !important;
+  opacity: 1 !important;
+}
+.resume-section-title span { color: #087F70 !important; }
+.resume-header h3 { color: #10253A !important; }
+.resume-header p,
+.resume-profile-text,
+.resume-entry p,
+.resume-entry-top span,
+.resume-simple-entry span,
+.resume-side-entry span,
+.resume-language-list > div,
+.resume-socials a { color: #536B80 !important; }
+.resume-entry h5,
+.resume-simple-entry h5,
+.resume-side-entry h5 { color: #10253A !important; }
+.resume-entry strong,
+.resume-simple-entry strong,
+.resume-language-list strong { color: #087F70 !important; }
+
+/* Theme control */
+.theme-toggle {
+  width: 38px;
+  height: 38px;
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(87,243,213,.28);
+  border-radius: 50%;
+  background: transparent;
+  color: #57F3D5;
+  cursor: pointer;
+  transition: .25s ease;
+}
+.theme-toggle:hover {
+  transform: translateY(-2px) rotate(8deg);
+  background: #57F3D5;
+  color: #08192F;
+  box-shadow: 0 8px 20px rgba(87,243,213,.16);
+}
+html[data-theme="light"] .theme-toggle {
+  color: #087F70;
+  border-color: rgba(8,127,112,.22);
+}
+html[data-theme="light"] .theme-toggle:hover {
+  background: #087F70;
+  color: #FFFFFF;
+}
+
+@media (max-width: 992px) {
+  .theme-toggle { margin-left: auto; margin-right: 10px; }
+}
+
+/* Additional light-mode readability across cards and hero */
+html[data-theme="light"] .hero-title { color: #193047 !important; }
+html[data-theme="light"] .hero-typing { color: #52687C !important; }
+html[data-theme="light"] .hero-description { color: #60758A !important; }
+html[data-theme="light"] .hero-stack span { color: #60758A !important; border-color: rgba(8,127,112,.12) !important; }
+html[data-theme="light"] .hero-grid { opacity: .35; }
+html[data-theme="light"] .hero-glow { opacity: .35; }
+html[data-theme="light"] .project-card { background: #FFFFFF !important; border-color: rgba(8,127,112,.12) !important; box-shadow: 0 12px 32px rgba(20,45,65,.06); }
+html[data-theme="light"] .project-content h3 { color: #087F70 !important; }
+html[data-theme="light"] .project-summary { color: #60758A !important; }
+html[data-theme="light"] .tech-stack span { background: #EEF6F5 !important; color: #087F70 !important; }
+html[data-theme="light"] .service-card { background: #FFFFFF !important; border-color: rgba(8,127,112,.12) !important; box-shadow: 0 12px 32px rgba(20,45,65,.06); }
+html[data-theme="light"] .service-title { color: #193047 !important; }
+html[data-theme="light"] .service-description { color: #60758A !important; }
+html[data-theme="light"] .contact-item a,
+html[data-theme="light"] .contact-item p { color: #52687C !important; }
+html[data-theme="light"] .contact-item a:hover { color: #087F70 !important; }
+html[data-theme="light"] .section-title { color: #087F70 !important; }
+
+/* Mobile navigation in light mode */
+@media (max-width: 992px) {
+  html[data-theme="light"] .nav-links { background: #FFFFFF !important; border-top-color: rgba(8,127,112,.10) !important; }
+}
+
+/* Compact Skills cloud / expanded view */
+html[data-theme="light"] #skills .skills-grid .skill-card {
+  background: #FFFFFF !important;
+  border-color: rgba(8,127,112,.12) !important;
+}
+
+
+/* =========================================================
+   LIGHT MODE — HIGH-CONTRAST BRAND GREEN
+   The original neon green is intentionally softened in dark mode,
+   but light mode needs a deeper green to remain clearly readable.
+========================================================= */
+html[data-theme="light"] {
+  --theme-heading: #007A68;
+  --theme-accent: #007A68;
+  --theme-accent-hover: #005F53;
+  --theme-accent-soft: rgba(0, 122, 104, 0.10);
+}
+
+/* Hero */
+html[data-theme="light"] .hero-title span,
+html[data-theme="light"] .hero-status,
+html[data-theme="light"] .typing-cursor,
+html[data-theme="light"] .hero-stack span:hover {
+  color: #007A68 !important;
+}
+html[data-theme="light"] .hero-status {
+  border-color: rgba(0, 122, 104, 0.30) !important;
+  background: rgba(0, 122, 104, 0.06) !important;
+}
+html[data-theme="light"] .status-dot {
+  background: #007A68 !important;
+  box-shadow: 0 0 0 4px rgba(0,122,104,.08), 0 0 12px rgba(0,122,104,.25) !important;
+}
+html[data-theme="light"] .hero-btn-primary {
+  background: #007A68 !important;
+  border-color: #007A68 !important;
+  color: #FFFFFF !important;
+}
+html[data-theme="light"] .hero-btn-primary:hover {
+  background: transparent !important;
+  color: #007A68 !important;
+  border-color: #007A68 !important;
+}
+html[data-theme="light"] .hero-btn-secondary {
+  color: #007A68 !important;
+  border-color: rgba(0,122,104,.38) !important;
+}
+html[data-theme="light"] .hero-btn-secondary:hover {
+  background: rgba(0,122,104,.07) !important;
+  border-color: #007A68 !important;
+}
+
+/* About / Resume controls */
+html[data-theme="light"] .about-title,
+html[data-theme="light"] .about-resume-kicker,
+html[data-theme="light"] .about-info-item a:hover,
+html[data-theme="light"] .resume-eyebrow,
+html[data-theme="light"] #resume-preview .resume-section-title,
+html[data-theme="light"] #resume-preview .resume-section-title h4,
+html[data-theme="light"] #resume-preview .resume-section-title span,
+html[data-theme="light"] #resume-preview .resume-entry strong,
+html[data-theme="light"] #resume-preview .resume-simple-entry strong,
+html[data-theme="light"] #resume-preview .resume-language-list strong,
+html[data-theme="light"] #resume-preview .resume-socials a:hover {
+  color: #007A68 !important;
+}
+html[data-theme="light"] .about-info-item .about-info-icon {
+  background: #007A68 !important;
+  color: #FFFFFF !important;
+}
+html[data-theme="light"] .about-info-item .about-info-icon svg {
+  color: #FFFFFF !important;
+  fill: #FFFFFF !important;
+}
+html[data-theme="light"] .about-resume-button,
+html[data-theme="light"] .resume-download-button {
+  background: #007A68 !important;
+  color: #FFFFFF !important;
+}
+html[data-theme="light"] .about-resume-button:hover,
+html[data-theme="light"] .resume-download-button:hover {
+  background: #005F53 !important;
+  color: #FFFFFF !important;
+}
+html[data-theme="light"] #resume-preview .resume-entry-dot {
+  background: #00A88F !important;
+  border-color: #007A68 !important;
+}
+html[data-theme="light"] #resume-preview .resume-simple-entry > svg,
+html[data-theme="light"] #resume-preview .resume-side-entry > svg,
+html[data-theme="light"] #resume-preview .resume-contact-row svg {
+  color: #007A68 !important;
+}
+
+/* Skills */
+html[data-theme="light"] #skills .section-title,
+html[data-theme="light"] #skills .skills-grid > h3,
+html[data-theme="light"] #skills .skills-stack span:hover {
+  color: #007A68 !important;
+}
+html[data-theme="light"] #skills .skills-view-button {
+  color: #007A68 !important;
+  border-color: rgba(0,122,104,.40) !important;
+}
+html[data-theme="light"] #skills .skills-view-button:hover {
+  background: #007A68 !important;
+  border-color: #007A68 !important;
+  color: #FFFFFF !important;
+}
+
+/* Services */
+html[data-theme="light"] .services-heading .section-title,
+html[data-theme="light"] .service-icon,
+html[data-theme="light"] .service-card:hover .service-title {
+  color: #007A68 !important;
+}
+html[data-theme="light"] .service-icon {
+  border-color: rgba(0,122,104,.18) !important;
+  background: rgba(0,122,104,.08) !important;
+}
+html[data-theme="light"] .service-card button,
+html[data-theme="light"] .service-card .service-btn {
+  background: #007A68 !important;
+  color: #FFFFFF !important;
+  border-color: #007A68 !important;
+}
+
+/* Projects */
+html[data-theme="light"] .projects-title,
+html[data-theme="light"] .projects-section .section-title,
+html[data-theme="light"] .project-content h3 {
+  color: #007A68 !important;
+}
+html[data-theme="light"] .project-filter button.active,
+html[data-theme="light"] .project-filter .active,
+html[data-theme="light"] .project-card .project-link,
+html[data-theme="light"] .project-card .project-btn {
+  background: #007A68 !important;
+  border-color: #007A68 !important;
+  color: #FFFFFF !important;
+}
+html[data-theme="light"] .project-filter button:hover,
+html[data-theme="light"] .project-card .project-link:hover,
+html[data-theme="light"] .project-card .project-btn:hover {
+  color: #005F53 !important;
+}
+
+/* Contact */
+html[data-theme="light"] .contact-header .section-title,
+html[data-theme="light"] .contact-item svg,
+html[data-theme="light"] .contact-item a:hover,
+html[data-theme="light"] .contact-section .section-title {
+  color: #007A68 !important;
+}
+html[data-theme="light"] .contact-form button,
+html[data-theme="light"] .contact-submit,
+html[data-theme="light"] .contact-btn {
+  background: #007A68 !important;
+  border-color: #007A68 !important;
+  color: #FFFFFF !important;
+}
+html[data-theme="light"] .contact-form button:hover,
+html[data-theme="light"] .contact-submit:hover,
+html[data-theme="light"] .contact-btn:hover {
+  background: #005F53 !important;
+  border-color: #005F53 !important;
+}
+
+/* Footer */
+html[data-theme="light"] .footer h3,
+html[data-theme="light"] .footer .footer-title,
+html[data-theme="light"] .footer-social a,
+html[data-theme="light"] .footer-contact svg,
+html[data-theme="light"] .footer-about strong {
+  color: #007A68 !important;
+}
+html[data-theme="light"] .footer-social a:hover {
+  background: #007A68 !important;
+  color: #FFFFFF !important;
+}
+
+/* Shared green UI */
+html[data-theme="light"] .btn,
+html[data-theme="light"] .btn-primary,
+html[data-theme="light"] .button-primary {
+  color: #007A68 !important;
+  border-color: #007A68 !important;
+}
+html[data-theme="light"] .btn:hover,
+html[data-theme="light"] .btn-primary:hover,
+html[data-theme="light"] .button-primary:hover {
+  background: #007A68 !important;
+  color: #FFFFFF !important;
+}
+
+/* Navbar actions stay high-contrast in light mode. */
+html[data-theme="light"] .login-nav-link {
+  color: #007A68 !important;
+  border-color: rgba(0,122,104,.30) !important;
+}
+html[data-theme="light"] .login-nav-link:hover {
+  background: #007A68 !important;
+  border-color: #007A68 !important;
+  color: #FFFFFF !important;
+}
+html[data-theme="light"] .theme-toggle {
+  color: #007A68 !important;
+  border-color: rgba(0,122,104,.30) !important;
+}
+html[data-theme="light"] .theme-toggle:hover {
+  background: #007A68 !important;
+  color: #FFFFFF !important;
+}

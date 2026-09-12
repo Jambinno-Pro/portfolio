@@ -1,0 +1,241 @@
+/* ==========================================
+   SKILLS SECTION
+   Compact by default; detailed cards open on demand.
+========================================== */
+
+#skills {
+    width: 100%;
+    padding: 72px 8% 82px;
+    background: #0A192F;
+    box-sizing: border-box;
+}
+
+#skills .container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* ==========================================
+   HEADING
+========================================== */
+
+#skills .skills-heading {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+#skills .section-title {
+    color: #57F3D5;
+    font-size: clamp(2rem, 4vw, 2.65rem);
+    font-weight: 700;
+    margin: 0 0 10px;
+    line-height: 1.2;
+}
+
+#skills .section-description {
+    max-width: 680px;
+    margin: 0 auto;
+    color: #8FA8C5;
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+/* ==========================================
+   COMPACT SKILLS CLOUD
+   Same visual language as the Hero technology stack.
+========================================== */
+
+#skills .skills-stack {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 7px;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+#skills .skills-stack span {
+    padding: 6px 12px;
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    border-radius: 50px;
+    background: rgba(255, 255, 255, 0.025);
+    color: #8892b0;
+    font-family: Helvetica, Arial, sans-serif;
+    font-size: 11px;
+    font-weight: 300;
+    line-height: 1.2;
+    transition: 0.3s ease;
+}
+
+#skills .skills-stack span:hover {
+    color: #64FFDA;
+    border-color: rgba(100, 255, 218, 0.4);
+    background: rgba(100, 255, 218, 0.05);
+    transform: translateY(-2px);
+}
+
+/* ==========================================
+   VIEW SKILLS BUTTON
+========================================== */
+
+#skills .skills-view-action {
+    display: flex;
+    justify-content: center;
+    margin-top: 24px;
+}
+
+#skills .skills-view-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    min-width: 132px;
+    padding: 10px 17px;
+    border: 1px solid rgba(100, 255, 218, 0.38);
+    border-radius: 50px;
+    background: transparent;
+    color: #64FFDA;
+    font-family: Helvetica, Arial, sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.2px;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+#skills .skills-view-button:hover {
+    color: #081321;
+    background: #64FFDA;
+    border-color: #64FFDA;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(100, 255, 218, 0.14);
+}
+
+#skills .skills-view-button svg {
+    font-size: 10px;
+}
+
+/* ==========================================
+   EXPANDED CURRENT SKILLS VIEW
+========================================== */
+
+#skills .skills-details {
+    margin-top: 38px;
+    animation: skillsReveal 0.35s ease both;
+}
+
+@keyframes skillsReveal {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+#skills .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 18px;
+    width: 100%;
+}
+
+#skills .skills-grid > h3 {
+    grid-column: 1 / -1;
+    text-align: center;
+    color: #64FFDA;
+}
+
+/* ==========================================
+   TABLET
+========================================== */
+
+@media (max-width: 1100px) {
+    #skills {
+        padding: 65px 6% 75px;
+    }
+
+    #skills .skills-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px;
+    }
+}
+
+/* ==========================================
+   MOBILE
+========================================== */
+
+@media (max-width: 650px) {
+    #skills {
+        padding: 55px 20px 65px;
+    }
+
+    #skills .skills-heading {
+        margin-bottom: 24px;
+    }
+
+    #skills .section-description {
+        font-size: 13px;
+    }
+
+    #skills .skills-stack {
+        max-width: 360px;
+        gap: 6px;
+    }
+
+    #skills .skills-stack span {
+        padding: 5px 9px;
+        font-size: 10px;
+    }
+
+    #skills .skills-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+}
+
+/* ==========================================
+   SMALL MOBILE
+========================================== */
+
+@media (max-width: 400px) {
+    #skills {
+        padding: 48px 15px 58px;
+    }
+
+    #skills .skills-stack span {
+        font-size: 9px;
+        padding: 5px 8px;
+    }
+}
+
+/* ==========================================
+   LIGHT MODE
+========================================== */
+
+html[data-theme="light"] #skills .skills-stack span {
+    color: #60758A;
+    border-color: rgba(8, 127, 112, 0.12);
+    background: rgba(8, 127, 112, 0.025);
+}
+
+html[data-theme="light"] #skills .skills-stack span:hover {
+    color: #087F70;
+    border-color: rgba(8, 127, 112, 0.32);
+    background: rgba(8, 127, 112, 0.06);
+}
+
+html[data-theme="light"] #skills .skills-view-button {
+    color: #087F70;
+    border-color: rgba(8, 127, 112, 0.28);
+}
+
+html[data-theme="light"] #skills .skills-view-button:hover {
+    color: #FFFFFF;
+    background: #087F70;
+    border-color: #087F70;
+}

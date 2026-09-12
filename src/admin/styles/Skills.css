@@ -1,0 +1,229 @@
+/* ==========================================
+   SKILLS PAGE
+========================================== */
+
+.skills-page {
+  width: 100%;
+  max-width: none;
+
+  margin: 0;
+  padding: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 25px;
+
+  box-sizing: border-box;
+}
+
+
+/* ==========================================
+   HEADER
+========================================== */
+
+.skills-header {
+  width: 100%;
+
+  display: flex;
+
+  justify-content: space-between;
+  align-items: center;
+
+  flex-wrap: wrap;
+
+  gap: 20px;
+
+  box-sizing: border-box;
+}
+
+
+.skills-header h1 {
+  color: #ffffff;
+
+  font-size: 32px;
+
+  margin: 0 0 5px;
+}
+
+
+.skills-header p {
+  color: #8892b0;
+
+  font-size: 15px;
+
+  margin: 0;
+}
+
+
+/* ==========================================
+   ADD SKILL BUTTON
+========================================== */
+
+.add-skill-btn {
+  background: #64ffda;
+
+  color: #081321;
+
+  border: none;
+
+  padding: 14px 22px;
+
+  border-radius: 12px;
+
+  cursor: pointer;
+
+  font-size: 15px;
+
+  font-weight: 700;
+
+  transition: 0.3s;
+
+  white-space: nowrap;
+}
+
+
+.add-skill-btn:hover {
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 10px 30px rgba(100, 255, 218, 0.25);
+}
+
+
+/* ==========================================
+   SEARCH
+========================================== */
+
+.search-box {
+  width: 100%;
+
+  margin: 0;
+
+  padding: 0;
+
+  box-sizing: border-box;
+}
+
+
+.search-box input {
+  display: block;
+
+  width: 100%;
+
+  height: 52px;
+
+  padding: 0 20px;
+
+  border-radius: 12px;
+
+  border: 1px solid rgba(255, 255, 255, 0.08);
+
+  background: #112240;
+
+  color: #ffffff;
+
+  outline: none;
+
+  font-size: 15px;
+
+  box-sizing: border-box;
+
+  transition: 0.3s;
+}
+
+
+.search-box input:focus {
+  border-color: #64ffda;
+
+  box-shadow:
+    0 0 0 2px rgba(100, 255, 218, 0.05);
+}
+
+
+.search-box input::placeholder {
+  color: #8892b0;
+}
+
+
+/* ==========================================
+   LOADING
+========================================== */
+
+.loading-skills {
+  width: 100%;
+
+  background: #112240;
+
+  padding: 50px;
+
+  border-radius: 20px;
+
+  text-align: center;
+
+  color: #ccd6f6;
+
+  box-sizing: border-box;
+}
+
+
+.loading-skills h3 {
+  margin: 0;
+
+  font-size: 18px;
+
+  font-weight: 500;
+}
+
+
+/* ==========================================
+   SKILL TABLE AREA
+========================================== */
+
+.skills-page > * {
+  width: 100%;
+
+  max-width: none;
+
+  box-sizing: border-box;
+}
+
+
+/* ==========================================
+   RESPONSIVE
+========================================== */
+
+@media (max-width: 768px) {
+
+  .skills-page {
+    gap: 20px;
+  }
+
+
+  .skills-header {
+    flex-direction: column;
+
+    align-items: flex-start;
+  }
+
+
+  .skills-header h1 {
+    font-size: 28px;
+  }
+
+
+  .add-skill-btn {
+    width: 100%;
+  }
+
+
+  .search-box input {
+    width: 100%;
+  }
+
+
+  .loading-skills {
+    padding: 35px 20px;
+  }
+
+}

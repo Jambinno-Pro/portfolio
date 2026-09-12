@@ -1,0 +1,221 @@
+/* ==========================
+        LOGIN PAGE
+========================== */
+
+.login-page{
+
+    width:100%;
+
+    min-height:100vh;
+
+    background:linear-gradient(135deg,#081321,#0A192F);
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    padding:40px;
+
+}
+
+/* ==========================
+        LOGIN CARD
+========================== */
+
+.login-card{
+
+    width:100%;
+
+    max-width:430px;
+
+    background:rgba(17,34,64,.95);
+
+    border:1px solid rgba(100,255,218,.15);
+
+    border-radius:20px;
+
+    padding:45px;
+
+    backdrop-filter:blur(20px);
+
+    box-shadow:0 25px 60px rgba(0,0,0,.35);
+
+}
+
+/* ==========================
+          LOGO
+========================== */
+
+.login-logo{
+
+    text-align:center;
+
+    margin-bottom:40px;
+
+}
+
+.login-logo h1{
+
+    color:#ffffff;
+
+    font-size:52px;
+
+    margin-bottom:10px;
+
+}
+
+.login-logo span{
+
+    color:#64FFDA;
+
+}
+
+.login-logo p{
+
+    color:#8892B0;
+
+}
+
+/* ==========================
+         INPUTS
+========================== */
+
+.input-group{
+
+    position:relative;
+
+    margin-bottom:25px;
+
+}
+
+.input-group input{
+
+    width:100%;
+
+    height:55px;
+
+    background:#081321;
+
+    border:1px solid rgba(100,255,218,.12);
+
+    border-radius:12px;
+
+    padding-left:50px;
+
+    padding-right:55px;
+
+    color:#ffffff;
+
+    font-size:15px;
+
+    outline:none;
+
+}
+
+.input-group input:focus{
+
+    border-color:#64FFDA;
+
+}
+
+.input-icon{
+
+    position:absolute;
+
+    left:18px;
+
+    top:18px;
+
+    color:#64FFDA;
+
+}
+
+.eye-btn{
+
+    position:absolute;
+
+    right:15px;
+
+    top:14px;
+
+    background:none;
+
+    border:none;
+
+    color:#64FFDA;
+
+    cursor:pointer;
+
+    font-size:18px;
+
+}
+
+/* ==========================
+      OPTIONS
+========================== */
+
+.login-options{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:30px;
+
+    font-size:14px;
+
+}
+
+.login-options label{
+
+    color:#CCD6F6;
+
+}
+
+.login-options a{
+
+    color:#64FFDA;
+
+    text-decoration:none;
+
+}
+
+/* ==========================
+        BUTTON
+========================== */
+
+.login-btn{
+
+    width:100%;
+
+    height:55px;
+
+    border:none;
+
+    border-radius:12px;
+
+    background:#64FFDA;
+
+    color:#081321;
+
+    font-size:17px;
+
+    font-weight:700;
+
+    cursor:pointer;
+
+    transition:.35s;
+
+}
+
+.login-btn:hover{
+
+    transform:translateY(-3px);
+
+    box-shadow:0 15px 35px rgba(100,255,218,.35);
+
+}

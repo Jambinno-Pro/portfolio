@@ -1,0 +1,184 @@
+/* =========================================
+   MESSAGE TABLE
+========================================= */
+
+.messages-table-wrapper {
+  width: 100%;
+
+  overflow-x: auto;
+
+  background: #11294b;
+
+  border: 1px solid #1d426b;
+
+  border-radius: 14px;
+}
+
+
+/* =========================================
+   TABLE
+========================================= */
+
+.messages-table {
+  width: 100%;
+
+  min-width: 850px;
+
+  border-collapse: collapse;
+}
+
+
+/* =========================================
+   TABLE HEADER
+========================================= */
+
+.messages-table th {
+  padding: 17px 18px;
+
+  text-align: left;
+
+  background: #091c34;
+
+  color: #55f5d4;
+
+  font-size: 13px;
+
+  font-weight: 700;
+
+  white-space: nowrap;
+}
+
+
+/* =========================================
+   TABLE CELLS
+========================================= */
+
+.messages-table td {
+  padding: 17px 18px;
+
+  border-top: 1px solid #1d426b;
+
+  color: #c5d2e5;
+
+  font-size: 14px;
+
+  vertical-align: middle;
+}
+
+
+/* =========================================
+   TABLE ROW
+========================================= */
+
+.messages-table tbody tr {
+  transition: background 0.2s ease;
+}
+
+.messages-table tbody tr:hover {
+  background: #162f52;
+}
+
+.messages-table .message-new {
+  background: rgba(85, 245, 212, 0.035);
+}
+
+
+/* =========================================
+   NO MESSAGES
+========================================= */
+
+.no-messages {
+  padding: 55px 20px !important;
+
+  text-align: center !important;
+
+  color: #8fa3bf !important;
+}
+
+
+/* =========================================
+   STATUS
+========================================= */
+
+.message-status {
+  display: inline-flex;
+
+  align-items: center;
+
+  padding: 5px 11px;
+
+  border-radius: 20px;
+
+  font-size: 11px;
+
+  font-weight: 700;
+}
+
+.status-new {
+  background: rgba(250, 204, 21, 0.12);
+  color: #facc15;
+}
+
+.status-read {
+  background: rgba(96, 165, 250, 0.12);
+  color: #60a5fa;
+}
+
+.status-replied {
+  background: rgba(74, 222, 128, 0.12);
+  color: #4ade80;
+}
+
+
+/* =========================================
+   ACTION BUTTONS
+========================================= */
+
+.message-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.message-actions button {
+  width: 35px;
+  height: 35px;
+
+  border: none;
+
+  border-radius: 8px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+
+  transition: all 0.2s ease;
+}
+
+
+/* VIEW */
+
+.view-message-btn {
+  background: #173f70;
+  color: #60a5fa;
+}
+
+.view-message-btn:hover {
+  background: #20548e;
+  transform: translateY(-1px);
+}
+
+
+/* DELETE */
+
+.delete-message-btn {
+  background: rgba(239, 68, 68, 0.12);
+  color: #f87171;
+}
+
+.delete-message-btn:hover {
+  background: rgba(239, 68, 68, 0.25);
+  transform: translateY(-1px);
+}
