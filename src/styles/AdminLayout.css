@@ -1,93 +1,259 @@
 /* =========================================
-   ADMIN LAYOUT
+   GALLERY TABLE CONTAINER
 ========================================= */
 
-.admin-layout {
+.table-container {
+  width: 100%;
+  overflow-x: auto;
+
+  background: #0d1b2a;
+
+  border-radius: 12px;
+  border: 1px solid #1b2d42;
+
+  box-sizing: border-box;
+}
+
+/* =========================================
+   TABLE
+========================================= */
+
+.gallery-table {
+  width: 100%;
+
+  border-collapse: collapse;
+
+  min-width: 750px;
+}
+
+/* =========================================
+   TABLE HEADER
+========================================= */
+
+.gallery-table thead {
+  background: #102236;
+}
+
+.gallery-table th {
+  padding: 15px 18px;
+
+  text-align: left;
+
+  font-size: 13px;
+  font-weight: 700;
+
+  color: #ccd6f6;
+
+  border-bottom: 1px solid #1b2d42;
+}
+
+/* =========================================
+   TABLE BODY
+========================================= */
+
+.gallery-table td {
+  padding: 15px 18px;
+
+  border-bottom: 1px solid #1b2d42;
+
+  font-size: 14px;
+
+  color: #ccd6f6;
+
+  vertical-align: middle;
+}
+
+/* =========================================
+   TABLE ROW
+========================================= */
+
+.gallery-table tbody tr {
+  background: #0d1b2a;
+
+  transition: 0.2s ease;
+}
+
+.gallery-table tbody tr:hover {
+  background: #11263a;
+}
+
+.gallery-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* =========================================
+   GALLERY THUMBNAIL
+========================================= */
+
+.gallery-thumb {
+  width: 70px;
+  height: 55px;
+
+  object-fit: cover;
+
+  border-radius: 7px;
+
+  display: block;
+
+  background: #081321;
+
+  border: 1px solid #233554;
+}
+
+/* =========================================
+   GALLERY INFORMATION
+========================================= */
+
+.gallery-info {
+  max-width: 300px;
+}
+
+.gallery-info h4 {
+  margin: 0 0 5px;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  color: #ffffff;
+}
+
+.gallery-info small {
+  display: block;
+
+  color: #8892b0;
+
+  font-size: 12px;
+
+  line-height: 1.5;
+}
+
+/* =========================================
+   STATUS BADGE
+========================================= */
+
+.status {
+  display: inline-flex;
+
+  align-items: center;
+
+  padding: 5px 10px;
+
+  border-radius: 20px;
+
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* =========================================
+   ACTIVE
+========================================= */
+
+.status.active {
+  background: rgba(34, 197, 94, 0.15);
+
+  color: #4ade80;
+
+  border: 1px solid rgba(74, 222, 128, 0.2);
+}
+
+/* =========================================
+   INACTIVE
+========================================= */
+
+.status.inactive {
+  background: rgba(239, 68, 68, 0.15);
+
+  color: #f87171;
+
+  border: 1px solid rgba(248, 113, 113, 0.2);
+}
+
+/* =========================================
+   ACTION BUTTONS
+========================================= */
+
+.action-buttons {
   display: flex;
 
-  width: 100%;
-  min-height: 100vh;
+  align-items: center;
 
-  background: #081321;
+  gap: 8px;
 }
-
 
 /* =========================================
-   MAIN CONTENT
+   ACTION BUTTON
 ========================================= */
 
-.admin-main {
-  flex: 1;
+.action-buttons button {
+  width: 34px;
+  height: 34px;
 
-  min-width: 0;
-  min-height: 100vh;
+  display: flex;
 
-  margin-left: 260px;
+  align-items: center;
+  justify-content: center;
 
-  padding: 30px;
+  border: 1px solid transparent;
 
-  box-sizing: border-box;
+  border-radius: 6px;
 
-  background: #081321;
+  cursor: pointer;
 
-  overflow-x: hidden;
+  transition: 0.2s ease;
 }
-
 
 /* =========================================
-   ADMIN PAGE CONTENT
+   EDIT BUTTON
 ========================================= */
 
-.admin-main > * {
-  width: 100%;
-  max-width: 100%;
+.edit-btn {
+  background: rgba(14, 165, 233, 0.15);
 
-  box-sizing: border-box;
+  color: #38bdf8;
+
+  border-color: rgba(56, 189, 248, 0.2);
 }
 
+.edit-btn:hover {
+  background: rgba(14, 165, 233, 0.25);
+
+  color: #7dd3fc;
+}
 
 /* =========================================
-   REMOVE PUBLIC SITE SECTION SPACING
+   DELETE BUTTON
 ========================================= */
 
-.admin-main section {
-  padding: 0 !important;
+.delete-btn {
+  background: rgba(239, 68, 68, 0.15);
 
-  margin: 0 !important;
+  color: #f87171;
 
-  width: 100% !important;
-
-  max-width: 100% !important;
-
-  box-sizing: border-box;
+  border-color: rgba(248, 113, 113, 0.2);
 }
 
+.delete-btn:hover {
+  background: rgba(239, 68, 68, 0.25);
 
-/* =========================================
-   TABLET
-========================================= */
-
-@media (max-width: 992px) {
-
-  .admin-main {
-    margin-left: 80px;
-
-    padding: 25px;
-  }
-
+  color: #fca5a5;
 }
-
 
 /* =========================================
    MOBILE
 ========================================= */
 
 @media (max-width: 768px) {
-
-  .admin-main {
-    margin-left: 0;
-
-    padding: 20px;
+  .table-container {
+    border-radius: 8px;
   }
 
+  .gallery-table th,
+  .gallery-table td {
+    padding: 12px;
+  }
+
+  .gallery-thumb {
+    width: 60px;
+    height: 45px;
+  }
 }
