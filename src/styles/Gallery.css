@@ -43,12 +43,12 @@
   font-weight: 600;
   transition: 0.25s ease;
 
-  background: #22c55e;
+  background: #64ffda;
   color: #ffffff;
 }
 
 .add-gallery-btn:hover {
-  background: #16a34a;
+  background: #64ffda;
   transform: translateY(-1px);
 }
 

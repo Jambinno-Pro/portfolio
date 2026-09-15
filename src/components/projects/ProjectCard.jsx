@@ -15,10 +15,15 @@ import { getProjectGallery } from "../../services/galleryService";
 
 function ProjectCard({ project }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
+
   const [activeImage, setActiveImage] = useState(0);
 
   const [gallery, setGallery] = useState([]);
   const [galleryLoading, setGalleryLoading] = useState(false);
+
+  // Full-screen gallery viewer
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [lightboxImage, setLightboxImage] = useState(0);
 
   /* ======================================================
      PROJECT MAIN IMAGE
@@ -35,7 +40,17 @@ function ProjectCard({ project }) {
 
     const loadGallery = async () => {
       if (!project?._id) {
-        setGallery(imageUrl ? [imageUrl] : []);
+        setGallery(
+          imageUrl
+            ? [
+                {
+                  image: imageUrl,
+                  description: "",
+                },
+              ]
+            : [],
+        );
+
         return;
       }
 
@@ -46,28 +61,59 @@ function ProjectCard({ project }) {
 
         if (cancelled) return;
 
-        const galleryImages = galleryItems
-          .map((item) => item?.image)
-          .filter(Boolean);
+        /*
+          Keep BOTH image and description.
+
+          Previously only the image URL was kept,
+          which meant the fullscreen viewer had
+          no description to display.
+        */
+
+        const galleryObjects = galleryItems
+          .map((item) => ({
+            image: item?.image || "",
+            description: item?.description || "",
+          }))
+          .filter((item) => item.image);
 
         /*
           Always place the main project image first.
 
-          If the same image already exists in Gallery,
-          don't duplicate it.
+          If the same image already exists in the
+          Gallery collection, don't duplicate it.
         */
 
-        const allImages = imageUrl
-          ? [imageUrl, ...galleryImages.filter((image) => image !== imageUrl)]
-          : galleryImages;
+        const mainImage = imageUrl
+          ? [
+              {
+                image: imageUrl,
+                description: "",
+              },
+            ]
+          : [];
 
-        setGallery(allImages);
+        const additionalGalleryImages = galleryObjects.filter(
+          (item) => item.image !== imageUrl,
+        );
+
+        const allGalleryImages = [...mainImage, ...additionalGalleryImages];
+
+        setGallery(allGalleryImages);
         setActiveImage(0);
       } catch (error) {
         console.error("PROJECT GALLERY LOAD ERROR:", error);
 
         if (!cancelled) {
-          setGallery(imageUrl ? [imageUrl] : []);
+          setGallery(
+            imageUrl
+              ? [
+                  {
+                    image: imageUrl,
+                    description: "",
+                  },
+                ]
+              : [],
+          );
         }
       } finally {
         if (!cancelled) {
@@ -103,11 +149,52 @@ function ProjectCard({ project }) {
   const websiteUrl = project?.website || project?.liveDemo;
 
   /* ======================================================
+     CLOSE FULLSCREEN GALLERY
+  ====================================================== */
+
+  const closeLightbox = () => {
+    setLightboxOpen(false);
+  };
+
+  /* ======================================================
+     OPEN FULLSCREEN GALLERY
+  ====================================================== */
+
+  const openLightbox = (index) => {
+    if (!gallery.length) return;
+
+    setLightboxImage(index);
+    setLightboxOpen(true);
+  };
+
+  /* ======================================================
+     FULLSCREEN NEXT IMAGE
+  ====================================================== */
+
+  const nextLightboxImage = () => {
+    if (gallery.length <= 1) return;
+
+    setLightboxImage((current) => (current + 1) % gallery.length);
+  };
+
+  /* ======================================================
+     FULLSCREEN PREVIOUS IMAGE
+  ====================================================== */
+
+  const previousLightboxImage = () => {
+    if (gallery.length <= 1) return;
+
+    setLightboxImage(
+      (current) => (current - 1 + gallery.length) % gallery.length,
+    );
+  };
+
+  /* ======================================================
      MODAL BODY SCROLL LOCK
   ====================================================== */
 
   useEffect(() => {
-    if (!isModalOpen) {
+    if (!isModalOpen && !lightboxOpen) {
       return undefined;
     }
 
@@ -116,6 +203,30 @@ function ProjectCard({ project }) {
     document.body.style.overflow = "hidden";
 
     const handleKeyDown = (event) => {
+      /*
+        Fullscreen gallery gets keyboard priority.
+      */
+
+      if (lightboxOpen) {
+        if (event.key === "Escape") {
+          closeLightbox();
+        }
+
+        if (event.key === "ArrowLeft" && gallery.length > 1) {
+          previousLightboxImage();
+        }
+
+        if (event.key === "ArrowRight" && gallery.length > 1) {
+          nextLightboxImage();
+        }
+
+        return;
+      }
+
+      /*
+        Normal project modal keyboard controls.
+      */
+
       if (event.key === "Escape") {
         closeModal();
       }
@@ -138,10 +249,10 @@ function ProjectCard({ project }) {
 
       document.removeEventListener("keydown", handleKeyDown);
     };
-  }, [isModalOpen, gallery.length]);
+  }, [isModalOpen, lightboxOpen, gallery.length]);
 
   /* ======================================================
-     OPEN / CLOSE MODAL
+     OPEN / CLOSE PROJECT MODAL
   ====================================================== */
 
   const openModal = () => {
@@ -151,10 +262,11 @@ function ProjectCard({ project }) {
 
   const closeModal = () => {
     setIsModalOpen(false);
+    setLightboxOpen(false);
   };
 
   /* ======================================================
-     IMAGE NAVIGATION
+     PROJECT GALLERY NAVIGATION
   ====================================================== */
 
   const nextImage = () => {
@@ -172,11 +284,21 @@ function ProjectCard({ project }) {
   };
 
   /* ======================================================
+     CURRENT FULLSCREEN GALLERY ITEM
+  ====================================================== */
+
+  const currentLightboxItem = gallery[lightboxImage];
+
+  /* ======================================================
      RENDER
   ====================================================== */
 
   return (
     <>
+      {/* ==================================================
+          PROJECT CARD
+      ================================================== */}
+
       <motion.article
         className="project-card"
         whileHover={{ y: -7 }}
@@ -185,17 +307,13 @@ function ProjectCard({ project }) {
           ease: "easeOut",
         }}
       >
-        {/* ==================================================
-            FEATURED BADGE
-        ================================================== */}
+        {/* FEATURED BADGE */}
 
         {project?.featured && (
           <span className="featured-badge">★ Featured</span>
         )}
 
-        {/* ==================================================
-            MAIN PROJECT IMAGE
-        ================================================== */}
+        {/* MAIN PROJECT IMAGE */}
 
         <div className="project-image-wrap">
           {imageUrl ? (
@@ -218,16 +336,14 @@ function ProjectCard({ project }) {
           )}
         </div>
 
-        {/* ==================================================
-            MINI GALLERY
-        ================================================== */}
+        {/* MINI GALLERY */}
 
         {!galleryLoading && gallery.length > 0 && (
           <div
             className="project-card-mini-gallery"
             aria-label={`${project?.title || "Project"} mini gallery`}
           >
-            {gallery.map((galleryImage, index) => (
+            {gallery.map((galleryItem, index) => (
               <button
                 type="button"
                 key={`${
@@ -236,21 +352,22 @@ function ProjectCard({ project }) {
                 className={`mini-gallery-thumb ${
                   activeImage === index ? "active" : ""
                 }`}
-                onClick={() => setActiveImage(index)}
-                aria-label={`View ${
+                onClick={() => {
+                  setActiveImage(index);
+                  openLightbox(index);
+                }}
+                aria-label={`Open ${
                   project?.title || "project"
-                } image ${index + 1}`}
+                } image ${index + 1} fullscreen`}
                 aria-pressed={activeImage === index}
               >
-                <img src={galleryImage} alt="" />
+                <img src={galleryItem.image} alt="" />
               </button>
             ))}
           </div>
         )}
 
-        {/* ==================================================
-            CARD CONTENT
-        ================================================== */}
+        {/* CARD CONTENT */}
 
         <div className="project-content">
           <h3>{project?.title}</h3>
@@ -267,7 +384,7 @@ function ProjectCard({ project }) {
       </motion.article>
 
       {/* ====================================================
-          PROJECT MODAL
+          PROJECT DETAILS MODAL
       ==================================================== */}
 
       <AnimatePresence>
@@ -311,9 +428,7 @@ function ProjectCard({ project }) {
                 project?._id || project?.id
               }`}
             >
-              {/* ==================================================
-                  CLOSE BUTTON
-              ================================================== */}
+              {/* CLOSE */}
 
               <button
                 type="button"
@@ -324,9 +439,7 @@ function ProjectCard({ project }) {
                 <FaTimes />
               </button>
 
-              {/* ==================================================
-                  MODAL HEADER
-              ================================================== */}
+              {/* HEADER */}
 
               <div className="project-modal-header">
                 <div>
@@ -346,20 +459,28 @@ function ProjectCard({ project }) {
                 )}
               </div>
 
-              {/* ==================================================
-                  MODAL BODY
-              ================================================== */}
+              {/* BODY */}
 
               <div className="project-modal-body">
-                {/* ================================================
-                    GALLERY COLUMN
-                ================================================= */}
+                {/* GALLERY */}
 
                 <div className="project-gallery-column">
-                  <div className="project-gallery-main">
+                  <div
+                    className="project-gallery-main"
+                    onClick={() => openLightbox(activeImage)}
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={(event) => {
+                      if (event.key === "Enter" || event.key === " ") {
+                        event.preventDefault();
+                        openLightbox(activeImage);
+                      }
+                    }}
+                    aria-label="Open screenshot fullscreen"
+                  >
                     {gallery.length > 0 ? (
                       <img
-                        src={gallery[activeImage]}
+                        src={gallery[activeImage]?.image}
                         alt={`${project?.title || "Project"} screenshot ${
                           activeImage + 1
                         }`}
@@ -375,7 +496,10 @@ function ProjectCard({ project }) {
                         <button
                           type="button"
                           className="gallery-arrow gallery-arrow-left"
-                          onClick={previousImage}
+                          onClick={(event) => {
+                            event.stopPropagation();
+                            previousImage();
+                          }}
                           aria-label="Previous screenshot"
                         >
                           <FaChevronLeft />
@@ -384,25 +508,30 @@ function ProjectCard({ project }) {
                         <button
                           type="button"
                           className="gallery-arrow gallery-arrow-right"
-                          onClick={nextImage}
+                          onClick={(event) => {
+                            event.stopPropagation();
+                            nextImage();
+                          }}
                           aria-label="Next screenshot"
                         >
                           <FaChevronRight />
                         </button>
                       </>
                     )}
+
+                    <span className="gallery-fullscreen-hint">
+                      Click image to view fullscreen
+                    </span>
                   </div>
 
-                  {/* ==========================================
-                      ALL GALLERY THUMBNAILS
-                  ========================================== */}
+                  {/* THUMBNAILS */}
 
                   {gallery.length > 0 && (
                     <div
                       className="project-gallery-thumbs"
                       aria-label="Project screenshots"
                     >
-                      {gallery.map((galleryImage, index) => (
+                      {gallery.map((galleryItem, index) => (
                         <button
                           type="button"
                           key={`${
@@ -411,12 +540,16 @@ function ProjectCard({ project }) {
                           className={`gallery-thumb ${
                             activeImage === index ? "active" : ""
                           }`}
-                          onClick={() => setActiveImage(index)}
-                          aria-label={`View screenshot ${index + 1}`}
+                          onClick={() => {
+                            setActiveImage(index);
+
+                            openLightbox(index);
+                          }}
+                          aria-label={`Open screenshot ${index + 1} fullscreen`}
                           aria-pressed={activeImage === index}
                         >
                           <img
-                            src={galleryImage}
+                            src={galleryItem.image}
                             alt={`${project?.title || "Project"} thumbnail ${
                               index + 1
                             }`}
@@ -426,9 +559,7 @@ function ProjectCard({ project }) {
                     </div>
                   )}
 
-                  {/* ==========================================
-                      GALLERY COUNTER
-                  ========================================== */}
+                  {/* COUNTER */}
 
                   {gallery.length > 0 && (
                     <span className="gallery-counter">
@@ -437,9 +568,7 @@ function ProjectCard({ project }) {
                   )}
                 </div>
 
-                {/* ================================================
-                    PROJECT INFORMATION
-                ================================================= */}
+                {/* PROJECT INFORMATION */}
 
                 <div className="project-overview-column">
                   <div className="project-detail-block">
@@ -451,9 +580,7 @@ function ProjectCard({ project }) {
                     </p>
                   </div>
 
-                  {/* ==========================================
-                      TECHNOLOGIES
-                  ========================================== */}
+                  {/* TECHNOLOGIES */}
 
                   {technologies.length > 0 && (
                     <div className="project-detail-block">
@@ -467,9 +594,7 @@ function ProjectCard({ project }) {
                     </div>
                   )}
 
-                  {/* ==========================================
-                      PROJECT BUTTONS
-                  ========================================== */}
+                  {/* BUTTONS */}
 
                   <div className="project-buttons">
                     {websiteUrl && websiteUrl !== "#" && (
@@ -499,6 +624,117 @@ function ProjectCard({ project }) {
                 </div>
               </div>
             </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* ====================================================
+          FULLSCREEN GALLERY LIGHTBOX
+      ==================================================== */}
+
+      <AnimatePresence>
+        {lightboxOpen && currentLightboxItem && (
+          <motion.div
+            className="project-gallery-lightbox"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onMouseDown={(event) => {
+              if (event.target === event.currentTarget) {
+                closeLightbox();
+              }
+            }}
+            role="dialog"
+            aria-modal="true"
+            aria-label="Fullscreen project screenshot"
+          >
+            {/* CLOSE */}
+
+            <button
+              type="button"
+              className="gallery-lightbox-close"
+              onClick={closeLightbox}
+              aria-label="Close fullscreen image"
+            >
+              <FaTimes />
+            </button>
+
+            {/* PREVIOUS */}
+
+            {gallery.length > 1 && (
+              <button
+                type="button"
+                className="gallery-lightbox-arrow gallery-lightbox-left"
+                onClick={previousLightboxImage}
+                aria-label="Previous screenshot"
+              >
+                <FaChevronLeft />
+              </button>
+            )}
+
+            {/* FULLSCREEN CONTENT */}
+
+            <motion.div
+              className="gallery-lightbox-content"
+              initial={{
+                opacity: 0,
+                scale: 0.97,
+              }}
+              animate={{
+                opacity: 1,
+                scale: 1,
+              }}
+              exit={{
+                opacity: 0,
+                scale: 0.97,
+              }}
+              onMouseDown={(event) => event.stopPropagation()}
+            >
+              {/* FULL IMAGE */}
+
+              <div className="gallery-lightbox-image-container">
+                <img
+                  src={currentLightboxItem.image}
+                  alt=""
+                  className="gallery-lightbox-image"
+                />
+              </div>
+
+              {/* DESCRIPTION */}
+
+              {currentLightboxItem.description && (
+                <div className="gallery-lightbox-description">
+                  <p>{currentLightboxItem.description}</p>
+                </div>
+              )}
+
+              {!currentLightboxItem.description && (
+                <div className="gallery-lightbox-description">
+                  <p>Project screenshot</p>
+                </div>
+              )}
+
+              {/* COUNTER */}
+
+              {gallery.length > 1 && (
+                <span className="gallery-lightbox-counter">
+                  {lightboxImage + 1} / {gallery.length}
+                </span>
+              )}
+            </motion.div>
+
+            {/* NEXT */}
+
+            {gallery.length > 1 && (
+              <button
+                type="button"
+                className="gallery-lightbox-arrow gallery-lightbox-right"
+                onClick={nextLightboxImage}
+                aria-label="Next screenshot"
+              >
+                <FaChevronRight />
+              </button>
+            )}
           </motion.div>
         )}
       </AnimatePresence>
