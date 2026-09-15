@@ -1,9 +1,14 @@
+/* =========================================
+   GALLERY TABLE
+========================================= */
+
 .table-container {
   width: 100%;
   overflow-x: auto;
-  background: #ffffff;
+  background: #0d1b2a;
   border-radius: 12px;
-  border: 1px solid #e5e7eb;
+  border: 1px solid #1b2d42;
+  box-sizing: border-box;
 }
 
 .gallery-table {
@@ -12,8 +17,12 @@
   min-width: 750px;
 }
 
+/* =========================================
+   TABLE HEADER
+========================================= */
+
 .gallery-table thead {
-  background: #f8fafc;
+  background: #102236;
 }
 
 .gallery-table th {
@@ -21,25 +30,38 @@
   text-align: left;
   font-size: 13px;
   font-weight: 700;
-  color: #374151;
-  border-bottom: 1px solid #e5e7eb;
+  color: #ccd6f6;
+  border-bottom: 1px solid #1b2d42;
 }
+
+/* =========================================
+   TABLE BODY
+========================================= */
 
 .gallery-table td {
   padding: 15px 18px;
-  border-bottom: 1px solid #eeeeee;
+  border-bottom: 1px solid #1b2d42;
   font-size: 14px;
-  color: #374151;
+  color: #ccd6f6;
   vertical-align: middle;
 }
 
 .gallery-table tbody tr {
+  background: #0d1b2a;
   transition: 0.2s ease;
 }
 
 .gallery-table tbody tr:hover {
-  background: #f9fafb;
+  background: #11263a;
 }
+
+.gallery-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* =========================================
+   GALLERY IMAGE
+========================================= */
 
 .gallery-thumb {
   width: 70px;
@@ -47,8 +69,13 @@
   object-fit: cover;
   border-radius: 7px;
   display: block;
-  background: #f1f5f9;
+  background: #081321;
+  border: 1px solid #233554;
 }
+
+/* =========================================
+   GALLERY INFORMATION
+========================================= */
 
 .gallery-info {
   max-width: 300px;
@@ -58,15 +85,19 @@
   margin: 0 0 5px;
   font-size: 14px;
   font-weight: 600;
-  color: #111827;
+  color: #ffffff;
 }
 
 .gallery-info small {
   display: block;
-  color: #6b7280;
+  color: #8892b0;
   font-size: 12px;
   line-height: 1.5;
 }
+
+/* =========================================
+   STATUS
+========================================= */
 
 .status {
   display: inline-flex;
@@ -78,14 +109,20 @@
 }
 
 .status.active {
-  background: #dcfce7;
-  color: #166534;
+  background: rgba(34, 197, 94, 0.15);
+  color: #4ade80;
+  border: 1px solid rgba(74, 222, 128, 0.2);
 }
 
 .status.inactive {
-  background: #fee2e2;
-  color: #991b1b;
+  background: rgba(239, 68, 68, 0.15);
+  color: #f87171;
+  border: 1px solid rgba(248, 113, 113, 0.2);
 }
+
+/* =========================================
+   ACTION BUTTONS
+========================================= */
 
 .action-buttons {
   display: flex;
@@ -99,29 +136,41 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border: none;
+  border: 1px solid transparent;
   border-radius: 6px;
   cursor: pointer;
   transition: 0.2s ease;
 }
 
+/* EDIT */
+
 .edit-btn {
-  background: #e0f2fe;
-  color: #0369a1;
+  background: rgba(14, 165, 233, 0.15);
+  color: #38bdf8;
+  border-color: rgba(56, 189, 248, 0.2);
 }
 
 .edit-btn:hover {
-  background: #bae6fd;
+  background: rgba(14, 165, 233, 0.25);
+  color: #7dd3fc;
 }
 
+/* DELETE */
+
 .delete-btn {
-  background: #fee2e2;
-  color: #dc2626;
+  background: rgba(239, 68, 68, 0.15);
+  color: #f87171;
+  border-color: rgba(248, 113, 113, 0.2);
 }
 
 .delete-btn:hover {
-  background: #fecaca;
+  background: rgba(239, 68, 68, 0.25);
+  color: #fca5a5;
 }
+
+/* =========================================
+   MOBILE
+========================================= */
 
 @media (max-width: 768px) {
   .table-container {
