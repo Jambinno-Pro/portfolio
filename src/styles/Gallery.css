@@ -42,14 +42,17 @@
   font-size: 14px;
   font-weight: 600;
   transition: 0.25s ease;
+
+  background: #22c55e;
+  color: #ffffff;
 }
 
 .add-gallery-btn:hover {
+  background: #16a34a;
   transform: translateY(-1px);
-  opacity: 0.9;
 }
 
-/* ============================================================
+/*======================================================
    SEARCH
 ============================================================ */
 
