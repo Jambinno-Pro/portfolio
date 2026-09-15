@@ -1,8 +1,4 @@
-import {
-  BrowserRouter,
-  Routes,
-  Route,
-} from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import Home from "./pages/Home";
 import Login from "./pages/Login";
@@ -14,100 +10,49 @@ import AdminLayout from "./admin/layout/AdminLayout";
 import Dashboard from "./admin/pages/Dashboard";
 import About from "./admin/pages/About";
 import Projects from "./admin/pages/Projects";
+import Gallery from "./admin/pages/Gallery";
 import Skills from "./admin/pages/Skills";
-import Graphics from "./admin/pages/Graphics";
 import Services from "./admin/pages/Services";
 import Messages from "./admin/pages/Messages";
-import Resume from "./admin/pages/Resume";
 import Settings from "./admin/pages/Settings";
 
 function App() {
-
   return (
-
     <BrowserRouter>
-
       <Routes>
-
         {/* ==========================
             PUBLIC
         ========================== */}
 
-        <Route
-          path="/"
-          element={<Home />}
-        />
+        <Route path="/" element={<Home />} />
 
-        <Route
-          path="/login"
-          element={<Login />}
-        />
-
+        <Route path="/login" element={<Login />} />
 
         {/* ==========================
             PROTECTED ADMIN
         ========================== */}
 
         <Route element={<ProtectedRoute />}>
+          <Route path="/admin" element={<AdminLayout />}>
+            <Route index element={<Dashboard />} />
 
-          <Route
-            path="/admin"
-            element={<AdminLayout />}
-          >
+            <Route path="about" element={<About />} />
 
-            <Route
-              index
-              element={<Dashboard />}
-            />
+            <Route path="projects" element={<Projects />} />
 
-            <Route
-              path="about"
-              element={<About />}
-            />
+            <Route path="gallery" element={<Gallery />} />
 
-            <Route
-              path="projects"
-              element={<Projects />}
-            />
+            <Route path="skills" element={<Skills />} />
 
-            <Route
-              path="skills"
-              element={<Skills />}
-            />
+            <Route path="services" element={<Services />} />
 
-            <Route
-              path="graphics"
-              element={<Graphics />}
-            />
+            <Route path="messages" element={<Messages />} />
 
-            <Route
-              path="services"
-              element={<Services />}
-            />
-
-            <Route
-              path="messages"
-              element={<Messages />}
-            />
-
-            <Route
-              path="resume"
-              element={<Resume />}
-            />
-
-            <Route
-              path="settings"
-              element={<Settings />}
-            />
-
+            <Route path="settings" element={<Settings />} />
           </Route>
-
         </Route>
-
       </Routes>
-
     </BrowserRouter>
-
   );
 }
 

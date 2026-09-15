@@ -28,7 +28,7 @@
 
 .footer-grid {
   display: grid;
-  grid-template-columns: 2fr 1fr 1.5fr;
+  grid-template-columns: 1.7fr 1fr 1.15fr 1.45fr;
   gap: 60px;
   margin-bottom: 55px;
 }
@@ -81,6 +81,79 @@
   font-family: "Poppins", sans-serif;
   font-size: 18px;
   font-weight: 600;
+}
+
+
+/* ==========================================
+   FOOTER CTA
+========================================== */
+
+.footer-contact .footer-cta {
+  align-self: flex-start;
+  margin-top: 14px;
+}
+
+.footer-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  margin-top: 22px;
+  width: fit-content;
+  padding: 10px 15px;
+  border: 1px solid rgba(100,255,218,.30);
+  border-radius: 999px;
+  color: #64FFDA;
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: transform .25s ease, background .25s ease, border-color .25s ease;
+}
+
+.footer-cta span {
+  transition: transform .25s ease;
+}
+
+.footer-cta:hover {
+  transform: translateY(-2px);
+  background: rgba(100,255,218,.08);
+  border-color: rgba(100,255,218,.65);
+}
+
+.footer-cta:hover span {
+  transform: translateX(3px);
+}
+
+
+/* ==========================================
+   WHAT I DO
+========================================== */
+
+.footer-focus {
+  display: flex;
+  flex-direction: column;
+}
+
+.footer-focus h3 {
+  margin: 0 0 25px;
+  color: #64FFDA;
+  font-family: "Poppins", sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.footer-focus a {
+  width: fit-content;
+  margin-bottom: 13px;
+  color: #CCD6F6;
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 15px;
+  text-decoration: none;
+  transition: all .3s ease;
+}
+
+.footer-focus a:hover {
+  color: #64FFDA;
+  padding-left: 7px;
 }
 
 
@@ -285,8 +358,12 @@
     max-width: 100%;
   }
 
+  .footer-focus {
+    grid-column: span 1;
+  }
+
   .footer-contact {
-    grid-column: span 2;
+    grid-column: auto;
   }
 
 }
@@ -323,7 +400,8 @@
     line-height: 1.7;
   }
 
-  .footer-links {
+  .footer-links,
+  .footer-focus {
     align-items: center;
   }
 
@@ -335,6 +413,15 @@
   .footer-contact {
     grid-column: auto;
     align-items: center;
+  }
+
+  .footer-cta {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .footer-contact .footer-cta {
+    align-self: center;
   }
 
   .footer-contact > a,
@@ -395,3 +482,22 @@
   }
 
 }
+/* Modern footer details */
+.footer-focus a,
+.footer-links a,
+.footer-contact > a,
+.footer-location { position: relative; }
+
+.footer-focus a::after,
+.footer-links a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 100%;
+  bottom: -3px;
+  height: 1px;
+  background: currentColor;
+  transition: right .25s ease;
+}
+.footer-focus a:hover::after,
+.footer-links a:hover::after { right: 0; }

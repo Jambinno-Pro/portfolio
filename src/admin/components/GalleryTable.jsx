@@ -1,84 +1,81 @@
-import { FaEdit, FaTrash, FaExternalLinkAlt } from "react-icons/fa";
+import { FaEdit, FaTrash } from "react-icons/fa";
 
-import "../styles/ProjectTable.css";
+import "../../styles/GalleryTable.css";
 
-function ProjectTable({
-  projects = [],
-
-  editProject,
-
-  deleteProject,
-}) {
+function GalleryTable({ gallery = [], editGallery, deleteGallery }) {
   return (
     <div className="table-container">
-      <table className="projects-table">
+      <table className="gallery-table">
         <thead>
           <tr>
             <th>Image</th>
             <th>Title</th>
             <th>Category</th>
             <th>Status</th>
-            <th>Preview</th>
             <th>Actions</th>
           </tr>
         </thead>
 
         <tbody>
-          {projects.length > 0 ? (
-            projects.map((project) => (
-              <tr key={project._id}>
+          {gallery.length > 0 ? (
+            gallery.map((item) => (
+              <tr key={item._id}>
+                {/* IMAGE */}
+
                 <td>
                   <img
-                    src={project.image}
-                    alt={project.title}
-                    className="project-thumb"
+                    src={item.image}
+                    alt={item.title}
+                    className="gallery-thumb"
                     onError={(e) => {
                       e.target.style.display = "none";
                     }}
                   />
                 </td>
 
-                <td>
-                  <div className="project-info">
-                    <h4>{project.title}</h4>
+                {/* TITLE */}
 
-                    <small>{project.description}</small>
+                <td>
+                  <div className="gallery-info">
+                    <h4>{item.title}</h4>
+
+                    {item.description && <small>{item.description}</small>}
                   </div>
                 </td>
 
-                <td>{project.category}</td>
+                {/* CATEGORY */}
+
+                <td>{item.category}</td>
+
+                {/* STATUS */}
 
                 <td>
                   <span
                     className={
-                      project.status === "Active"
+                      item.status === "Active"
                         ? "status active"
                         : "status inactive"
                     }
                   >
-                    {project.status}
+                    {item.status}
                   </span>
                 </td>
 
-                <td>
-                  {project.liveDemo && (
-                    <a href={project.liveDemo} target="_blank" rel="noreferrer">
-                      <FaExternalLinkAlt />
-                    </a>
-                  )}
-                </td>
+                {/* ACTIONS */}
 
                 <td className="action-buttons">
                   <button
                     className="edit-btn"
-                    onClick={() => editProject(project)}
+                    onClick={() => editGallery(item)}
+                    title="Edit"
                   >
                     <FaEdit />
                   </button>
 
                   <button
                     className="delete-btn"
-                    onClick={() => deleteProject(project._id)}
+                    onClick={() => deleteGallery(item._id)}
+                    title="Delete"
                   >
                     <FaTrash />
                   </button>
@@ -88,13 +85,13 @@ function ProjectTable({
           ) : (
             <tr>
               <td
-                colSpan="6"
+                colSpan="5"
                 style={{
                   textAlign: "center",
                   padding: "30px",
                 }}
               >
-                No Projects Found
+                No Gallery Items Found
               </td>
             </tr>
           )}
@@ -104,4 +101,4 @@ function ProjectTable({
   );
 }
 
-export default ProjectTable;
+export default GalleryTable;

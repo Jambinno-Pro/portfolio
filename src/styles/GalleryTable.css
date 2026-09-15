@@ -1,0 +1,140 @@
+.table-container {
+  width: 100%;
+  overflow-x: auto;
+  background: #ffffff;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+}
+
+.gallery-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 750px;
+}
+
+.gallery-table thead {
+  background: #f8fafc;
+}
+
+.gallery-table th {
+  padding: 15px 18px;
+  text-align: left;
+  font-size: 13px;
+  font-weight: 700;
+  color: #374151;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.gallery-table td {
+  padding: 15px 18px;
+  border-bottom: 1px solid #eeeeee;
+  font-size: 14px;
+  color: #374151;
+  vertical-align: middle;
+}
+
+.gallery-table tbody tr {
+  transition: 0.2s ease;
+}
+
+.gallery-table tbody tr:hover {
+  background: #f9fafb;
+}
+
+.gallery-thumb {
+  width: 70px;
+  height: 55px;
+  object-fit: cover;
+  border-radius: 7px;
+  display: block;
+  background: #f1f5f9;
+}
+
+.gallery-info {
+  max-width: 300px;
+}
+
+.gallery-info h4 {
+  margin: 0 0 5px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.gallery-info small {
+  display: block;
+  color: #6b7280;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.status {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.status.active {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.status.inactive {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.action-buttons {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.action-buttons button {
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.edit-btn {
+  background: #e0f2fe;
+  color: #0369a1;
+}
+
+.edit-btn:hover {
+  background: #bae6fd;
+}
+
+.delete-btn {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.delete-btn:hover {
+  background: #fecaca;
+}
+
+@media (max-width: 768px) {
+  .table-container {
+    border-radius: 8px;
+  }
+
+  .gallery-table th,
+  .gallery-table td {
+    padding: 12px;
+  }
+
+  .gallery-thumb {
+    width: 60px;
+    height: 45px;
+  }
+}

@@ -448,3 +448,152 @@ html[data-theme="light"] .theme-toggle:hover {
   background: #007A68 !important;
   color: #FFFFFF !important;
 }
+
+
+/* =========================================================
+   LIGHT MODE — FINAL CONTRAST PASS
+========================================================= */
+html[data-theme="light"] {
+  --theme-text-strong: #193047;
+  --theme-text-muted: #52687C;
+  --theme-green: #007A68;
+  --theme-green-dark: #005F53;
+  --theme-green-soft: #EEF7F5;
+}
+
+html[data-theme="light"] .section-description,
+html[data-theme="light"] .description,
+html[data-theme="light"] .service-description,
+html[data-theme="light"] .projects-description,
+html[data-theme="light"] .hero-description,
+html[data-theme="light"] .about-bio p,
+html[data-theme="light"] .contact-header .section-description {
+  color: #52687C !important;
+}
+
+html[data-theme="light"] .service-icon svg,
+html[data-theme="light"] .contact-item svg,
+html[data-theme="light"] .footer-contact svg { color: #007A68 !important; }
+
+html[data-theme="light"] .service-card,
+html[data-theme="light"] #skills .skill-card,
+html[data-theme="light"] .about-bio,
+html[data-theme="light"] .about-info,
+html[data-theme="light"] .contact-info,
+html[data-theme="light"] .contact-form-container {
+  box-shadow: 0 14px 34px rgba(20,45,65,.08) !important;
+}
+
+html[data-theme="light"] .skills-stack span,
+html[data-theme="light"] .hero-stack span {
+  background: #F3F8FA !important;
+  color: #52687C !important;
+  border-color: #D9E5EA !important;
+}
+
+html[data-theme="light"] .skills-stack span:hover,
+html[data-theme="light"] .hero-stack span:hover {
+  color: #007A68 !important;
+  border-color: rgba(0,122,104,.35) !important;
+  background: #EEF7F5 !important;
+}
+
+html[data-theme="light"] .form-group label { color: #193047 !important; }
+html[data-theme="light"] .form-group input::placeholder,
+html[data-theme="light"] .form-group textarea::placeholder { color: #7A8D9D !important; }
+
+html[data-theme="light"] .footer {
+  background: #E9F1F5 !important;
+  border-top-color: rgba(0,95,83,.14) !important;
+}
+html[data-theme="light"] .footer-focus h3,
+html[data-theme="light"] .footer-links h3,
+html[data-theme="light"] .footer-contact h3 { color: #007A68 !important; }
+html[data-theme="light"] .footer-focus a,
+html[data-theme="light"] .footer-links a,
+html[data-theme="light"] .footer-contact > a,
+html[data-theme="light"] .footer-location { color: #52687C !important; }
+html[data-theme="light"] .footer-focus a:hover,
+html[data-theme="light"] .footer-links a:hover,
+html[data-theme="light"] .footer-contact > a:hover { color: #007A68 !important; }
+html[data-theme="light"] .footer-cta { color: #007A68 !important; border-color: rgba(0,122,104,.28) !important; }
+html[data-theme="light"] .footer-cta:hover { background: rgba(0,122,104,.07) !important; border-color: rgba(0,122,104,.45) !important; }
+
+/* =========================================================
+   MODERN BUTTON FINISH
+========================================================= */
+.btn,
+.hero-btn-primary,
+.hero-btn-secondary,
+.contact-form button,
+.contact-submit,
+.contact-btn,
+.about-resume-button,
+.resume-download-button,
+.skills-view-button,
+.service-status,
+.view-more-btn,
+.project-buttons a {
+  border-radius: 999px !important;
+  font-weight: 700 !important;
+  letter-spacing: .15px;
+}
+
+.btn,
+.hero-btn-primary,
+.hero-btn-secondary,
+.contact-form button,
+.contact-submit,
+.contact-btn,
+.about-resume-button,
+.resume-download-button,
+.skills-view-button,
+.view-more-btn,
+.project-buttons a {
+  box-shadow: 0 8px 20px rgba(0,0,0,.10);
+}
+
+html[data-theme="light"] .btn,
+html[data-theme="light"] .hero-btn-primary,
+html[data-theme="light"] .hero-btn-secondary,
+html[data-theme="light"] .contact-form button,
+html[data-theme="light"] .contact-submit,
+html[data-theme="light"] .contact-btn,
+html[data-theme="light"] .about-resume-button,
+html[data-theme="light"] .resume-download-button,
+html[data-theme="light"] .skills-view-button,
+html[data-theme="light"] .view-more-btn,
+html[data-theme="light"] .project-buttons a {
+  box-shadow: 0 8px 22px rgba(0,95,83,.12);
+}
+
+/* =========================================================
+   SITE-WIDE CARD MOTION
+========================================================= */
+.service-card,
+#skills .skill-card,
+.about-bio,
+.about-info,
+.contact-info,
+.contact-form-container {
+  will-change: transform;
+  transition: transform .35s ease, box-shadow .35s ease, border-color .35s ease;
+}
+
+.service-card:hover,
+#skills .skill-card:hover,
+.about-bio:hover,
+.about-info:hover,
+.contact-info:hover,
+.contact-form-container:hover {
+  transform: translateY(-6px);
+}
+
+html[data-theme="light"] .service-card:hover,
+html[data-theme="light"] #skills .skill-card:hover,
+html[data-theme="light"] .about-bio:hover,
+html[data-theme="light"] .about-info:hover,
+html[data-theme="light"] .contact-info:hover,
+html[data-theme="light"] .contact-form-container:hover {
+  box-shadow: 0 18px 40px rgba(20,45,65,.12) !important;
+}

@@ -11,7 +11,7 @@ const skillSchema = new mongoose.Schema(
     category: {
       type: String,
       enum: [
-        "Frontend",
+        "Software Developer",
         "Backend",
         "Database",
         "Mobile",
@@ -20,7 +20,7 @@ const skillSchema = new mongoose.Schema(
         "DevOps",
         "Other",
       ],
-      default: "Frontend",
+      default: "Software Developer",
     },
 
     level: {

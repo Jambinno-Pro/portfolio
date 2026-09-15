@@ -4,190 +4,310 @@
 
 .projects-section {
   width: 100%;
-  padding: 100px 8%;
+  padding: 90px 6%;
   background: #0A192F;
   color: #CCD6F6;
-  font-family: "Helvetica", sans-serif;
+  font-family: "Helvetica", "Helvetica Neue", Arial, sans-serif;
 }
-
-
-/* =========================================================
-   CONTAINER
-========================================================= */
 
 .projects-container {
   width: 100%;
-  max-width: 1400px;
+  max-width: 1500px;
   margin: 0 auto;
 }
-
-
-/* =========================================================
-   HEADER
-========================================================= */
 
 .projects-heading {
   text-align: center;
   max-width: 850px;
-  margin: 0 auto 55px;
+  margin: 0 auto 45px;
 }
 
-
-/* =========================================================
-   TITLE
-========================================================= */
-
 .projects-title {
-  margin: 0 0 18px;
-
+  margin: 0 0 15px;
   color: #64FFDA;
-
-  font-size: 44px;
-
+  font-size: 40px;
   font-weight: 600;
-
   line-height: 1.2;
-
   letter-spacing: -0.5px;
 }
 
-
-/* =========================================================
-   DESCRIPTION
-========================================================= */
-
 .projects-description {
   margin: 0 auto;
-
   color: #8FA3BF;
-
   font-size: 15px;
-
-  font-weight: 400;
-
-  line-height: 1.8;
+  line-height: 1.7;
 }
 
-
-/* =========================================================
-   PROJECT GRID
-   DESKTOP = 3
-========================================================= */
-
+/* 4 cards per row on desktop */
 .projects-grid {
   display: grid;
-
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-
-  gap: 28px;
-
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 22px;
   width: 100%;
-
-  align-items: stretch;
+  align-items: start;
 }
-
-
-/* =========================================================
-   PROJECT MESSAGE
-========================================================= */
 
 .projects-message {
   grid-column: 1 / -1;
-
   width: 100%;
-
-  padding: 60px 20px;
-
+  padding: 50px 20px;
   text-align: center;
-
   background: #112240;
-
   border: 1px solid rgba(100, 255, 218, 0.08);
-
-  border-radius: 16px;
+  border-radius: 14px;
 }
 
 .projects-message h3 {
   margin: 0;
-
   color: #8FA3BF;
-
   font-size: 16px;
-
   font-weight: 500;
 }
 
-
-/* =========================================================
-   TABLET
-   2 PROJECTS PER ROW
-========================================================= */
-
-@media (max-width: 1100px) {
-
+/* 3 cards */
+@media (max-width: 1200px) {
   .projects-section {
-    padding: 90px 6%;
+    padding: 80px 5%;
+  }
+
+  .projects-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
+  }
+}
+
+/* 2 cards */
+@media (max-width: 850px) {
+  .projects-section {
+    padding: 70px 5%;
   }
 
   .projects-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-
-    gap: 24px;
   }
 
   .projects-title {
-    font-size: 38px;
+    font-size: 36px;
   }
-
 }
 
-
-/* =========================================================
-   MOBILE
-   1 PROJECT PER ROW
-========================================================= */
-
-@media (max-width: 700px) {
-
+/* 1 card */
+@media (max-width: 600px) {
   .projects-section {
-    padding: 75px 20px;
+    padding: 60px 20px;
   }
 
   .projects-heading {
-    margin-bottom: 40px;
-  }
-
-  .projects-title {
-    font-size: 32px;
-  }
-
-  .projects-description {
-    font-size: 14px;
-
-    line-height: 1.7;
+    margin-bottom: 35px;
   }
 
   .projects-grid {
     grid-template-columns: 1fr;
-
-    gap: 22px;
+    gap: 18px;
   }
 
+  .projects-title {
+    font-size: 31px;
+  }
+
+  .projects-description {
+    font-size: 14px;
+  }
 }
 
-
-/* =========================================================
-   SMALL MOBILE
-========================================================= */
-
-@media (max-width: 480px) {
-
+@media (max-width: 400px) {
   .projects-section {
-    padding: 65px 16px;
+    padding: 55px 16px;
   }
 
   .projects-title {
     font-size: 28px;
   }
-
 }
+
+
+/* =========================================================
+   PROJECTS IN PROGRESS
+========================================================= */
+
+.projects-progress-wrap {
+  margin-top: 34px;
+  text-align: center;
+}
+
+.projects-progress-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 48px;
+  padding: 0 20px;
+  border: 1px solid rgba(100, 255, 218, 0.45);
+  border-radius: 999px;
+  background: rgba(100, 255, 218, 0.06);
+  color: #64FFDA;
+  font: 700 13px "Helvetica", "Helvetica Neue", Arial, sans-serif;
+  cursor: pointer;
+  box-shadow: 0 10px 28px rgba(0,0,0,.12);
+  transition: transform .25s ease, background .25s ease, border-color .25s ease, box-shadow .25s ease;
+}
+
+.projects-progress-button:hover,
+.projects-progress-button.active {
+  transform: translateY(-2px);
+  background: #64FFDA;
+  border-color: #64FFDA;
+  color: #0A192F;
+  box-shadow: 0 14px 32px rgba(100,255,218,.18);
+}
+
+.projects-progress-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+  box-shadow: 0 0 0 5px rgba(100,255,218,.10);
+}
+
+.projects-progress-arrow {
+  font-size: 16px;
+  line-height: 1;
+}
+
+.projects-in-progress {
+  max-width: 1050px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.progress-intro {
+  margin-bottom: 18px;
+  padding: 22px;
+  border: 1px solid rgba(100,255,218,.12);
+  border-radius: 16px;
+  background: rgba(17,34,64,.55);
+  text-align: left;
+}
+
+.progress-kicker {
+  color: #64FFDA;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1.4px;
+}
+
+.progress-intro h3 {
+  margin: 7px 0 6px;
+  color: #FFFFFF;
+  font-size: 20px;
+}
+
+.progress-intro p {
+  margin: 0;
+  color: #8FA3BF;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.progress-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0,1fr));
+  gap: 16px;
+  text-align: left;
+}
+
+.progress-card {
+  padding: 20px;
+  border: 1px solid rgba(100,255,218,.13);
+  border-radius: 16px;
+  background: #112240;
+  transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease;
+}
+
+.progress-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(100,255,218,.35);
+  box-shadow: 0 16px 35px rgba(0,0,0,.18);
+}
+
+.progress-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.progress-status,
+.progress-category {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .5px;
+  text-transform: uppercase;
+}
+
+.progress-status { color: #64FFDA; }
+.progress-category { color: #8892B0; }
+
+.progress-card h4 {
+  margin: 0 0 8px;
+  color: #FFFFFF;
+  font-size: 20px;
+}
+
+.progress-card p {
+  margin: 0 0 15px;
+  color: #B8C5D9;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.progress-tech {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.progress-tech span {
+  padding: 5px 8px;
+  border-radius: 999px;
+  background: rgba(100,255,218,.07);
+  border: 1px solid rgba(100,255,218,.16);
+  color: #64FFDA;
+  font-size: 9px;
+}
+
+html[data-theme="light"] .progress-intro,
+html[data-theme="light"] .progress-card {
+  background: #FFFFFF !important;
+  border-color: rgba(0,95,83,.14) !important;
+  box-shadow: 0 12px 28px rgba(20,45,65,.07);
+}
+html[data-theme="light"] .progress-intro h3,
+html[data-theme="light"] .progress-card h4 { color: #193047 !important; }
+html[data-theme="light"] .progress-intro p,
+html[data-theme="light"] .progress-card p { color: #52687C !important; }
+html[data-theme="light"] .progress-category { color: #718394 !important; }
+html[data-theme="light"] .progress-tech span {
+  background: #EEF7F5;
+  border-color: rgba(0,122,104,.18);
+  color: #006B5D;
+}
+html[data-theme="light"] .projects-progress-button {
+  color: #006B5D;
+  border-color: rgba(0,107,93,.28);
+  background: #EEF7F5;
+}
+html[data-theme="light"] .projects-progress-button:hover,
+html[data-theme="light"] .projects-progress-button.active {
+  background: #007A68;
+  border-color: #007A68;
+  color: #FFFFFF;
+}
+
+@media (max-width: 650px) {
+  .progress-grid { grid-template-columns: 1fr; }
+  .projects-progress-button { width: 100%; }
+}
+
+.projects-loading,.projects-error{width:100%;padding:28px;text-align:center;border:1px solid rgba(255,255,255,.1);border-radius:16px;margin:20px 0}.projects-error{display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap}.projects-error button{border:0;border-radius:999px;padding:10px 18px;cursor:pointer}

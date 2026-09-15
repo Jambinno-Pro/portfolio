@@ -1,5 +1,4 @@
 const express = require("express");
-const path = require("path");
 const cors = require("cors");
 require("dotenv").config();
 
@@ -18,6 +17,7 @@ const serviceRoutes = require("./routes/serviceRoutes");
 const aboutRoutes = require("./routes/aboutRoutes");
 const resumeRoutes = require("./routes/resumeRoutes");
 const messageRoutes = require("./routes/messageRoutes");
+const galleryRoutes = require("./routes/galleryRoutes");
 
 // ===============================
 // Middleware
@@ -40,10 +40,6 @@ connectDB();
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(
-  "/uploads",
-  express.static(path.join(__dirname, "uploads"))
-);
 
 // ===============================
 // Home Route
@@ -64,6 +60,15 @@ app.use("/api/auth", authRoutes);
 // Project Routes
 // ===============================
 app.use("/api/projects", projectRoutes);
+
+// ===============================
+// Gallery Routes
+// ===============================
+app.use("/api/gallery", galleryRoutes);
+
+// ===============================
+// Other API Routes
+// ===============================
 app.use("/api/skills", skillRoutes);
 app.use("/api/services", serviceRoutes);
 app.use("/api/about", aboutRoutes);

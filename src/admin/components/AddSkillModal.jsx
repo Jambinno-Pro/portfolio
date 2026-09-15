@@ -26,7 +26,7 @@ function AddSkillModal({
 
     name: "",
 
-    category: "Frontend",
+    category: "Software Developer",
 
     level: 80,
 
@@ -50,7 +50,7 @@ function AddSkillModal({
 
         name: skillData.name,
 
-        category: skillData.category,
+        category: skillData.category === "Frontend" ? "Software Developer" : skillData.category,
 
         level: skillData.level,
 
@@ -248,7 +248,7 @@ function AddSkillModal({
 
             >
 
-              <option>Frontend</option>
+              <option>Software Developer</option>
 
               <option>Backend</option>
 

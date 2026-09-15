@@ -153,8 +153,8 @@ function Contact() {
 
                   <span>Email</span>
 
-                  <a href="mailto:jambinnocreations@gmail.com">
-                    jambinnocreations@gmail.com
+                  <a href="mailto:hello@iaminno.com">
+                    hello@iaminno.com
                   </a>
 
                 </div>
@@ -172,8 +172,8 @@ function Contact() {
 
                   <span>Phone</span>
 
-                  <a href="tel:0614217057">
-                    0614217057
+                  <a href="tel:+27766300517">
+                    0766300517
                   </a>
 
                 </div>

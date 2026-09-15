@@ -3,51 +3,46 @@
    Portfolio - Innocent Jambaya
 ========================================================= */
 
-
 /* =========================================================
    GOOGLE FONT
 ========================================================= */
 
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400&display=swap');
-
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400&display=swap");
 
 /* =========================================================
    RESET
 ========================================================= */
 
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
-
 
 /* =========================================================
    HTML
 ========================================================= */
 
 html {
-    scroll-behavior: smooth;
-    scroll-padding-top: 80px;
+  scroll-behavior: smooth;
+  scroll-padding-top: 80px;
 }
-
 
 /* =========================================================
    BODY
 ========================================================= */
 
 body {
-    background: #0A192F;
-    color: #CCD6F6;
+  background: #0a192f;
+  color: #ccd6f6;
 
-    /* BODY / DESCRIPTION FONT */
-    font-family: "Helvetica", Helvetica, Arial, sans-serif;
+  /* BODY / DESCRIPTION FONT */
+  font-family: "Helvetica", Helvetica, Arial, sans-serif;
 
-    overflow-x: hidden;
+  overflow-x: hidden;
 
-    line-height: 1.6;
+  line-height: 1.6;
 }
-
 
 /* =========================================================
    HEADINGS
@@ -60,20 +55,18 @@ h3,
 h4,
 h5,
 h6 {
-    font-family: "Montserrat", sans-serif;
-    font-weight: 400;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 400;
 }
-
 
 /* =========================================================
    LINKS
 ========================================================= */
 
 a {
-    text-decoration: none;
-    color: inherit;
+  text-decoration: none;
+  color: inherit;
 }
-
 
 /* =========================================================
    LISTS
@@ -81,18 +74,16 @@ a {
 
 ul,
 ol {
-    list-style: none;
+  list-style: none;
 }
-
 
 /* =========================================================
    IMAGES
 ========================================================= */
 
 img {
-    max-width: 100%;
+  max-width: 100%;
 }
-
 
 /* =========================================================
    BUTTONS / FORM ELEMENTS
@@ -102,60 +93,55 @@ button,
 input,
 textarea,
 select {
-    font-family: inherit;
+  font-family: inherit;
 }
-
 
 /* =========================================================
    HOME PAGE
 ========================================================= */
 
 .home-page {
-    width: 100%;
-    min-height: 100vh;
-    overflow-x: hidden;
+  width: 100%;
+  min-height: 100vh;
+  overflow-x: hidden;
 }
-
 
 /* =========================================================
    SECTIONS
 ========================================================= */
 
 section {
-    width: 100%;
-    padding: 100px 10%;
+  width: 100%;
+  padding: 100px 10%;
 }
-
 
 /* =========================================================
    CONTAINER
 ========================================================= */
 
 .container {
-    width: 100%;
-    max-width: 1200px;
-    margin: 0 auto;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
 }
-
 
 /* =========================================================
    GENERAL TITLE
 ========================================================= */
 
 .title {
-    color: #64FFDA;
+  color: #64ffda;
 
-    font-family: "Poppins", sans-serif;
+  font-family: "Poppins", sans-serif;
 
-    font-size: 42px;
+  font-size: 42px;
 
-    font-weight: 400;
+  font-weight: 400;
 
-    line-height: 1.2;
+  line-height: 1.2;
 
-    margin-bottom: 40px;
+  margin-bottom: 40px;
 }
-
 
 /* =========================================================
    ABOUT ME TITLE
@@ -163,28 +149,27 @@ section {
 
 .about-page .title,
 .about-section .title {
-    color: #64FFDA;
+  color: #64ffda;
 
-    font-family: "Poppins", sans-serif;
+  font-family: "Poppins", sans-serif;
 
-    font-size: 36px;
+  font-size: 36px;
 
-    font-weight: 400;
+  font-weight: 400;
 
-    text-transform: uppercase;
+  text-transform: uppercase;
 
-    letter-spacing: 3px;
+  letter-spacing: 3px;
 
-    line-height: 1.2;
+  line-height: 1.2;
 
-    text-align: center;
+  text-align: center;
 
-    margin-bottom: 40px;
+  margin-bottom: 40px;
 
-    /* Removed rotation because it can cause
+  /* Removed rotation because it can cause
        unwanted movement around the section */
 }
-
 
 /* =========================================================
    GENERAL DESCRIPTION TEXT
@@ -193,369 +178,500 @@ section {
 .section-description,
 .section-description p,
 .description {
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 
-    font-weight: 400;
+  font-weight: 400;
 
-    line-height: 1.7;
+  line-height: 1.7;
 }
-
 
 /* =========================================================
    GENERAL BUTTON
 ========================================================= */
 
 .btn {
-    display: inline-flex;
+  display: inline-flex;
 
-    align-items: center;
-    justify-content: center;
+  align-items: center;
+  justify-content: center;
 
-    padding: 12px 28px;
+  padding: 12px 28px;
 
-    border: 1.5px solid #64FFDA;
+  border: 1.5px solid #64ffda;
 
-    color: #64FFDA;
+  color: #64ffda;
 
-    background: transparent;
+  background: transparent;
 
-    border-radius: 6px;
+  border-radius: 6px;
 
-    transition: all 0.3s ease;
+  transition: all 0.3s ease;
 
-    font-size: 14px;
+  font-size: 14px;
 
-    font-weight: 600;
+  font-weight: 600;
 
-    cursor: pointer;
+  cursor: pointer;
 }
-
 
 .btn:hover {
-    background: #64FFDA;
+  background: #64ffda;
 
-    color: #0A192F;
+  color: #0a192f;
 
-    transform: translateY(-2px);
+  transform: translateY(-2px);
 
-    box-shadow:
-        0 10px 25px rgba(100, 255, 218, 0.18);
+  box-shadow: 0 10px 25px rgba(100, 255, 218, 0.18);
 }
-
 
 /* =========================================================
    GLASS EFFECT
 ========================================================= */
 
 .glass {
-    background: rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.08);
 
-    backdrop-filter: blur(18px);
+  backdrop-filter: blur(18px);
 
-    -webkit-backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
 
-    border: 1px solid rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.18);
 
-    box-shadow:
-        0 8px 32px rgba(0, 0, 0, 0.25),
-        inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
 
-    border-radius: 20px;
+  border-radius: 20px;
 
-    transition: all 0.4s ease;
+  transition: all 0.4s ease;
 }
-
 
 .glass:hover {
-    background: rgba(255, 255, 255, 0.11);
+  background: rgba(255, 255, 255, 0.11);
 
-    transform: translateY(-4px);
+  transform: translateY(-4px);
 
-    box-shadow:
-        0 15px 40px rgba(0, 0, 0, 0.35),
-        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  box-shadow:
+    0 15px 40px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
-
 
 /* =========================================================
    PROFILE PHOTO DIVIDER
 ========================================================= */
 
 .profile-photo-divider {
-    position: relative;
+  position: relative;
 
-    width: 100%;
+  width: 100%;
 
-    display: flex;
+  display: flex;
 
-    justify-content: center;
+  justify-content: center;
 
-    align-items: center;
+  align-items: center;
 
-    /* Keep the photo overlapping sections */
-    margin-top: -65px;
+  /* Keep the photo overlapping sections */
+  margin-top: -65px;
 
-    margin-bottom: -65px;
+  margin-bottom: -65px;
 
-    z-index: 20;
+  z-index: 20;
 
-    pointer-events: none;
+  pointer-events: auto;
 }
-
 
 /* =========================================================
    PROFILE PHOTO RING
 ========================================================= */
 
 .profile-photo-ring {
-    width: 130px;
+  width: 130px;
 
-    height: 130px;
+  height: 130px;
 
-    padding: 5px;
+  padding: 5px;
 
-    border-radius: 50%;
+  border-radius: 50%;
 
-    background: #0A192F;
+  background: #0a192f;
 
-    border: 2px solid #64FFDA;
+  border: 2px solid #64ffda;
 
-    box-shadow:
-        0 0 0 6px rgba(100, 255, 218, 0.08),
-        0 12px 35px rgba(0, 0, 0, 0.40);
+  box-shadow:
+    0 0 0 6px rgba(100, 255, 218, 0.08),
+    0 12px 35px rgba(0, 0, 0, 0.4);
 
-    overflow: hidden;
+  overflow: hidden;
 
-    display: flex;
+  display: flex;
 
-    align-items: center;
+  align-items: center;
 
-    justify-content: center;
+  justify-content: center;
 
-    /* IMPORTANT */
-    flex-shrink: 0;
+  /* IMPORTANT */
+  flex-shrink: 0;
 }
-
 
 /* =========================================================
    PROFILE IMAGE
 ========================================================= */
 
 .profile-photo-ring img {
-    width: 100%;
+  width: 100%;
 
-    height: 100%;
+  height: 100%;
 
-    max-width: none;
+  max-width: none;
 
-    object-fit: cover;
+  object-fit: cover;
 
-    object-position: center;
+  object-position: center;
 
-    border-radius: 50%;
+  border-radius: 50%;
 
-    display: block;
+  display: block;
 }
 
+/* Strong profile-photo hover zoom */
+.profile-photo-ring {
+  cursor: zoom-in;
+  transition:
+    transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1),
+    box-shadow 0.45s ease;
+  transform-origin: center;
+  will-change: transform;
+}
 
+.profile-photo-ring:hover {
+  transform: scale(1.95);
+  box-shadow:
+    0 0 0 8px rgba(100, 255, 218, 0.12),
+    0 24px 55px rgba(0, 0, 0, 0.48);
+  z-index: 50;
+}
+
+@media (max-width: 768px) {
+  .profile-photo-ring:hover {
+    transform: scale(1.72);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .profile-photo-ring {
+    transition: none;
+  }
+  .profile-photo-ring:hover {
+    transform: none;
+  }
+}
 /* =========================================================
    PROFILE PHOTO — MOBILE
 ========================================================= */
 
 @media (max-width: 768px) {
+  .profile-photo-divider {
+    margin-top: -60px;
+    margin-bottom: -60px;
+  }
 
-    .profile-photo-divider {
-        margin-top: -60px;
-        margin-bottom: -60px;
-    }
-
-
-    .profile-photo-ring {
-        width: 125px;
-        height: 125px;
-
-        padding: 4px;
-    }
-
+  .profile-photo-ring {
+    width: 125px;
+    height: 125px;
+    padding: 4px;
+  }
 }
-
 
 /* =========================================================
    PROFILE PHOTO — SMALL MOBILE
 ========================================================= */
 
 @media (max-width: 480px) {
+  .profile-photo-divider {
+    margin-top: -55px;
+    margin-bottom: -55px;
+  }
 
-    .profile-photo-divider {
-        margin-top: -55px;
-        margin-bottom: -55px;
-    }
-
-
-    .profile-photo-ring {
-        width: 115px;
-        height: 115px;
-    }
-
+  .profile-photo-ring {
+    width: 115px;
+    height: 115px;
+  }
 }
-
 
 /* =========================================================
    TABLET
 ========================================================= */
 
 @media (max-width: 992px) {
+  section {
+    padding: 80px 7%;
+  }
 
-    section {
-        padding: 80px 7%;
-    }
+  .container {
+    max-width: 100%;
+  }
 
+  .title {
+    font-size: 36px;
+  }
 
-    .container {
-        max-width: 100%;
-    }
+  .about-page .title,
+  .about-section .title {
+    font-size: 32px;
 
+    font-weight: 400;
 
-    .title {
-        font-size: 36px;
-    }
-
-
-    .about-page .title,
-    .about-section .title {
-        font-size: 32px;
-
-        font-weight: 400;
-
-        letter-spacing: 2.5px;
-    }
-
+    letter-spacing: 2.5px;
+  }
 }
-
 
 /* =========================================================
    MOBILE
 ========================================================= */
 
 @media (max-width: 768px) {
+  section {
+    padding: 70px 6%;
+  }
 
-    section {
-        padding: 70px 6%;
-    }
+  .title {
+    font-size: 32px;
 
+    margin-bottom: 30px;
+  }
 
-    .title {
-        font-size: 32px;
+  .btn {
+    padding: 10px 22px;
 
-        margin-bottom: 30px;
-    }
+    font-size: 13px;
+  }
 
+  .about-page .title,
+  .about-section .title {
+    font-size: 28px;
 
-    .btn {
-        padding: 10px 22px;
+    font-weight: 400;
 
-        font-size: 13px;
-    }
+    letter-spacing: 2px;
 
-
-    .about-page .title,
-    .about-section .title {
-        font-size: 28px;
-
-        font-weight: 400;
-
-        letter-spacing: 2px;
-
-        margin-bottom: 30px;
-    }
-
+    margin-bottom: 30px;
+  }
 }
-
 
 /* =========================================================
    SMALL MOBILE
 ========================================================= */
 
 @media (max-width: 480px) {
+  section {
+    padding: 60px 5%;
+  }
 
-    section {
-        padding: 60px 5%;
-    }
+  .title {
+    font-size: 28px;
+  }
 
+  .about-page .title,
+  .about-section .title {
+    font-size: 24px;
 
-    .title {
-        font-size: 28px;
-    }
+    font-weight: 400;
 
+    letter-spacing: 1.5px;
 
-    .about-page .title,
-    .about-section .title {
-        font-size: 24px;
-
-        font-weight: 400;
-
-        letter-spacing: 1.5px;
-
-        margin-bottom: 25px;
-    }
-
+    margin-bottom: 25px;
+  }
 }
-
 
 /* =========================================================
    SELECTION
 ========================================================= */
 
 ::selection {
-    background: #64FFDA;
+  background: #64ffda;
 
-    color: #0A192F;
+  color: #0a192f;
 }
-
 
 /* =========================================================
    SCROLLBAR
 ========================================================= */
 
 ::-webkit-scrollbar {
-    width: 8px;
+  width: 8px;
 }
-
 
 ::-webkit-scrollbar-track {
-    background: #081321;
+  background: #081321;
 }
-
 
 ::-webkit-scrollbar-thumb {
-    background: #233554;
+  background: #233554;
 
-    border-radius: 10px;
+  border-radius: 10px;
 }
 
-
 ::-webkit-scrollbar-thumb:hover {
-    background: #64FFDA;
+  background: #64ffda;
 }
 
 /* Accessibility: keyboard users can skip navigation */
 .skip-link {
-    position: fixed;
-    top: -100px;
-    left: 16px;
-    z-index: 9999;
-    padding: 10px 16px;
-    border-radius: 8px;
-    background: #64FFDA;
-    color: #081321;
-    font-weight: 700;
-    text-decoration: none;
+  position: fixed;
+  top: -100px;
+  left: 16px;
+  z-index: 9999;
+  padding: 10px 16px;
+  border-radius: 8px;
+  background: #64ffda;
+  color: #081321;
+  font-weight: 700;
+  text-decoration: none;
 }
 
 .skip-link:focus {
-    top: 16px;
+  top: 16px;
 }
 
-button, a, input, textarea, select {
-    outline-offset: 3px;
+button,
+a,
+input,
+textarea,
+select {
+  outline-offset: 3px;
+}
+
+/* =========================================================
+   MODERN MOTION SYSTEM
+========================================================= */
+
+@keyframes softRise {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes softFloat {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-7px);
+  }
+}
+
+@keyframes subtlePulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(100, 255, 218, 0);
+  }
+  50% {
+    box-shadow: 0 0 0 7px rgba(100, 255, 218, 0.06);
+  }
+}
+
+.hero-title {
+  animation: softRise 0.75s ease both;
+}
+.hero-description {
+  animation: softRise 0.75s 0.12s ease both;
+}
+.hero-actions {
+  animation: softRise 0.75s 0.22s ease both;
+}
+.profile-photo-ring {
+  animation: softFloat 5s ease-in-out infinite;
+}
+
+.btn,
+.hero-btn-primary,
+.hero-btn-secondary,
+.contact-submit,
+.contact-btn,
+.about-resume-button,
+.resume-download-button,
+.skills-view-button,
+.service-btn,
+.view-more-btn,
+.project-buttons a {
+  position: relative;
+  overflow: hidden;
+  border-radius: 999px;
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    background 0.25s ease,
+    border-color 0.25s ease,
+    color 0.25s ease;
+}
+
+.btn::before,
+.hero-btn-primary::before,
+.hero-btn-secondary::before,
+.contact-submit::before,
+.contact-btn::before,
+.about-resume-button::before,
+.resume-download-button::before,
+.skills-view-button::before,
+.service-btn::before,
+.view-more-btn::before,
+.project-buttons a::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-110%);
+  background: linear-gradient(
+    110deg,
+    transparent 20%,
+    rgba(255, 255, 255, 0.18) 48%,
+    transparent 76%
+  );
+  transition: transform 0.55s ease;
+  pointer-events: none;
+}
+
+.btn:hover::before,
+.hero-btn-primary:hover::before,
+.hero-btn-secondary:hover::before,
+.contact-submit:hover::before,
+.contact-btn:hover::before,
+.about-resume-button:hover::before,
+.resume-download-button:hover::before,
+.skills-view-button:hover::before,
+.service-btn:hover::before,
+.view-more-btn:hover::before,
+.project-buttons a:hover::before {
+  transform: translateX(110%);
+}
+
+.btn:hover,
+.hero-btn-primary:hover,
+.hero-btn-secondary:hover,
+.contact-submit:hover,
+.contact-btn:hover,
+.about-resume-button:hover,
+.resume-download-button:hover,
+.skills-view-button:hover,
+.service-btn:hover,
+.view-more-btn:hover,
+.project-buttons a:hover {
+  transform: translateY(-3px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

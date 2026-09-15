@@ -18,7 +18,7 @@ function ServiceCard({ service }) {
 
   if (title.includes("full stack")) {
     Icon = FaLaptopCode;
-  } else if (title.includes("frontend") || title.includes("ui")) {
+  } else if (title.includes("software") || title.includes("developer") || title.includes("ui")) {
     Icon = FaPalette;
   } else if (title.includes("database")) {
     Icon = FaDatabase;

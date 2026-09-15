@@ -1,45 +1,45 @@
 const Project = require("../models/Project");
-const supabase = require("../config/supabase");
 
-/* ===========================
-   SUPABASE BUCKET
-=========================== */
+const {
+  uploadImageToGitHub,
+  deleteImageFromGitHub,
+} = require("../utils/githubUpload");
 
-const PROJECT_BUCKET = "inno-project-images";
+/* ======================================================
+   GENERATE PROJECT SLUG
+====================================================== */
 
+const generateProjectSlug = (title) => {
+  return String(title || "")
+    .toLowerCase()
+    .trim()
+    .replace(/&/g, "and")
+    .replace(/[^a-z0-9\s-]/g, "")
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "");
+};
 
-/* ===========================
+/* ======================================================
    NORMALIZE TECHNOLOGIES
-=========================== */
+====================================================== */
 
 const normalizeTechnologies = (technologies) => {
-
   if (!technologies) {
     return [];
   }
 
   if (Array.isArray(technologies)) {
-
-    return technologies
-      .map((tech) => String(tech).trim())
-      .filter(Boolean);
-
+    return technologies.map((tech) => String(tech).trim()).filter(Boolean);
   }
 
   if (typeof technologies === "string") {
-
     try {
-
       const parsed = JSON.parse(technologies);
 
       if (Array.isArray(parsed)) {
-
-        return parsed
-          .map((tech) => String(tech).trim())
-          .filter(Boolean);
-
+        return parsed.map((tech) => String(tech).trim()).filter(Boolean);
       }
-
     } catch (error) {
       // Continue with comma-separated format
     }
@@ -48,510 +48,398 @@ const normalizeTechnologies = (technologies) => {
       .split(",")
       .map((tech) => tech.trim())
       .filter(Boolean);
-
   }
 
   return [];
 };
 
-
-/* ===========================
-   GENERATE FILE NAME
-=========================== */
+/* ======================================================
+   GENERATE SAFE FILE NAME
+====================================================== */
 
 const generateFileName = (originalName) => {
+  const extension = originalName.includes(".")
+    ? originalName.substring(originalName.lastIndexOf(".")).toLowerCase()
+    : "";
 
-  const extension =
-    originalName.includes(".")
-      ? originalName.substring(
-          originalName.lastIndexOf(".")
-        )
-      : "";
+  const baseName = originalName
+    .replace(/\.[^/.]+$/, "")
+    .replace(/[^a-zA-Z0-9-_]/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "")
+    .toLowerCase();
 
-  return `${Date.now()}-${Math.round(
-    Math.random() * 1e9
-  )}${extension}`;
+  return `${baseName || "project-image"}-${Date.now()}${extension}`;
 };
 
+/* ======================================================
+   EXTRACT GITHUB FILE PATH FROM URL
+====================================================== */
 
-/* ===========================
-   UPLOAD IMAGE TO SUPABASE
-=========================== */
-
-const uploadImageToSupabase = async (file) => {
-
-  if (!file) {
+const getGitHubFilePath = (imageUrl) => {
+  if (!imageUrl || typeof imageUrl !== "string") {
     return null;
   }
 
-  const fileName =
-    generateFileName(file.originalname);
+  const prefix = "https://raw.githubusercontent.com/";
 
-  const filePath =
-    `projects/${fileName}`;
-
-  const { error } =
-    await supabase.storage
-      .from(PROJECT_BUCKET)
-      .upload(
-        filePath,
-        file.buffer,
-        {
-          contentType: file.mimetype,
-          upsert: false,
-        }
-      );
-
-  if (error) {
-    throw new Error(
-      `Supabase upload failed: ${error.message}`
-    );
+  if (!imageUrl.startsWith(prefix)) {
+    return null;
   }
 
-  const { data } =
-    supabase.storage
-      .from(PROJECT_BUCKET)
-      .getPublicUrl(filePath);
+  const remaining = imageUrl.substring(prefix.length);
+  const parts = remaining.split("/");
 
+  /*
+    Expected:
+
+    owner
+    repo
+    branch
+    projects
+    project-slug
+    image-file
+  */
+
+  if (parts.length < 6) {
+    return null;
+  }
+
+  return parts.slice(3).join("/");
+};
+
+/* ======================================================
+   BUILD PROJECT DATA
+====================================================== */
+
+const buildProjectData = (req) => {
   return {
-    url: data.publicUrl,
-    path: filePath,
+    title: typeof req.body.title === "string" ? req.body.title.trim() : "",
+
+    description:
+      typeof req.body.description === "string"
+        ? req.body.description.trim()
+        : "",
+
+    category:
+      typeof req.body.category === "string"
+        ? req.body.category
+        : "Web Development",
+
+    technologies: normalizeTechnologies(req.body.technologies),
+
+    github: typeof req.body.github === "string" ? req.body.github.trim() : "",
+
+    liveDemo:
+      typeof req.body.liveDemo === "string" ? req.body.liveDemo.trim() : "",
+
+    status: typeof req.body.status === "string" ? req.body.status : "Active",
+
+    featured: req.body.featured === true || req.body.featured === "true",
   };
 };
 
-
-/* ===========================
-   DELETE SUPABASE IMAGE
-=========================== */
-
-const deleteImageFromSupabase = async (imageUrl) => {
-
-  if (!imageUrl) {
-    return;
-  }
-
-  // Only delete files belonging to our
-  // Supabase project-images bucket.
-
-  if (!imageUrl.includes(PROJECT_BUCKET)) {
-    return;
-  }
-
-  try {
-
-    const marker =
-      `/storage/v1/object/public/${PROJECT_BUCKET}/`;
-
-    const index =
-      imageUrl.indexOf(marker);
-
-    if (index === -1) {
-      return;
-    }
-
-    const filePath =
-      imageUrl.substring(
-        index + marker.length
-      );
-
-    if (!filePath) {
-      return;
-    }
-
-    const { error } =
-      await supabase.storage
-        .from(PROJECT_BUCKET)
-        .remove([filePath]);
-
-    if (error) {
-
-      console.error(
-        "SUPABASE IMAGE DELETE ERROR:",
-        error.message
-      );
-
-    }
-
-  } catch (error) {
-
-    console.error(
-      "SUPABASE IMAGE DELETE ERROR:",
-      error.message
-    );
-
-  }
-
-};
-
-
-/* ===========================
+/* ======================================================
    GET ALL PROJECTS
-=========================== */
+====================================================== */
 
 exports.getProjects = async (req, res) => {
-
   try {
-
-    const projects =
-      await Project.find().sort({
-        createdAt: -1,
-      });
+    const projects = await Project.find().sort({
+      createdAt: -1,
+    });
 
     res.status(200).json({
-
       success: true,
-
       count: projects.length,
-
       projects,
-
     });
-
   } catch (error) {
-
-    console.error(
-      "GET PROJECTS ERROR:",
-      error
-    );
+    console.error("GET PROJECTS ERROR:", error);
 
     res.status(500).json({
-
       success: false,
-
       message: error.message,
-
     });
-
   }
-
 };
 
-
-/* ===========================
+/* ======================================================
    GET SINGLE PROJECT
-=========================== */
+====================================================== */
 
 exports.getProject = async (req, res) => {
-
   try {
-
-    const project =
-      await Project.findById(req.params.id);
+    const project = await Project.findById(req.params.id);
 
     if (!project) {
-
       return res.status(404).json({
-
         success: false,
-
         message: "Project not found",
-
       });
-
     }
 
     res.status(200).json({
-
       success: true,
-
       project,
-
     });
-
   } catch (error) {
-
-    console.error(
-      "GET PROJECT ERROR:",
-      error
-    );
+    console.error("GET PROJECT ERROR:", error);
 
     res.status(500).json({
-
       success: false,
-
       message: error.message,
-
     });
-
   }
-
 };
 
-
-/* ===========================
+/* ======================================================
    CREATE PROJECT
-=========================== */
+====================================================== */
 
 exports.createProject = async (req, res) => {
-
   try {
+    console.log("========================================");
+    console.log("CREATE PROJECT");
+    console.log("BODY:", req.body);
+    console.log("FILE:", req.file ? req.file.originalname : "No image");
+    console.log("========================================");
 
-    console.log(
-      "CREATE PROJECT BODY:",
-      req.body
-    );
+    const projectData = buildProjectData(req);
 
-    /* ===========================
-       IMAGE
-    =========================== */
+    /* ==================================================
+       GENERATE PERMANENT SLUG
+    ================================================== */
 
-    let imageUrl = req.body.image || "";
+    const slug = generateProjectSlug(projectData.title);
 
-    if (req.file) {
-
-      const uploadedImage =
-        await uploadImageToSupabase(
-          req.file
-        );
-
-      imageUrl =
-        uploadedImage.url;
-
+    if (!slug) {
+      return res.status(400).json({
+        success: false,
+        message: "A valid project title is required.",
+      });
     }
 
-    /* ===========================
-       PROJECT DATA
-    =========================== */
+    /* ==================================================
+       CHECK SLUG DUPLICATE
+    ================================================== */
 
-    const projectData = {
+    const existingProject = await Project.findOne({
+      slug,
+    });
 
-      ...req.body,
+    if (existingProject) {
+      return res.status(400).json({
+        success: false,
+        message: "A project with this title already exists.",
+      });
+    }
 
-      image: imageUrl,
+    projectData.slug = slug;
 
-      technologies:
-        normalizeTechnologies(
-          req.body.technologies
-        ),
+    console.log("PROJECT SLUG:", projectData.slug);
 
-    };
+    console.log("PROJECT GITHUB FOLDER:", `projects/${projectData.slug}`);
 
-    console.log(
-      "PROJECT DATA:",
-      projectData
-    );
+    /* ==================================================
+       UPLOAD MAIN PROJECT IMAGE
+    ================================================== */
 
-    /* ===========================
-       CREATE
-    =========================== */
+    if (req.file) {
+      const fileName = generateFileName(req.file.originalname);
 
-    const project =
-      await Project.create(projectData);
+      const uploadedImage = await uploadImageToGitHub({
+        buffer: req.file.buffer,
+        fileName,
+        folder: `projects/${projectData.slug}`,
+      });
+
+      projectData.image = uploadedImage.url;
+
+      console.log("MAIN PROJECT IMAGE UPLOADED:", uploadedImage.url);
+    } else {
+      projectData.image = "";
+    }
+
+    /* ==================================================
+       CREATE PROJECT IN MONGODB
+    ================================================== */
+
+    const project = await Project.create(projectData);
 
     res.status(201).json({
-
       success: true,
-
-      message:
-        "Project created successfully",
-
+      message: "Project created successfully",
       project,
-
     });
-
   } catch (error) {
-
-    console.error(
-      "CREATE PROJECT ERROR:",
-      error
-    );
+    console.error("CREATE PROJECT ERROR:", error);
 
     res.status(500).json({
-
       success: false,
-
       message: error.message,
-
     });
-
   }
-
 };
 
-
-/* ===========================
+/* ======================================================
    UPDATE PROJECT
-=========================== */
+====================================================== */
 
 exports.updateProject = async (req, res) => {
-
   try {
-
-    const project =
-      await Project.findById(
-        req.params.id
-      );
+    const project = await Project.findById(req.params.id);
 
     if (!project) {
-
       return res.status(404).json({
-
         success: false,
-
         message: "Project not found",
-
       });
-
     }
 
-    console.log(
-      "UPDATE PROJECT BODY:",
-      req.body
-    );
+    console.log("========================================");
+    console.log("UPDATE PROJECT");
+    console.log("BODY:", req.body);
+    console.log("FILE:", req.file ? req.file.originalname : "No new image");
+    console.log("========================================");
 
-    /* ===========================
-       PROJECT DATA
-    =========================== */
+    const projectData = buildProjectData(req);
 
-    const projectData = {
+    /* ==================================================
+       KEEP PERMANENT SLUG
+    ================================================== */
 
-      ...req.body,
+    const projectSlug = project.slug;
 
-      technologies:
-        normalizeTechnologies(
-          req.body.technologies
-        ),
+    if (!projectSlug) {
+      return res.status(400).json({
+        success: false,
+        message:
+          "This project does not have a slug. Please migrate existing projects first.",
+      });
+    }
 
-    };
+    projectData.slug = projectSlug;
 
+    console.log("PROJECT SLUG:", projectSlug);
 
-    /* ===========================
-       NEW IMAGE
-    =========================== */
+    console.log("PROJECT GITHUB FOLDER:", `projects/${projectSlug}`);
+
+    /* ==================================================
+       UPLOAD NEW MAIN IMAGE
+    ================================================== */
 
     if (req.file) {
+      const fileName = generateFileName(req.file.originalname);
 
-      const uploadedImage =
-        await uploadImageToSupabase(
-          req.file
-        );
-
-      projectData.image =
-        uploadedImage.url;
-
-      // Delete old Supabase image
-      // after successful new upload.
-
-      await deleteImageFromSupabase(
-        project.image
-      );
-
-    }
-
-
-    /* ===========================
-       UPDATE
-    =========================== */
-
-    const updatedProject =
-      await Project.findByIdAndUpdate(
-
-        req.params.id,
-
-        projectData,
-
-        {
-          new: true,
-          runValidators: true,
-        }
-
-      );
-
-    res.status(200).json({
-
-      success: true,
-
-      message:
-        "Project updated successfully",
-
-      project: updatedProject,
-
-    });
-
-  } catch (error) {
-
-    console.error(
-      "UPDATE PROJECT ERROR:",
-      error
-    );
-
-    res.status(500).json({
-
-      success: false,
-
-      message: error.message,
-
-    });
-
-  }
-
-};
-
-
-/* ===========================
-   DELETE PROJECT
-=========================== */
-
-exports.deleteProject = async (req, res) => {
-
-  try {
-
-    const project =
-      await Project.findById(
-        req.params.id
-      );
-
-    if (!project) {
-
-      return res.status(404).json({
-
-        success: false,
-
-        message: "Project not found",
-
+      const uploadedImage = await uploadImageToGitHub({
+        buffer: req.file.buffer,
+        fileName,
+        folder: `projects/${projectSlug}`,
       });
 
+      projectData.image = uploadedImage.url;
+
+      console.log("NEW MAIN PROJECT IMAGE UPLOADED:", uploadedImage.url);
+
+      /* ================================================
+         DELETE OLD MAIN IMAGE
+      ================================================ */
+
+      const oldFilePath = getGitHubFilePath(project.image);
+
+      if (oldFilePath) {
+        try {
+          await deleteImageFromGitHub(oldFilePath);
+
+          console.log("OLD MAIN PROJECT IMAGE DELETED:", oldFilePath);
+        } catch (deleteError) {
+          console.error("OLD MAIN IMAGE DELETE ERROR:", deleteError.message);
+        }
+      }
+    } else {
+      /* ================================================
+         KEEP EXISTING IMAGE
+      ================================================ */
+
+      projectData.image = project.image || "";
     }
 
-    /* ===========================
-       DELETE SUPABASE IMAGE
-    =========================== */
+    /* ==================================================
+       UPDATE PROJECT IN MONGODB
+    ================================================== */
 
-    await deleteImageFromSupabase(
-      project.image
+    const updatedProject = await Project.findByIdAndUpdate(
+      req.params.id,
+      projectData,
+      {
+        new: true,
+        runValidators: true,
+      },
     );
 
+    res.status(200).json({
+      success: true,
+      message: "Project updated successfully",
+      project: updatedProject,
+    });
+  } catch (error) {
+    console.error("UPDATE PROJECT ERROR:", error);
 
-    /* ===========================
-       DELETE PROJECT
-    =========================== */
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+/* ======================================================
+   DELETE PROJECT
+====================================================== */
+
+exports.deleteProject = async (req, res) => {
+  try {
+    const project = await Project.findById(req.params.id);
+
+    if (!project) {
+      return res.status(404).json({
+        success: false,
+        message: "Project not found",
+      });
+    }
+
+    /* ==================================================
+       DELETE MAIN IMAGE FROM GITHUB
+    ================================================== */
+
+    const filePath = getGitHubFilePath(project.image);
+
+    if (filePath) {
+      try {
+        await deleteImageFromGitHub(filePath);
+
+        console.log("MAIN PROJECT IMAGE DELETED:", filePath);
+      } catch (deleteError) {
+        console.error("MAIN PROJECT IMAGE DELETE ERROR:", deleteError.message);
+      }
+    }
+
+    /* ==================================================
+       DELETE PROJECT FROM MONGODB
+    ================================================== */
 
     await project.deleteOne();
 
     res.status(200).json({
-
       success: true,
-
-      message:
-        "Project deleted successfully",
-
+      message: "Project deleted successfully",
     });
-
   } catch (error) {
-
-    console.error(
-      "DELETE PROJECT ERROR:",
-      error
-    );
+    console.error("DELETE PROJECT ERROR:", error);
 
     res.status(500).json({
-
       success: false,
-
       message: error.message,
-
     });
-
   }
-
 };

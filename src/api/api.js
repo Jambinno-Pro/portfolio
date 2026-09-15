@@ -3,73 +3,40 @@ import { API_BASE_URL } from "../config";
 
 const api = axios.create({
   baseURL: API_BASE_URL,
-
-  headers: {
-    "Content-Type": "application/json",
-  },
 });
 
-
-// ==========================
-// ATTACH AUTH TOKEN
-// ==========================
+// ============================================================
+// AUTH TOKEN
+// ============================================================
 
 api.interceptors.request.use(
   (config) => {
-
-    const token =
-      localStorage.getItem("token");
+    const token = localStorage.getItem("token");
 
     if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
 
-      config.headers.Authorization =
-        `Bearer ${token}`;
+    // ========================================================
+    // FORM DATA
+    // ========================================================
+    //
+    // When uploading an image, Axios/browser must automatically
+    // generate:
+    //
+    // multipart/form-data; boundary=...
+    //
+    // Do NOT manually set Content-Type for FormData.
+    //
+    // ========================================================
 
+    if (config.data instanceof FormData) {
+      delete config.headers["Content-Type"];
     }
 
     return config;
-
   },
-
-  (error) => {
-
-    return Promise.reject(error);
-
-  }
-);
-
-
-// ==========================
-// HANDLE INVALID TOKEN
-// ==========================
-
-api.interceptors.response.use(
-
-  (response) => response,
-
-  (error) => {
-
-    if (
-      error.response?.status === 401
-    ) {
-
-      localStorage.removeItem("token");
-
-      // Don't redirect while already on login
-      if (
-        window.location.pathname !== "/login"
-      ) {
-
-        window.location.href = "/login";
-
-      }
-
-    }
-
-    return Promise.reject(error);
-
-  }
-
+  (error) => Promise.reject(error),
 );
 
 export default api;

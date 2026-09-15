@@ -3,771 +3,623 @@
 ========================================================= */
 
 .project-card {
-    background: #112240;
-
-    border-radius: 18px;
-
-    overflow: hidden;
-
-    position: relative;
-
-    transition: 0.4s;
-
-    border: 1px solid rgba(255, 255, 255, 0.05);
+  background: #112240;
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  height: fit-content;
 }
-
 
 .project-card:hover {
-    transform: translateY(-8px);
-
-    box-shadow:
-        0 20px 50px rgba(0, 0, 0, 0.35);
+  transform: translateY(-4px);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.24);
 }
 
-
-/* =========================================================
-   FEATURED BADGE
-========================================================= */
-
-.featured-badge {
-    position: absolute;
-
-    top: 18px;
-    right: 18px;
-
-    background: #64FFDA;
-
-    color: #0A192F;
-
-    padding: 6px 15px;
-
-    border-radius: 30px;
-
-    font-size: 12px;
-
-    font-weight: 600;
-
-    z-index: 20;
+.project-image-wrap {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  background: #1B2738;
 }
-
-
-/* =========================================================
-   BROWSER WINDOW
-========================================================= */
-
-.browser-window {
-    background: #1B2738;
-
-    overflow: hidden;
-}
-
-
-.browser-header {
-    height: 42px;
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: space-between;
-
-    padding: 0 18px;
-
-    background: #233554;
-}
-
-
-.browser-dots {
-    display: flex;
-
-    gap: 8px;
-}
-
-
-.dot {
-    width: 12px;
-
-    height: 12px;
-
-    border-radius: 50%;
-}
-
-
-.dot.red {
-    background: #FF5F57;
-}
-
-
-.dot.yellow {
-    background: #FEBC2E;
-}
-
-
-.dot.green {
-    background: #28C840;
-}
-
-
-.browser-address {
-    color: #CCD6F6;
-
-    font-size: 13px;
-
-    overflow: hidden;
-
-    white-space: nowrap;
-
-    text-overflow: ellipsis;
-
-    margin-left: 20px;
-
-    flex: 1;
-}
-
-
-/* =========================================================
-   PROJECT IMAGE
-========================================================= */
 
 .project-image {
-    width: 100%;
-
-    height: 240px;
-
-    object-fit: cover;
-
-    transition: 0.5s;
-
-    display: block;
+  width: 100%;
+  height: 145px;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.45s ease;
 }
-
 
 .project-card:hover .project-image {
-    transform: scale(1.04);
+  transform: scale(1.035);
 }
 
+.project-category {
+  position: absolute;
+  right: 9px;
+  bottom: 9px;
+  max-width: calc(100% - 18px);
+  padding: 5px 8px;
+  background: rgba(10, 25, 47, 0.9);
+  border: 1px solid rgba(100, 255, 218, 0.6);
+  border-radius: 5px;
+  color: #64FFDA;
+  font-family: "Helvetica", "Helvetica Neue", Arial, sans-serif;
+  font-size: 9px;
+  font-weight: 600;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  backdrop-filter: blur(4px);
+}
 
-/* =========================================================
-   PROJECT CONTENT
-========================================================= */
+.featured-badge {
+  position: absolute;
+  top: 9px;
+  left: 9px;
+  z-index: 3;
+  padding: 4px 7px;
+  border-radius: 5px;
+  background: #64FFDA;
+  color: #0A192F;
+  font-size: 9px;
+  font-weight: 700;
+}
 
 .project-content {
-    padding: 25px;
+  padding: 13px;
 }
-
 
 .project-content h3 {
-    font-family: "Poppins", sans-serif;
-
-    font-size: 25px;
-
-    font-weight: 400;
-
-    margin-bottom: 15px;
-
-    color: #64FFDA;
+  margin: 0;
+  color: #64FFDA;
+  font-family: "Helvetica", "Helvetica Neue", Arial, sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.35;
+  min-height: 41px;
+  display: flex;
+  align-items: center;
 }
 
+.view-more-btn {
+  width: 100%;
+  margin-top: 10px;
+  padding: 8px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(100, 255, 218, 0.55);
+  border-radius: 5px;
+  background: transparent;
+  color: #64FFDA;
+  font-family: "Helvetica", "Helvetica Neue", Arial, sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.25s ease;
+}
+
+.view-more-btn:hover {
+  background: #64FFDA;
+  color: #0A192F;
+}
 
 /* =========================================================
-   PROJECT SUMMARY
+   PROJECT MODAL
 ========================================================= */
 
-.project-summary {
-    color: #CCD6F6;
-
-    font-family:
-        "Helvetica Neue",
-        Helvetica,
-        Arial,
-        sans-serif;
-
-    font-size: 15px;
-
-    font-weight: 400;
-
-    line-height: 1.8;
-
-    margin-bottom: 22px;
-
-    display: -webkit-box;
-
-    -webkit-line-clamp: 3;
-
-    -webkit-box-orient: vertical;
-
-    overflow: hidden;
+.project-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  padding: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(3, 12, 25, 0.82);
+  backdrop-filter: blur(8px);
+  overflow-y: auto;
 }
-
-
-/* =========================================================
-   TECHNOLOGY TAGS
-========================================================= */
-
-.tech-stack {
-    display: flex;
-
-    flex-wrap: wrap;
-
-    gap: 8px;
-
-    margin-bottom: 25px;
-}
-
-
-.tech-stack span {
-    padding: 7px 12px;
-
-    background: #0A192F;
-
-    border: 1px solid #64FFDA;
-
-    border-radius: 40px;
-
-    font-size: 12px;
-
-    color: #64FFDA;
-
-    transition: 0.3s;
-}
-
-
-.tech-stack span:hover {
-    background: #64FFDA;
-
-    color: #0A192F;
-}
-
-
-/* =========================================================
-   PROJECT BUTTONS
-========================================================= */
-
-.project-buttons {
-    display: flex;
-
-    gap: 10px;
-
-    flex-direction: column;
-}
-
-
-.project-buttons a,
-.project-buttons button {
-    width: 100%;
-
-    display: flex;
-
-    justify-content: center;
-
-    align-items: center;
-
-    gap: 8px;
-
-    padding: 13px;
-
-    text-decoration: none;
-
-    font-family:
-        "Helvetica Neue",
-        Helvetica,
-        Arial,
-        sans-serif;
-
-    font-size: 14px;
-
-    font-weight: 600;
-
-    border-radius: 8px;
-
-    transition: 0.35s;
-
-    cursor: pointer;
-
-    box-sizing: border-box;
-}
-
-
-/* =========================================================
-   DETAILS BUTTON
-========================================================= */
-
-.details-btn {
-    background: #64FFDA;
-
-    color: #0A192F;
-
-    border: 1px solid #64FFDA;
-}
-
-
-.details-btn:hover {
-    background: #4de8c7;
-
-    transform: translateY(-2px);
-}
-
-
-/* =========================================================
-   VISIT BUTTON
-========================================================= */
-
-.visit-btn {
-    background: transparent;
-
-    color: #64FFDA;
-
-    border: 1px solid #64FFDA;
-}
-
-
-.visit-btn:hover {
-    background: #64FFDA;
-
-    color: #0A192F;
-
-    transform: translateY(-2px);
-}
-
-
-/* =========================================================
-   GITHUB
-========================================================= */
-
-.github-btn {
-    background: transparent;
-
-    color: #64FFDA;
-
-    border: 2px solid #64FFDA;
-}
-
-
-.github-btn:hover {
-    background: #64FFDA;
-
-    color: #0A192F;
-}
-
-
-/* =========================================================
-   PROJECT DETAILS MODAL
-========================================================= */
-
-.project-modal-overlay {
-    position: fixed;
-
-    inset: 0;
-
-    background: rgba(2, 12, 27, 0.88);
-
-    backdrop-filter: blur(8px);
-
-    -webkit-backdrop-filter: blur(8px);
-
-    z-index: 9999;
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    padding: 30px;
-
-    overflow-y: auto;
-}
-
-
-/* =========================================================
-   MODAL
-========================================================= */
 
 .project-modal {
-    width: 100%;
-
-    max-width: 950px;
-
-    max-height: 92vh;
-
-    overflow-y: auto;
-
-    background: #0F203A;
-
-    border: 1px solid rgba(100, 255, 218, 0.2);
-
-    border-radius: 20px;
-
-    box-shadow:
-        0 30px 80px rgba(0, 0, 0, 0.5);
-
-    position: relative;
+  position: relative;
+  width: min(1120px, 100%);
+  max-height: calc(100vh - 56px);
+  overflow-y: auto;
+  padding: 28px;
+  border: 1px solid rgba(100, 255, 218, 0.18);
+  border-radius: 18px;
+  background: #0A192F;
+  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.5);
+  color: #CCD6F6;
 }
 
+.project-modal-close {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  border-radius: 50%;
+  background: rgba(17, 34, 64, 0.9);
+  color: #CCD6F6;
+  cursor: pointer;
+  z-index: 5;
+}
 
-/* =========================================================
-   MODAL HEADER
-========================================================= */
+.project-modal-close:hover {
+  background: #64FFDA;
+  color: #0A192F;
+}
 
 .project-modal-header {
-    display: flex;
-
-    align-items: flex-start;
-
-    justify-content: space-between;
-
-    gap: 20px;
-
-    padding: 30px 35px;
+  padding-right: 50px;
+  margin-bottom: 22px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
 }
 
-
-.project-modal-label {
-    color: #64FFDA;
-
-    font-size: 12px;
-
-    font-weight: 600;
-
-    letter-spacing: 2px;
+.project-modal-eyebrow {
+  display: block;
+  margin-bottom: 6px;
+  color: #64FFDA;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.3px;
+  text-transform: uppercase;
 }
-
 
 .project-modal-header h2 {
-    margin: 8px 0 0;
-
-    color: #FFFFFF;
-
-    font-family: "Poppins", sans-serif;
-
-    font-size: 32px;
-
-    font-weight: 400;
+  margin: 0;
+  color: #FFFFFF;
+  font-family: "Helvetica", "Helvetica Neue", Arial, sans-serif;
+  font-size: clamp(24px, 3vw, 34px);
+  line-height: 1.2;
 }
 
-
-/* =========================================================
-   CLOSE BUTTON
-========================================================= */
-
-.modal-close {
-    width: 42px;
-
-    height: 42px;
-
-    border-radius: 50%;
-
-    border: 1px solid rgba(100, 255, 218, 0.3);
-
-    background: #112240;
-
-    color: #64FFDA;
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    cursor: pointer;
-
-    font-size: 17px;
-
-    flex-shrink: 0;
-
-    transition: 0.3s;
+.project-modal-category {
+  flex: 0 0 auto;
+  padding: 7px 10px;
+  border: 1px solid rgba(100, 255, 218, 0.5);
+  border-radius: 6px;
+  color: #64FFDA;
+  font-size: 10px;
+  font-weight: 600;
 }
-
-
-.modal-close:hover {
-    background: #64FFDA;
-
-    color: #0A192F;
-
-    transform: rotate(90deg);
-}
-
-
-/* =========================================================
-   MODAL IMAGE
-========================================================= */
-
-.project-modal-image {
-    width: 100%;
-
-    max-height: 430px;
-
-    overflow: hidden;
-}
-
-
-.project-modal-image img {
-    width: 100%;
-
-    height: 100%;
-
-    max-height: 430px;
-
-    object-fit: cover;
-
-    display: block;
-}
-
-
-/* =========================================================
-   MODAL BODY
-========================================================= */
 
 .project-modal-body {
-    padding: 35px;
+  display: grid;
+  grid-template-columns: minmax(0, 1.12fr) minmax(300px, 0.88fr);
+  gap: 28px;
+  align-items: start;
 }
 
-
 /* =========================================================
-   DETAIL SECTIONS
+   GALLERY
 ========================================================= */
 
-.project-detail-section {
-    margin-bottom: 35px;
+.project-gallery-column {
+  min-width: 0;
 }
 
-
-.project-detail-section h3 {
-    color: #64FFDA;
-
-    font-family: "Poppins", sans-serif;
-
-    font-size: 22px;
-
-    font-weight: 400;
-
-    margin-bottom: 12px;
+.project-gallery-main {
+  position: relative;
+  width: 100%;
+  height: 390px;
+  overflow: hidden;
+  border-radius: 12px;
+  background: #112240;
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-
-.project-detail-section p {
-    color: #CCD6F6;
-
-    font-family:
-        "Helvetica Neue",
-        Helvetica,
-        Arial,
-        sans-serif;
-
-    font-size: 15px;
-
-    font-weight: 400;
-
-    line-height: 1.9;
-
-    margin: 0;
+.project-gallery-main img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  background: #0d1b30;
 }
 
+.gallery-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 50%;
+  background: rgba(10, 25, 47, 0.82);
+  color: #FFFFFF;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.gallery-arrow:hover {
+  background: #64FFDA;
+  color: #0A192F;
+}
+
+.gallery-arrow-left { left: 12px; }
+.gallery-arrow-right { right: 12px; }
+
+.project-gallery-thumbs {
+  margin-top: 10px;
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 7px;
+}
+
+.gallery-thumb {
+  height: 58px;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  background: #112240;
+  cursor: pointer;
+  opacity: 0.68;
+  transition: 0.2s ease;
+}
+
+.gallery-thumb:hover,
+.gallery-thumb.active {
+  opacity: 1;
+  border-color: #64FFDA;
+}
+
+.gallery-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.gallery-counter {
+  display: block;
+  margin-top: 7px;
+  text-align: right;
+  color: #8892B0;
+  font-size: 10px;
+}
 
 /* =========================================================
-   MODAL TECHNOLOGIES
+   OVERVIEW
 ========================================================= */
 
-.modal-tech-stack {
-    display: flex;
-
-    flex-wrap: wrap;
-
-    gap: 10px;
+.project-overview-column {
+  padding: 4px 2px;
 }
 
-
-.modal-tech-stack span {
-    padding: 8px 14px;
-
-    border-radius: 30px;
-
-    background: #112240;
-
-    border: 1px solid #64FFDA;
-
-    color: #64FFDA;
-
-    font-size: 13px;
+.project-detail-block {
+  margin-bottom: 24px;
 }
 
+.project-detail-block h4 {
+  margin: 0 0 9px;
+  color: #64FFDA;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+}
+
+.project-detail-block p {
+  margin: 0;
+  color: #CCD6F6;
+  font-family: "Helvetica", "Helvetica Neue", Arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.75;
+}
+
+.tech-stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.tech-stack span {
+  padding: 6px 9px;
+  background: #112240;
+  border: 1px solid rgba(100, 255, 218, 0.45);
+  border-radius: 20px;
+  color: #64FFDA;
+  font-size: 10px;
+  line-height: 1.2;
+}
+
+.project-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 30px;
+}
+
+.project-buttons a {
+  flex: 1 1 180px;
+  min-height: 42px;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 13px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-family: "Helvetica", "Helvetica Neue", Arial, sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  transition: 0.25s ease;
+}
+
+.visit-btn {
+  background: #64FFDA;
+  color: #0A192F;
+  border: 1px solid #64FFDA;
+}
+
+.visit-btn:hover {
+  background: #4de8c7;
+  transform: translateY(-1px);
+}
+
+.github-btn {
+  background: transparent;
+  color: #64FFDA;
+  border: 1px solid #64FFDA;
+}
+
+.github-btn:hover {
+  background: #64FFDA;
+  color: #0A192F;
+}
 
 /* =========================================================
-   FEATURES
-========================================================= */
-
-.project-features {
-    padding-left: 20px;
-
-    margin: 0;
-}
-
-
-.project-features li {
-    color: #CCD6F6;
-
-    font-family:
-        "Helvetica Neue",
-        Helvetica,
-        Arial,
-        sans-serif;
-
-    font-size: 15px;
-
-    line-height: 1.8;
-
-    margin-bottom: 8px;
-
-    list-style: disc;
-}
-
-
-/* =========================================================
-   MODAL ACTIONS
-========================================================= */
-
-.project-modal-actions {
-    display: flex;
-
-    gap: 15px;
-
-    padding-top: 10px;
-
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-
-.project-modal-actions a {
-    flex: 1;
-
-    display: flex;
-
-    justify-content: center;
-
-    align-items: center;
-
-    gap: 10px;
-
-    padding: 14px 20px;
-
-    border-radius: 8px;
-
-    text-decoration: none;
-
-    font-family:
-        "Helvetica Neue",
-        Helvetica,
-        Arial,
-        sans-serif;
-
-    font-size: 14px;
-
-    font-weight: 600;
-
-    transition: 0.3s;
-}
-
-
-/* =========================================================
-   TABLET
+   RESPONSIVE
 ========================================================= */
 
 @media (max-width: 900px) {
+  .project-modal-body {
+    grid-template-columns: 1fr;
+  }
 
-    .project-modal-overlay {
-        padding: 20px;
-    }
+  .project-gallery-main {
+    height: 360px;
+  }
+}
 
+@media (max-width: 600px) {
+  .project-image {
+    height: 155px;
+  }
 
-    .project-modal {
-        max-height: 94vh;
-    }
+  .project-modal-backdrop {
+    padding: 10px;
+  }
 
+  .project-modal {
+    max-height: calc(100vh - 20px);
+    padding: 20px;
+    border-radius: 14px;
+  }
 
-    .project-modal-header {
-        padding: 25px;
-    }
+  .project-modal-header {
+    display: block;
+    padding-right: 42px;
+  }
 
+  .project-modal-category {
+    display: inline-block;
+    margin-top: 10px;
+  }
 
-    .project-modal-body {
-        padding: 25px;
-    }
+  .project-gallery-main {
+    height: 245px;
+  }
 
+  .project-gallery-thumbs {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
 
-    .project-modal-header h2 {
-        font-size: 28px;
-    }
+  .gallery-thumb {
+    height: 58px;
+  }
 
+  .project-buttons {
+    flex-direction: column;
+  }
+
+  .project-buttons a {
+    flex-basis: auto;
+    width: 100%;
+  }
 }
 
 
 /* =========================================================
-   MOBILE
+   PROJECT MOTION + LIGHT MODE READABILITY
 ========================================================= */
 
+.project-card {
+  will-change: transform;
+  box-shadow: 0 10px 28px rgba(0,0,0,.12);
+}
+
+.project-image-wrap::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(115deg, transparent 30%, rgba(255,255,255,.12) 50%, transparent 70%);
+  transform: translateX(-120%);
+  transition: transform .7s ease;
+  pointer-events: none;
+}
+
+.project-card:hover .project-image-wrap::after { transform: translateX(120%); }
+
+.project-category { transition: transform .25s ease, background .25s ease; }
+.project-card:hover .project-category { transform: translateY(-2px); }
+
+.view-more-btn {
+  min-height: 38px;
+  font-weight: 700;
+  letter-spacing: .1px;
+  box-shadow: 0 7px 18px rgba(100,255,218,.08);
+}
+
+.project-modal-close,
+.gallery-arrow,
+.gallery-thumb { transition: transform .2s ease, border-color .2s ease, background .2s ease, opacity .2s ease; }
+.project-modal-close:hover { transform: rotate(8deg) scale(1.04); }
+.gallery-arrow:hover { transform: translateY(-50%) scale(1.06); }
+.gallery-thumb:hover { transform: translateY(-2px); }
+
+html[data-theme="light"] .projects-section {
+  background: #F5F8FC !important;
+  color: #193047 !important;
+}
+html[data-theme="light"] .project-card {
+  background: #FFFFFF !important;
+  border-color: rgba(0,95,83,.14) !important;
+  box-shadow: 0 14px 32px rgba(20,45,65,.09) !important;
+}
+html[data-theme="light"] .project-category {
+  background: rgba(255,255,255,.96) !important;
+  color: #006B5D !important;
+  border-color: rgba(0,107,93,.28) !important;
+}
+html[data-theme="light"] .featured-badge {
+  background: #007A68 !important;
+  color: #FFFFFF !important;
+}
+html[data-theme="light"] .view-more-btn {
+  background: #007A68 !important;
+  border-color: #007A68 !important;
+  color: #FFFFFF !important;
+}
+html[data-theme="light"] .view-more-btn:hover {
+  background: #005F53 !important;
+  border-color: #005F53 !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 10px 22px rgba(0,95,83,.18);
+}
+html[data-theme="light"] .project-modal-backdrop {
+  background: rgba(18,34,50,.52) !important;
+}
+html[data-theme="light"] .project-modal {
+  background: #FFFFFF !important;
+  color: #193047 !important;
+  border-color: rgba(0,95,83,.16) !important;
+  box-shadow: 0 30px 80px rgba(20,45,65,.22) !important;
+}
+html[data-theme="light"] .project-modal-header h2 { color: #193047 !important; }
+html[data-theme="light"] .project-modal-eyebrow,
+html[data-theme="light"] .project-detail-block h4 { color: #007A68 !important; }
+html[data-theme="light"] .project-modal-category {
+  color: #007A68 !important;
+  border-color: rgba(0,122,104,.28) !important;
+  background: #EEF7F5 !important;
+}
+html[data-theme="light"] .project-gallery-main,
+html[data-theme="light"] .gallery-thumb { background: #F2F6F8 !important; border-color: #D9E4EA !important; }
+html[data-theme="light"] .project-gallery-main img { background: #F2F6F8 !important; }
+html[data-theme="light"] .gallery-arrow,
+html[data-theme="light"] .project-modal-close {
+  background: rgba(255,255,255,.95) !important;
+  color: #193047 !important;
+  border-color: #D5E0E6 !important;
+}
+html[data-theme="light"] .gallery-arrow:hover,
+html[data-theme="light"] .project-modal-close:hover {
+  background: #007A68 !important;
+  color: #FFFFFF !important;
+  border-color: #007A68 !important;
+}
+html[data-theme="light"] .project-detail-block p { color: #52687C !important; }
+html[data-theme="light"] .tech-stack span {
+  background: #EEF7F5 !important;
+  border-color: rgba(0,122,104,.20) !important;
+  color: #006B5D !important;
+}
+html[data-theme="light"] .gallery-counter { color: #718394 !important; }
+html[data-theme="light"] .project-buttons .visit-btn {
+  background: #007A68 !important;
+  border-color: #007A68 !important;
+  color: #FFFFFF !important;
+}
+html[data-theme="light"] .project-buttons .visit-btn:hover {
+  background: #005F53 !important;
+  border-color: #005F53 !important;
+}
+html[data-theme="light"] .project-buttons .github-btn {
+  background: #FFFFFF !important;
+  border-color: #007A68 !important;
+  color: #007A68 !important;
+}
+html[data-theme="light"] .project-buttons .github-btn:hover {
+  background: #007A68 !important;
+  color: #FFFFFF !important;
+}
+
+/* =========================================================
+   MINI GALLERY ON PROJECT CARDS
+========================================================= */
+.project-card-mini-gallery {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 5px;
+  padding: 10px 14px 0;
+}
+
+.mini-gallery-thumb {
+  width: 100%;
+  height: 42px;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,.10);
+  border-radius: 5px;
+  background: #112240;
+  opacity: .62;
+  cursor: pointer;
+  transition: transform .2s ease, opacity .2s ease, border-color .2s ease;
+}
+
+.mini-gallery-thumb:hover,
+.mini-gallery-thumb.active {
+  opacity: 1;
+  border-color: #64FFDA;
+  transform: translateY(-1px);
+}
+
+.mini-gallery-thumb img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+html[data-theme="light"] .mini-gallery-thumb {
+  background: #F2F6F8 !important;
+  border-color: #D9E4EA !important;
+}
+
 @media (max-width: 600px) {
+  .project-card-mini-gallery {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
 
-    .project-image {
-        height: 210px;
-    }
-
-
-    .project-content {
-        padding: 20px;
-    }
-
-
-    .project-content h3 {
-        font-size: 22px;
-    }
-
-
-    .project-modal-overlay {
-        padding: 10px;
-    }
-
-
-    .project-modal {
-        border-radius: 16px;
-
-        max-height: 96vh;
-    }
-
-
-    .project-modal-header {
-        padding: 20px;
-    }
-
-
-    .project-modal-header h2 {
-        font-size: 24px;
-    }
-
-
-    .project-modal-body {
-        padding: 20px;
-    }
-
-
-    .project-modal-image,
-    .project-modal-image img {
-        max-height: 250px;
-    }
-
-
-    .project-detail-section h3 {
-        font-size: 19px;
-    }
-
-
-    .project-detail-section p,
-    .project-features li {
-        font-size: 14px;
-    }
-
-
-    .project-modal-actions {
-        flex-direction: column;
-    }
-
+  .mini-gallery-thumb {
+    height: 38px;
+  }
 }
