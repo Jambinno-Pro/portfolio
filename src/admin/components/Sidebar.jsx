@@ -8,6 +8,7 @@ import {
   FaCog,
   FaSignOutAlt,
   FaUser,
+  FaFileAlt,
 } from "react-icons/fa";
 
 import { NavLink } from "react-router-dom";
@@ -40,6 +41,15 @@ function Sidebar() {
         <NavLink to="/admin/about">
           <FaUser />
           <span>About</span>
+        </NavLink>
+
+        {/* ==========================
+            RESUME
+        ========================== */}
+
+        <NavLink to="/admin/resume">
+          <FaFileAlt />
+          <span>Resume</span>
         </NavLink>
 
         <NavLink to="/admin/projects">
