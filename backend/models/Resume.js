@@ -29,6 +29,14 @@ const certificateSchema = new mongoose.Schema({
 });
 
 // ===============================
+// Professional Skill Schema
+// ===============================
+const skillSchema = new mongoose.Schema({
+  name: String,
+  level: String,
+});
+
+// ===============================
 // Language Schema
 // ===============================
 const languageSchema = new mongoose.Schema({
@@ -65,13 +73,19 @@ const resumeSchema = new mongoose.Schema(
 
     linkedin: String,
 
+    // Professional Skills
+    skills: [skillSchema],
 
+    // Work Experience
     experience: [experienceSchema],
 
+    // Education
     education: [educationSchema],
 
+    // Certificates
     certificates: [certificateSchema],
 
+    // Languages
     languages: [languageSchema],
   },
   {

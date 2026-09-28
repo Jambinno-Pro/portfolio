@@ -8,7 +8,10 @@ const getResume = async (req, res) => {
   try {
     const resume = await Resume.findOne();
 
-    res.set("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate");
+    res.set(
+      "Cache-Control",
+      "no-store, no-cache, must-revalidate, proxy-revalidate"
+    );
     res.set("Pragma", "no-cache");
     res.set("Expires", "0");
 
@@ -34,12 +37,7 @@ const saveResume = async (req, res) => {
   try {
     let resume = await Resume.findOne();
 
-    // Resume collection fields must always end up as real arrays.
-    // The frontend sends arrays, but this also safely supports older records
-    // or clients that may send a JSON string. Never call JSON.parse() on an
-    // already-created JavaScript object/array.
     const parseArray = (value, fallback = []) => {
-      // Resume collections are sent as JSON arrays by the frontend.
       return Array.isArray(value) ? value : fallback;
     };
 
@@ -52,6 +50,10 @@ const saveResume = async (req, res) => {
         .trim();
     };
 
+    // =======================================
+    // NORMALIZE EXPERIENCE
+    // =======================================
+
     const normalizeExperience = (items) =>
       items.map((item = {}) => ({
         company: normalizeText(item.company),
@@ -60,12 +62,20 @@ const saveResume = async (req, res) => {
         description: normalizeText(item.description),
       }));
 
+    // =======================================
+    // NORMALIZE EDUCATION
+    // =======================================
+
     const normalizeEducation = (items) =>
       items.map((item = {}) => ({
         school: normalizeText(item.school),
         qualification: normalizeText(item.qualification),
         period: normalizeText(item.period),
       }));
+
+    // =======================================
+    // NORMALIZE CERTIFICATES
+    // =======================================
 
     const normalizeCertificates = (items) =>
       items.map((item = {}) => ({
@@ -74,11 +84,29 @@ const saveResume = async (req, res) => {
         year: normalizeText(item.year),
       }));
 
+    // =======================================
+    // NORMALIZE PROFESSIONAL SKILLS
+    // =======================================
+
+    const normalizeSkills = (items) =>
+      items.map((item = {}) => ({
+        name: normalizeText(item.name),
+        level: normalizeText(item.level),
+      }));
+
+    // =======================================
+    // NORMALIZE LANGUAGES
+    // =======================================
+
     const normalizeLanguages = (items) =>
       items.map((item = {}) => ({
         name: normalizeText(item.name),
         level: normalizeText(item.level),
       }));
+
+    // =======================================
+    // PREPARE COLLECTIONS
+    // =======================================
 
     const experience = normalizeExperience(
       parseArray(req.body.experience, resume?.experience || [])
@@ -92,9 +120,17 @@ const saveResume = async (req, res) => {
       parseArray(req.body.certificates, resume?.certificates || [])
     );
 
+    const skills = normalizeSkills(
+      parseArray(req.body.skills, resume?.skills || [])
+    );
+
     const languages = normalizeLanguages(
       parseArray(req.body.languages, resume?.languages || [])
     );
+
+    // =======================================
+    // RESUME DATA
+    // =======================================
 
     const resumeData = {
       fullName: normalizeText(req.body.fullName),
@@ -106,18 +142,32 @@ const saveResume = async (req, res) => {
       website: normalizeText(req.body.website),
       github: normalizeText(req.body.github),
       linkedin: normalizeText(req.body.linkedin),
+
+      skills,
       experience,
       education,
       certificates,
       languages,
     };
 
+    // =======================================
+    // CREATE
+    // =======================================
+
     if (!resume) {
       resume = await Resume.create(resumeData);
-    } else {
+    }
+
+    // =======================================
+    // UPDATE
+    // =======================================
+
+    else {
       resume = await Resume.findByIdAndUpdate(
         resume._id,
-        { $set: resumeData },
+        {
+          $set: resumeData,
+        },
         {
           new: true,
           runValidators: true,
