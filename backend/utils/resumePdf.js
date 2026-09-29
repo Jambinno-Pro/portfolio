@@ -11,6 +11,10 @@ const PALE = [0.965, 0.985, 0.985];
 const TEXT = [0.10, 0.18, 0.24];
 const MUTED = [0.36, 0.44, 0.49];
 
+/* =========================================================
+   BASIC HELPERS
+   ========================================================= */
+
 const normalize = (value) =>
   String(value ?? "")
     .replace(/\r\n/g, "\n")
@@ -31,6 +35,14 @@ const esc = (value) =>
     .replace(/\\/g, "\\\\")
     .replace(/\(/g, "\\(")
     .replace(/\)/g, "\\)");
+
+function colorString(color) {
+  return color.join(" ");
+}
+
+/* =========================================================
+   TEXT WRAPPING
+   ========================================================= */
 
 function wrap(text, maxChars) {
   const lines = [];
@@ -62,7 +74,10 @@ function wrap(text, maxChars) {
               i += maxChars
             ) {
               lines.push(
-                word.slice(i, i + maxChars)
+                word.slice(
+                  i,
+                  i + maxChars
+                )
               );
             }
 
@@ -105,9 +120,9 @@ function textHeight(
   );
 }
 
-function colorString(color) {
-  return color.join(" ");
-}
+/* =========================================================
+   PDF DRAWING HELPERS
+   ========================================================= */
 
 function fill(
   c,
@@ -201,7 +216,9 @@ function roundedRect(
       ? "f"
       : "S";
 
-  parts.push(`${path} ${paint}`);
+  parts.push(
+    `${path} ${paint}`
+  );
 
   c.push(parts.join("\n"));
 }
@@ -261,7 +278,9 @@ function circle(
       ? "f"
       : "S";
 
-  parts.push(`${path} ${paint}`);
+  parts.push(
+    `${path} ${paint}`
+  );
 
   c.push(parts.join("\n"));
 }
@@ -290,7 +309,9 @@ function txt(
   color = TEXT,
   font = "F1"
 ) {
-  if (!safeText(text)) return;
+  if (!safeText(text)) {
+    return;
+  }
 
   c.push(
     `${colorString(color)} rg`,
@@ -307,13 +328,18 @@ function block(
   y,
   options = {}
 ) {
-  const size = options.size || 8;
+  const size =
+    options.size || 8;
+
   const leading =
     options.leading || 10;
+
   const maxChars =
     options.maxChars || 60;
+
   const color =
     options.color || TEXT;
+
   const font =
     options.font || "F1";
 
@@ -353,18 +379,18 @@ function block(
   );
 }
 
+/* =========================================================
+   SECTION HEADING
+   ========================================================= */
+
 function sectionHeading(
   c,
   number,
   title,
   x,
   y,
-  width,
-  baselineOffset = 0
+  width
 ) {
-  const headingY =
-    y - baselineOffset;
-
   txt(
     c,
     String(number).padStart(
@@ -372,7 +398,7 @@ function sectionHeading(
       "0"
     ),
     x,
-    headingY,
+    y,
     7.1,
     TEAL,
     "F2"
@@ -382,7 +408,7 @@ function sectionHeading(
     c,
     title.toUpperCase(),
     x + 18,
-    headingY,
+    y,
     9.1,
     NAVY,
     "F2"
@@ -391,13 +417,17 @@ function sectionHeading(
   rule(
     c,
     x + 18,
-    headingY - 6,
+    y - 6,
     x + width,
-    headingY - 6,
+    y - 6,
     LIGHT,
     0.7
   );
 }
+
+/* =========================================================
+   HEADER
+   ========================================================= */
 
 function header(
   c,
@@ -463,7 +493,7 @@ function header(
   txt(
     c,
     resume.title ||
-      "Technology Professional",
+      "Professional",
     MARGIN,
     PAGE_HEIGHT - 98,
     10.2,
@@ -517,6 +547,10 @@ function header(
   return PAGE_HEIGHT - 150;
 }
 
+/* =========================================================
+   PROFILE
+   ========================================================= */
+
 function drawProfile(
   c,
   resume,
@@ -538,10 +572,16 @@ function drawProfile(
 
   y -= 22;
 
-  const lines = wrap(
-    resume.bio,
-    108
-  );
+  const lines =
+    wrap(
+      resume.bio,
+      Math.max(
+        40,
+        Math.floor(
+          width / 5
+        )
+      )
+    );
 
   const h = Math.max(
     40,
@@ -568,7 +608,12 @@ function drawProfile(
     {
       size: 7.7,
       leading: 9.5,
-      maxChars: 108,
+      maxChars: Math.max(
+        40,
+        Math.floor(
+          width / 5
+        )
+      ),
       color: MUTED,
     }
   );
@@ -576,19 +621,26 @@ function drawProfile(
   return y - h - 12;
 }
 
+/* =========================================================
+   EXPERIENCE
+   ========================================================= */
+
 function experienceHeight(
   item,
   maxChars,
   leading = 9.1,
   width = 380
 ) {
-  const position = safeText(
-    item.position || "Role"
-  );
+  const position =
+    safeText(
+      item.position ||
+        "Role"
+    );
 
-  const period = safeText(
-    item.period || ""
-  );
+  const period =
+    safeText(
+      item.period || ""
+    );
 
   const periodWidth =
     Math.min(
@@ -608,7 +660,7 @@ function experienceHeight(
     Math.max(
       18,
       Math.floor(
-        titleReserve / 5.0
+        titleReserve / 5
       )
     );
 
@@ -621,18 +673,11 @@ function experienceHeight(
       ).length
     );
 
-  let h;
-
-  if (
+  let h =
     titleLines > 1 &&
     period
-  ) {
-    h =
-      titleLines * 10.5 +
-      12;
-  } else {
-    h = 12;
-  }
+      ? titleLines * 10.5 + 12
+      : 12;
 
   if (item.company) {
     h += 12;
@@ -658,13 +703,16 @@ function drawExperienceEntry(
   width,
   maxChars = 68
 ) {
-  const position = safeText(
-    item.position || "Role"
-  );
+  const position =
+    safeText(
+      item.position ||
+        "Role"
+    );
 
-  const period = safeText(
-    item.period || ""
-  );
+  const period =
+    safeText(
+      item.period || ""
+    );
 
   const periodWidth =
     Math.min(
@@ -680,18 +728,19 @@ function drawExperienceEntry(
     periodWidth -
     14;
 
+  const titleMaxChars =
+    Math.max(
+      18,
+      Math.floor(
+        titleReserve / 5
+      )
+    );
+
   const titleLines =
-    position.length > 0
-      ? wrap(
-          position,
-          Math.max(
-            18,
-            Math.floor(
-              titleReserve / 5.0
-            )
-          )
-        )
-      : ["Role"];
+    wrap(
+      position,
+      titleMaxChars
+    );
 
   if (
     titleLines.length > 1 &&
@@ -705,12 +754,8 @@ function drawExperienceEntry(
       {
         size: 9,
         leading: 10.5,
-        maxChars: Math.max(
-          18,
-          Math.floor(
-            titleReserve / 5.0
-          )
-        ),
+        maxChars:
+          titleMaxChars,
         color: NAVY,
         font: "F2",
       }
@@ -733,7 +778,7 @@ function drawExperienceEntry(
   } else {
     txt(
       c,
-      position || "Role",
+      position,
       x,
       y,
       9,
@@ -799,12 +844,17 @@ function drawExperienceEntry(
 function drawExperience(
   c,
   resume,
+  x,
   y,
   width,
   bottomLimit
 ) {
   const experience =
-    resume.experience || [];
+    Array.isArray(
+      resume.experience
+    )
+      ? resume.experience
+      : [];
 
   if (!experience.length) {
     return {
@@ -817,7 +867,7 @@ function drawExperience(
     c,
     2,
     "Experience",
-    MARGIN,
+    x,
     y,
     width
   );
@@ -853,7 +903,7 @@ function drawExperience(
       drawExperienceEntry(
         c,
         item,
-        MARGIN,
+        x,
         y,
         width,
         68
@@ -865,9 +915,9 @@ function drawExperience(
     ) {
       rule(
         c,
-        MARGIN,
+        x,
         y + 3,
-        MARGIN + width,
+        x + width,
         y + 3,
         LIGHT,
         0.55
@@ -898,33 +948,49 @@ function drawSidebar(
 ) {
   let sy = y;
 
-  const innerX = x + 10;
-  const innerW = width - 20;
+  const innerX =
+    x + 10;
+
+  const innerW =
+    width - 20;
+
   const sectionGap = 7;
 
+  /*
+   * Draw one sidebar card.
+   */
   const drawCard = ({
     number,
     title,
     height,
     drawContent,
   }) => {
-    const cardTop = sy;
+    const safeHeight =
+      Math.max(
+        42,
+        height
+      );
+
+    const cardTop =
+      sy;
+
     const cardBottom =
-      cardTop - height;
+      cardTop -
+      safeHeight;
 
     roundedRect(
       c,
       x,
       cardBottom,
       width,
-      height,
+      safeHeight,
       5,
       PALE,
       LIGHT,
       0.7
     );
 
-    const headingBaseline =
+    const headingY =
       cardTop - 13;
 
     txt(
@@ -934,7 +1000,7 @@ function drawSidebar(
         "0"
       ),
       innerX,
-      headingBaseline,
+      headingY,
       7.1,
       TEAL,
       "F2"
@@ -944,7 +1010,7 @@ function drawSidebar(
       c,
       title.toUpperCase(),
       innerX + 18,
-      headingBaseline,
+      headingY,
       8.2,
       NAVY,
       "F2"
@@ -953,58 +1019,120 @@ function drawSidebar(
     rule(
       c,
       innerX + 18,
-      headingBaseline - 7,
+      headingY - 7,
       innerX + innerW,
-      headingBaseline - 7,
+      headingY - 7,
       LIGHT,
       0.7
     );
 
-    let contentY =
+    const contentY =
       cardTop - 37;
 
-    contentY =
-      drawContent(contentY);
+    drawContent(
+      contentY
+    );
 
     sy =
       cardBottom -
       sectionGap;
-
-    return contentY;
   };
 
-  /* =====================================================
+  /* =======================================================
      03 PROFESSIONAL SKILLS
-     Put Skills FIRST so they cannot be pushed off
-     the printable area by Education/Certificates.
-     ===================================================== */
 
-  if (
+     THIS IS INTENTIONALLY FIRST.
+     ======================================================= */
+
+  const skills =
     Array.isArray(
       resume.skills
-    ) &&
-    resume.skills.length
-  ) {
-    const items =
-      resume.skills.filter(
-        (item) =>
-          item &&
-          (item.name ||
-            item.level)
-      );
+    )
+      ? resume.skills.filter(
+          (item) =>
+            item &&
+            (
+              normalize(
+                item.name
+              ) ||
+              normalize(
+                item.level
+              )
+            )
+        )
+      : [];
 
-    if (items.length) {
-      /*
-       * Compact calculation.
-       *
-       * Each skill normally occupies one line:
-       * Skill Name          Level
-       *
-       * Long names wrap only when necessary.
-       */
-      const contentHeight =
-        items.reduce(
-          (sum, item) => {
+  if (skills.length) {
+    /*
+     * Calculate exact card height.
+     */
+    let contentHeight = 0;
+
+    skills.forEach(
+      (item) => {
+        const name =
+          safeText(
+            item.name ||
+              "Skill"
+          );
+
+        const level =
+          safeText(
+            item.level || ""
+          );
+
+        const nameLines =
+          Math.max(
+            1,
+            wrap(
+              name,
+              20
+            ).length
+          );
+
+        const levelLines =
+          level
+            ? Math.max(
+                1,
+                wrap(
+                  level,
+                  12
+                ).length
+              )
+            : 1;
+
+        const lines =
+          Math.max(
+            nameLines,
+            levelLines
+          );
+
+        contentHeight +=
+          lines * 9 +
+          5;
+      }
+    );
+
+    /*
+     * Card heading = 37
+     * bottom padding = 8
+     */
+    const height =
+      37 +
+      contentHeight +
+      8;
+
+    drawCard({
+      number: 3,
+      title:
+        "Professional Skills",
+      height,
+
+      drawContent: (
+        contentY
+      ) => {
+        skills.forEach(
+          (item, index) => {
             const name =
               safeText(
                 item.name ||
@@ -1021,7 +1149,7 @@ function drawSidebar(
                 1,
                 wrap(
                   name,
-                  22
+                  20
                 ).length
               );
 
@@ -1031,10 +1159,10 @@ function drawSidebar(
                     1,
                     wrap(
                       level,
-                      14
+                      12
                     ).length
                   )
-                : 0;
+                : 1;
 
             const lines =
               Math.max(
@@ -1042,96 +1170,41 @@ function drawSidebar(
                 levelLines
               );
 
-            return (
-              sum +
-              lines * 9 +
-              4
+            /*
+             * Skill name.
+             */
+            block(
+              c,
+              name,
+              innerX,
+              contentY,
+              {
+                size: 7.1,
+                leading: 9,
+                maxChars: 20,
+                color: NAVY,
+                font: "F2",
+              }
             );
-          },
-          0
-        );
 
-      const height =
-        39 +
-        contentHeight +
-        7;
-
-      drawCard({
-        number: 3,
-        title:
-          "Professional Skills",
-        height,
-
-        drawContent: (
-          contentY
-        ) => {
-          items.forEach(
-            (item) => {
-              const name =
-                safeText(
-                  item.name ||
-                    "Skill"
-                );
-
-              const level =
-                safeText(
-                  item.level || ""
-                );
-
-              const nameLines =
-                Math.max(
-                  1,
-                  wrap(
-                    name,
-                    22
-                  ).length
-                );
-
-              const levelLines =
-                level
-                  ? Math.max(
-                      1,
-                      wrap(
-                        level,
-                        14
-                      ).length
-                    )
-                  : 0;
-
-              const lines =
-                Math.max(
-                  nameLines,
-                  levelLines
-                );
-
-              /*
-               * Draw skill name on the left.
-               */
-              block(
-                c,
-                name,
-                innerX,
-                contentY,
-                {
-                  size: 7.1,
-                  leading: 9,
-                  maxChars: 22,
-                  color: NAVY,
-                  font: "F2",
-                }
-              );
-
-              /*
-               * Draw level on the right.
-               */
-              if (level) {
+            /*
+             * Skill level.
+             *
+             * Put it underneath if the skill
+             * name is long enough to wrap.
+             * This prevents overlap.
+             */
+            if (level) {
+              if (
+                nameLines === 1
+              ) {
                 const levelWidth =
                   Math.min(
-                    58,
+                    60,
                     Math.max(
                       30,
                       level.length *
-                        3.4
+                        3.2
                     )
                   );
 
@@ -1146,89 +1219,154 @@ function drawSidebar(
                   levelX,
                   contentY,
                   {
-                    size: 6.1,
+                    size: 5.9,
                     leading: 9,
-                    maxChars: 14,
+                    maxChars: 12,
+                    color: TEAL,
+                  }
+                );
+              } else {
+                block(
+                  c,
+                  level,
+                  innerX,
+                  contentY -
+                    nameLines *
+                      9,
+                  {
+                    size: 5.9,
+                    leading: 8,
+                    maxChars: 30,
                     color: TEAL,
                   }
                 );
               }
-
-              contentY -=
-                lines * 9 +
-                4;
             }
-          );
 
-          return contentY;
-        },
-      });
-    }
+            /*
+             * Separator between skills.
+             */
+            if (
+              index <
+              skills.length - 1
+            ) {
+              rule(
+                c,
+                innerX,
+                contentY -
+                  lines * 9 -
+                  1,
+                innerX +
+                  innerW,
+                contentY -
+                  lines * 9 -
+                  1,
+                LIGHT,
+                0.45
+              );
+            }
+
+            contentY -=
+              lines * 9 +
+              5;
+          }
+        );
+      },
+    });
   }
 
-  /* =====================================================
+  /* =======================================================
      04 EDUCATION
-     ===================================================== */
+     ======================================================= */
 
-  if (
+  const education =
     Array.isArray(
       resume.education
-    ) &&
-    resume.education.length
-  ) {
-    const items =
-      resume.education;
+    )
+      ? resume.education.filter(
+          (item) =>
+            item &&
+            (
+              normalize(
+                item.qualification
+              ) ||
+              normalize(
+                item.school
+              ) ||
+              normalize(
+                item.period
+              )
+            )
+        )
+      : [];
 
-    const contentHeight =
-      items.reduce(
-        (sum, item) => {
-          let h = 11;
+  if (education.length) {
+    let contentHeight = 0;
 
-          if (item.school) {
-            h +=
-              textHeight(
-                item.school,
-                34,
+    education.forEach(
+      (item) => {
+        const qualification =
+          item.qualification
+            ? textHeight(
+                item.qualification,
+                32,
                 8.2
-              ) + 2;
-          }
+              )
+            : 8.2;
 
-          h += item.period
-            ? 14
-            : 5;
+        const school =
+          item.school
+            ? textHeight(
+                item.school,
+                32,
+                8
+              )
+            : 0;
 
-          return sum + h;
-        },
-        0
-      );
+        const period =
+          item.period
+            ? 11
+            : 3;
 
-    const height =
-      39 +
-      contentHeight +
-      8;
+        contentHeight +=
+          qualification +
+          school +
+          period +
+          7;
+      }
+    );
 
     drawCard({
       number: 4,
       title: "Education",
-      height,
+      height:
+        37 +
+        contentHeight +
+        8,
 
       drawContent: (
         contentY
       ) => {
-        items.forEach(
-          (item) => {
-            txt(
-              c,
-              item.qualification ||
-                "Qualification",
-              innerX,
-              contentY,
-              7.7,
-              NAVY,
-              "F2"
-            );
-
-            contentY -= 11;
+        education.forEach(
+          (item, index) => {
+            if (
+              item.qualification
+            ) {
+              contentY =
+                block(
+                  c,
+                  item.qualification,
+                  innerX,
+                  contentY,
+                  {
+                    size: 7.2,
+                    leading: 8.2,
+                    maxChars: 32,
+                    color: NAVY,
+                    font: "F2",
+                  }
+                ) - 2;
+            }
 
             if (item.school) {
               contentY =
@@ -1238,9 +1376,9 @@ function drawSidebar(
                   innerX,
                   contentY,
                   {
-                    size: 7.1,
-                    leading: 8.2,
-                    maxChars: 34,
+                    size: 6.9,
+                    leading: 8,
+                    maxChars: 32,
                     color: MUTED,
                   }
                 ) - 2;
@@ -1252,106 +1390,130 @@ function drawSidebar(
                 item.period,
                 innerX,
                 contentY,
-                6.6,
+                6.4,
                 TEAL
               );
 
-              contentY -= 14;
-            } else {
-              contentY -= 5;
+              contentY -=
+                11;
+            }
+
+            if (
+              index <
+              education.length - 1
+            ) {
+              rule(
+                c,
+                innerX,
+                contentY + 2,
+                innerX +
+                  innerW,
+                contentY + 2,
+                LIGHT,
+                0.45
+              );
+
+              contentY -=
+                6;
             }
           }
         );
-
-        return contentY;
       },
     });
   }
 
-  /* =====================================================
+  /* =======================================================
      05 CERTIFICATES
-     ===================================================== */
+     ======================================================= */
 
-  if (
+  const certificates =
     Array.isArray(
       resume.certificates
-    ) &&
-    resume.certificates.length
-  ) {
-    const items =
-      resume.certificates;
+    )
+      ? resume.certificates.filter(
+          (item) =>
+            item &&
+            (
+              normalize(
+                item.name
+              ) ||
+              normalize(
+                item.issuer
+              ) ||
+              normalize(
+                item.year
+              )
+            )
+        )
+      : [];
 
-    const contentHeight =
-      items.reduce(
-        (sum, item) => {
-          const nameHeight =
-            item.name
-              ? textHeight(
-                  item.name,
-                  34,
-                  8.2
-                )
-              : 8.2;
+  if (certificates.length) {
+    let contentHeight = 0;
 
-          const meta = [
-            item.issuer,
-            item.year,
-          ]
-            .filter(Boolean)
-            .join(" - ");
+    certificates.forEach(
+      (item) => {
+        const nameHeight =
+          item.name
+            ? textHeight(
+                item.name,
+                32,
+                8
+              )
+            : 8;
 
-          const metaHeight =
-            meta
-              ? textHeight(
-                  meta,
-                  34,
-                  7.6
-                )
-              : 0;
+        const meta = [
+          item.issuer,
+          item.year,
+        ]
+          .filter(Boolean)
+          .join(" - ");
 
-          return (
-            sum +
-            nameHeight +
-            2 +
-            (meta
-              ? metaHeight + 7
-              : 4)
-          );
-        },
-        0
-      );
+        const metaHeight =
+          meta
+            ? textHeight(
+                meta,
+                32,
+                7.5
+              )
+            : 0;
 
-    const height =
-      39 +
-      contentHeight +
-      8;
+        contentHeight +=
+          nameHeight +
+          metaHeight +
+          8;
+      }
+    );
 
     drawCard({
       number: 5,
       title:
         "Certificates",
-      height,
+      height:
+        37 +
+        contentHeight +
+        8,
 
       drawContent: (
         contentY
       ) => {
-        items.forEach(
-          (item) => {
-            contentY =
-              block(
-                c,
-                item.name ||
-                  "Certificate",
-                innerX,
-                contentY,
-                {
-                  size: 7.3,
-                  leading: 8.2,
-                  maxChars: 34,
-                  color: NAVY,
-                  font: "F2",
-                }
-              ) - 2;
+        certificates.forEach(
+          (item, index) => {
+            if (item.name) {
+              contentY =
+                block(
+                  c,
+                  item.name,
+                  innerX,
+                  contentY,
+                  {
+                    size: 7.1,
+                    leading: 8,
+                    maxChars: 32,
+                    color: NAVY,
+                    font: "F2",
+                  }
+                ) - 2;
+            }
 
             const meta = [
               item.issuer,
@@ -1368,100 +1530,120 @@ function drawSidebar(
                   innerX,
                   contentY,
                   {
-                    size: 6.6,
-                    leading: 7.6,
-                    maxChars: 34,
+                    size: 6.4,
+                    leading: 7.5,
+                    maxChars: 32,
                     color: MUTED,
                   }
-                ) - 7;
-            } else {
-              contentY -= 4;
+                ) - 5;
+            }
+
+            if (
+              index <
+              certificates.length - 1
+            ) {
+              rule(
+                c,
+                innerX,
+                contentY + 2,
+                innerX +
+                  innerW,
+                contentY + 2,
+                LIGHT,
+                0.45
+              );
+
+              contentY -=
+                5;
             }
           }
         );
-
-        return contentY;
       },
     });
   }
 
-  /* =====================================================
+  /* =======================================================
      06 LANGUAGES
-     ===================================================== */
+     ======================================================= */
 
-  if (
+  const languages =
     Array.isArray(
       resume.languages
-    ) &&
-    resume.languages.length
-  ) {
-    const items =
-      resume.languages;
+    )
+      ? resume.languages.filter(
+          (item) =>
+            item &&
+            (
+              normalize(
+                item.name
+              ) ||
+              normalize(
+                item.level
+              )
+            )
+        )
+      : [];
 
-    const contentHeight =
-      items.reduce(
-        (sum, item) => {
-          const nameHeight =
-            item.name
-              ? textHeight(
-                  item.name,
-                  34,
-                  8.2
-                )
-              : 8.2;
+  if (languages.length) {
+    let contentHeight = 0;
 
-          const levelHeight =
-            item.level
-              ? textHeight(
-                  item.level,
-                  34,
-                  7.6
-                )
-              : 0;
+    languages.forEach(
+      (item) => {
+        const nameHeight =
+          item.name
+            ? textHeight(
+                item.name,
+                32,
+                8
+              )
+            : 8;
 
-          return (
-            sum +
-            nameHeight +
-            (item.level
-              ? levelHeight + 3
-              : 4) +
-            4
-          );
-        },
-        0
-      );
+        const levelHeight =
+          item.level
+            ? textHeight(
+                item.level,
+                32,
+                7.5
+              )
+            : 0;
 
-    const height =
-      39 +
-      contentHeight +
-      8;
+        contentHeight +=
+          nameHeight +
+          levelHeight +
+          7;
+      }
+    );
 
     drawCard({
       number: 6,
       title:
         "Languages",
-      height,
+      height:
+        37 +
+        contentHeight +
+        8,
 
       drawContent: (
         contentY
       ) => {
-        items.forEach(
-          (item) => {
-            contentY =
-              block(
-                c,
-                item.name ||
-                  "Language",
-                innerX,
-                contentY,
-                {
-                  size: 7.3,
-                  leading: 8.2,
-                  maxChars: 34,
-                  color: NAVY,
-                  font: "F2",
-                }
-              ) - 1;
+        languages.forEach(
+          (item, index) => {
+            if (item.name) {
+              contentY =
+                block(
+                  c,
+                  item.name,
+                  innerX,
+                  contentY,
+                  {
+                    size: 7.1,
+                    leading: 8,
+                    maxChars: 32,
+                    color: NAVY,
+                    font: "F2",
+                  }
+                ) - 1;
+            }
 
             if (item.level) {
               contentY =
@@ -1471,26 +1653,41 @@ function drawSidebar(
                   innerX,
                   contentY,
                   {
-                    size: 6.5,
-                    leading: 7.6,
-                    maxChars: 34,
+                    size: 6.3,
+                    leading: 7.5,
+                    maxChars: 32,
                     color: TEAL,
                   }
-                ) - 6;
-            } else {
-              contentY -= 5;
+                ) - 5;
+            }
+
+            if (
+              index <
+              languages.length - 1
+            ) {
+              rule(
+                c,
+                innerX,
+                contentY + 2,
+                innerX +
+                  innerW,
+                contentY + 2,
+                LIGHT,
+                0.45
+              );
+
+              contentY -=
+                5;
             }
           }
         );
-
-        return contentY;
       },
     });
   }
 
-  /* =====================================================
+  /* =======================================================
      07 CONNECT
-     ===================================================== */
+     ======================================================= */
 
   const links = [
     resume.github &&
@@ -1500,34 +1697,32 @@ function drawSidebar(
   ].filter(Boolean);
 
   if (links.length) {
-    const contentHeight =
-      links.reduce(
-        (sum, item) =>
-          sum +
-          textHeight(
-            item,
-            34,
-            8
-          ) +
-          6,
-        0
-      );
+    let contentHeight = 0;
 
-    const height =
-      39 +
-      contentHeight +
-      8;
+    links.forEach(
+      (link) => {
+        contentHeight +=
+          textHeight(
+            link,
+            32,
+            7.5
+          ) + 5;
+      }
+    );
 
     drawCard({
       number: 7,
       title: "Connect",
-      height,
+      height:
+        37 +
+        contentHeight +
+        8,
 
       drawContent: (
         contentY
       ) => {
         links.forEach(
-          (link) => {
+          (link, index) => {
             contentY =
               block(
                 c,
@@ -1535,16 +1730,30 @@ function drawSidebar(
                 innerX,
                 contentY,
                 {
-                  size: 6.5,
-                  leading: 8,
-                  maxChars: 34,
+                  size: 6.2,
+                  leading: 7.5,
+                  maxChars: 32,
                   color: MUTED,
                 }
-              ) - 6;
+              ) - 5;
+
+            if (
+              index <
+              links.length - 1
+            ) {
+              rule(
+                c,
+                innerX,
+                contentY + 2,
+                innerX +
+                  innerW,
+                contentY + 2,
+                LIGHT,
+                0.45
+              );
+            }
           }
         );
-
-        return contentY;
       },
     });
   }
@@ -1633,11 +1842,40 @@ function drawPageFrame(c) {
 }
 
 /* =========================================================
-   BUILD PAGES
+   FIRST PAGE
    ========================================================= */
 
-function buildPages(resume) {
-  const pages = [];
+function buildFirstPage(
+  resume
+) {
+  const page = [];
+
+  drawPageFrame(page);
+
+  const headerY =
+    header(
+      page,
+      resume,
+      false
+    );
+
+  /*
+   * -------------------------------------------------------
+   * IMPORTANT LAYOUT CHANGE
+   *
+   * The old PDF did this:
+   *
+   * Header
+   * Profile across full page
+   * THEN sidebar
+   *
+   * That meant a long profile could push the sidebar
+   * below the printable area.
+   *
+   * The new PDF starts BOTH columns immediately after
+   * the header.
+   * -------------------------------------------------------
+   */
 
   const contentWidth =
     PAGE_WIDTH -
@@ -1657,178 +1895,370 @@ function buildPages(resume) {
     leftWidth +
     gap;
 
-  const first = [];
-
-  drawPageFrame(first);
-
-  let y = header(
-    first,
-    resume,
-    false
-  );
-
-  y = drawProfile(
-    first,
-    resume,
-    y,
-    contentWidth
-  );
-
-  const columnsY = y;
-
-  const bottom = 56;
+  const columnsTop =
+    headerY - 8;
 
   /*
-   * Sidebar is independent from the
-   * Experience column.
+   * RIGHT COLUMN
+   *
+   * Professional Skills starts here.
    */
   drawSidebar(
-    first,
+    page,
     resume,
     rightX,
-    columnsY,
+    columnsTop,
     rightWidth
   );
 
+  /*
+   * LEFT COLUMN
+   *
+   * Profile and Experience.
+   */
+  let leftY =
+    columnsTop;
+
+  if (resume.bio) {
+    sectionHeading(
+      page,
+      1,
+      "Profile",
+      MARGIN,
+      leftY,
+      leftWidth
+    );
+
+    leftY -= 22;
+
+    const profileLines =
+      wrap(
+        resume.bio,
+        Math.max(
+          35,
+          Math.floor(
+            leftWidth / 5
+          )
+        )
+      );
+
+    const profileHeight =
+      Math.max(
+        40,
+        profileLines.length *
+          9.5 +
+          20
+      );
+
+    roundedRect(
+      page,
+      MARGIN,
+      leftY -
+        profileHeight +
+        7,
+      leftWidth,
+      profileHeight,
+      5,
+      PALE,
+      LIGHT,
+      0.7
+    );
+
+    block(
+      page,
+      resume.bio,
+      MARGIN + 10,
+      leftY - 8,
+      {
+        size: 7.5,
+        leading: 9.5,
+        maxChars: Math.max(
+          35,
+          Math.floor(
+            leftWidth / 5
+          )
+        ),
+        color: MUTED,
+      }
+    );
+
+    leftY =
+      leftY -
+      profileHeight -
+      14;
+  }
+
+  /*
+   * Experience starts below Profile.
+   */
+  const bottom =
+    58;
+
   const experienceResult =
     drawExperience(
-      first,
+      page,
       resume,
-      columnsY,
+      MARGIN,
+      leftY,
       leftWidth,
       bottom
     );
 
-  pages.push({
-    commands: first,
-    remainingExperience:
-      (
-        resume.experience ||
-        []
-      ).slice(
-        experienceResult.used
+  const used =
+    experienceResult.used;
+
+  const experience =
+    Array.isArray(
+      resume.experience
+    )
+      ? resume.experience
+      : [];
+
+  return {
+    page,
+    remaining:
+      experience.slice(
+        used
       ),
-  });
+  };
+}
 
-  let remaining =
-    (
-      resume.experience ||
-      []
-    ).slice(
-      experienceResult.used
-    );
+/* =========================================================
+   CONTINUATION EXPERIENCE PAGE
+   ========================================================= */
 
-  while (
-    remaining.length
-  ) {
-    const page = [];
+function buildExperiencePage(
+  resume,
+  remaining
+) {
+  const page = [];
 
-    drawPageFrame(page);
+  drawPageFrame(page);
 
-    let py = header(
+  let y =
+    header(
       page,
       resume,
       true
     );
 
-    sectionHeading(
-      page,
-      2,
-      "Experience Continued",
-      MARGIN,
-      py,
-      contentWidth
-    );
+  const contentWidth =
+    PAGE_WIDTH -
+    MARGIN * 2;
 
-    py -= 25;
+  sectionHeading(
+    page,
+    2,
+    "Experience Continued",
+    MARGIN,
+    y,
+    contentWidth
+  );
 
-    let consumed = 0;
+  y -= 25;
 
-    for (
-      let i = 0;
-      i < remaining.length;
-      i += 1
-    ) {
-      const h =
-        experienceHeight(
-          remaining[i],
-          102,
-          9.1,
-          contentWidth
-        );
+  const bottom =
+    58;
 
-      if (
-        py - h < bottom &&
-        consumed > 0
-      ) {
-        break;
-      }
+  let consumed = 0;
 
-      py =
-        drawExperienceEntry(
-          page,
-          remaining[i],
-          MARGIN,
-          py,
-          contentWidth,
-          102
-        );
+  for (
+    let i = 0;
+    i < remaining.length;
+    i += 1
+  ) {
+    const item =
+      remaining[i];
 
-      if (
-        i <
-        remaining.length - 1
-      ) {
-        rule(
-          page,
-          MARGIN,
-          py + 3,
-          PAGE_WIDTH - MARGIN,
-          py + 3,
-          LIGHT,
-          0.55
-        );
-
-        py -= 7;
-      }
-
-      consumed += 1;
-    }
-
-    if (!consumed) {
-      consumed = 1;
-    }
-
-    pages.push({
-      commands: page,
-      remainingExperience: [],
-    });
-
-    remaining =
-      remaining.slice(
-        consumed
+    const h =
+      experienceHeight(
+        item,
+        102,
+        9.1,
+        contentWidth
       );
+
+    if (
+      y - h < bottom &&
+      consumed > 0
+    ) {
+      break;
+    }
+
+    y =
+      drawExperienceEntry(
+        page,
+        item,
+        MARGIN,
+        y,
+        contentWidth,
+        102
+      );
+
+    if (
+      i <
+      remaining.length - 1
+    ) {
+      rule(
+        page,
+        MARGIN,
+        y + 3,
+        PAGE_WIDTH - MARGIN,
+        y + 3,
+        LIGHT,
+        0.55
+      );
+
+      y -= 7;
+    }
+
+    consumed += 1;
   }
 
-  return pages.map(
-    (page) => page.commands
+  /*
+   * Safety guard.
+   */
+  if (!consumed) {
+    consumed = 1;
+  }
+
+  return {
+    page,
+    remaining:
+      remaining.slice(
+        consumed
+      ),
+  };
+}
+
+/* =========================================================
+   BUILD ALL PAGES
+   ========================================================= */
+
+function buildPages(
+  resume
+) {
+  const pages = [];
+
+  /*
+   * FIRST PAGE
+   */
+  const first =
+    buildFirstPage(
+      resume
+    );
+
+  pages.push(
+    first.page
   );
+
+  /*
+   * REMAINING EXPERIENCE
+   */
+  let remaining =
+    first.remaining;
+
+  while (
+    remaining.length
+  ) {
+    const next =
+      buildExperiencePage(
+        resume,
+        remaining
+      );
+
+    pages.push(
+      next.page
+    );
+
+    remaining =
+      next.remaining;
+  }
+
+  /*
+   * Footer is added only after
+   * the total number of pages
+   * is known.
+   */
+  const total =
+    pages.length;
+
+  pages.forEach(
+    (commands, index) => {
+      drawFooter(
+        commands,
+        resume,
+        index + 1,
+        total
+      );
+    }
+  );
+
+  return pages;
 }
 
 /* =========================================================
    BUILD PDF
    ========================================================= */
 
-function buildPdf(resume) {
+function buildPdf(
+  resume
+) {
   const safeResume =
     resume || {};
 
+  /*
+   * Normalize arrays defensively.
+   *
+   * This ensures the PDF generator doesn't
+   * crash if MongoDB returns undefined/null.
+   */
+  const normalizedResume = {
+    ...safeResume,
+
+    skills:
+      Array.isArray(
+        safeResume.skills
+      )
+        ? safeResume.skills
+        : [],
+
+    experience:
+      Array.isArray(
+        safeResume.experience
+      )
+        ? safeResume.experience
+        : [],
+
+    education:
+      Array.isArray(
+        safeResume.education
+      )
+        ? safeResume.education
+        : [],
+
+    certificates:
+      Array.isArray(
+        safeResume.certificates
+      )
+        ? safeResume.certificates
+        : [],
+
+    languages:
+      Array.isArray(
+        safeResume.languages
+      )
+        ? safeResume.languages
+        : [],
+  };
+
+  /*
+   * Build page commands.
+   */
   const pages =
     buildPages(
-      safeResume
+      normalizedResume
     );
-
-  const total =
-    pages.length;
 
   const objects = [];
   const offsets = [];
@@ -1839,6 +2269,12 @@ function buildPdf(resume) {
 
     return objects.length;
   };
+
+  /*
+   * -------------------------------------------------------
+   * PDF OBJECTS
+   * -------------------------------------------------------
+   */
 
   const catalog =
     add(
@@ -1863,8 +2299,9 @@ function buildPdf(resume) {
   pages.forEach(
     (commands) => {
       const stream =
-        commands.join("\n") +
-        "\n";
+        commands.join(
+          "\n"
+        ) + "\n";
 
       const byteLength =
         typeof Buffer !==
@@ -1873,9 +2310,11 @@ function buildPdf(resume) {
               stream,
               "latin1"
             )
-          : new TextEncoder().encode(
-              stream
-            ).length;
+          : new TextEncoder()
+              .encode(
+                stream
+              )
+              .length;
 
       const content =
         add(
@@ -1890,6 +2329,9 @@ function buildPdf(resume) {
     }
   );
 
+  /*
+   * Pages object.
+   */
   objects[
     pagesObject - 1
   ] =
@@ -1902,8 +2344,20 @@ function buildPdf(resume) {
         " "
       )}] /Count ${pageRefs.length} >>`;
 
+  /*
+   * -------------------------------------------------------
+   * PDF HEADER
+   * -------------------------------------------------------
+   */
+
   let pdf =
     "%PDF-1.4\n%\xFF\xFF\xFF\xFF\n";
+
+  /*
+   * -------------------------------------------------------
+   * OBJECTS
+   * -------------------------------------------------------
+   */
 
   objects.forEach(
     (body, index) => {
@@ -1914,9 +2368,11 @@ function buildPdf(resume) {
               pdf,
               "latin1"
             )
-          : new TextEncoder().encode(
-              pdf
-            ).length;
+          : new TextEncoder()
+              .encode(
+                pdf
+              )
+              .length;
 
       pdf +=
         `${index + 1} 0 obj\n` +
@@ -1925,6 +2381,12 @@ function buildPdf(resume) {
     }
   );
 
+  /*
+   * -------------------------------------------------------
+   * XREF
+   * -------------------------------------------------------
+   */
+
   const xref =
     typeof Buffer !==
     "undefined"
@@ -1932,9 +2394,11 @@ function buildPdf(resume) {
           pdf,
           "latin1"
         )
-      : new TextEncoder().encode(
-          pdf
-        ).length;
+      : new TextEncoder()
+          .encode(
+            pdf
+          )
+          .length;
 
   pdf +=
     `xref\n0 ${
@@ -1954,12 +2418,24 @@ function buildPdf(resume) {
     }
   );
 
+  /*
+   * -------------------------------------------------------
+   * TRAILER
+   * -------------------------------------------------------
+   */
+
   pdf +=
     `trailer\n<< /Size ${
       objects.length + 1
     } /Root ${catalog} 0 R >>\n` +
     `startxref\n${xref}\n` +
     `%%EOF`;
+
+  /*
+   * -------------------------------------------------------
+   * RETURN PDF BUFFER
+   * -------------------------------------------------------
+   */
 
   return typeof Buffer !==
     "undefined"
@@ -1971,6 +2447,10 @@ function buildPdf(resume) {
         pdf
       );
 }
+
+/* =========================================================
+   EXPORT
+   ========================================================= */
 
 module.exports = {
   buildPdf,
