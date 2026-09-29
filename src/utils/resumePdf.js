@@ -781,10 +781,6 @@ function drawExperience(
   };
 }
 
-// =======================================
-// SIDEBAR
-// =======================================
-
 function drawSidebar(
   c,
   resume,
@@ -809,8 +805,7 @@ function drawSidebar(
     drawContent,
   }) => {
     const cardTop = sy;
-    const cardBottom =
-      cardTop - height;
+    const cardBottom = cardTop - height;
 
     roundedRect(
       c,
@@ -824,8 +819,7 @@ function drawSidebar(
       0.7
     );
 
-    const headingBaseline =
-      cardTop - 13;
+    const headingBaseline = cardTop - 13;
 
     txt(
       c,
@@ -857,17 +851,11 @@ function drawSidebar(
       0.7
     );
 
-    let contentY =
-      cardTop - 39;
+    let contentY = cardTop - 39;
 
-    contentY = drawContent(
-      contentY
-    );
+    drawContent(contentY);
 
-    sy =
-      cardBottom - sectionGap;
-
-    return contentY;
+    sy = cardBottom - sectionGap;
   };
 
   // =======================================
@@ -875,31 +863,27 @@ function drawSidebar(
   // =======================================
 
   if (resume.education?.length) {
-    const items =
-      resume.education;
+    const items = resume.education;
 
-    const contentHeight =
-      items.reduce(
-        (sum, item) => {
-          let h = 11;
+    const contentHeight = items.reduce(
+      (sum, item) => {
+        let h = 11;
 
-          if (item.school) {
-            h +=
-              textHeight(
-                item.school,
-                34,
-                8.2
-              ) + 2;
-          }
+        if (item.school) {
+          h +=
+            textHeight(
+              item.school,
+              34,
+              8.2
+            ) + 2;
+        }
 
-          h += item.period
-            ? 14
-            : 5;
+        h += item.period ? 14 : 5;
 
-          return sum + h;
-        },
-        0
-      );
+        return sum + h;
+      },
+      0
+    );
 
     const height =
       39 +
@@ -911,58 +895,61 @@ function drawSidebar(
       title: "Education",
       height,
 
-      drawContent: (
-        contentY
-      ) => {
-        items.forEach(
-          (item) => {
-            txt(
-              c,
-              item.qualification ||
-                "Qualification",
-              innerX,
-              contentY,
-              7.7,
-              NAVY,
-              "F2"
-            );
-
+      drawContent: (contentY) => {
+        items.forEach((item) => {
+          if (item.qualification) {
+            contentY =
+              block(
+                c,
+                item.qualification,
+                innerX,
+                contentY,
+                {
+                  size: 7.7,
+                  leading: 8.5,
+                  maxChars: 34,
+                  color: NAVY,
+                  font: "F2",
+                }
+              ) - 2;
+          } else {
             contentY -= 11;
+          }
 
-            if (item.school) {
-              contentY =
-                block(
-                  c,
-                  item.school,
-                  innerX,
-                  contentY,
-                  {
-                    size: 7.1,
-                    leading: 8.2,
-                    maxChars: 34,
-                    color: MUTED,
-                  }
-                ) - 2;
-            }
+          if (item.school) {
+            contentY =
+              block(
+                c,
+                item.school,
+                innerX,
+                contentY,
+                {
+                  size: 7.1,
+                  leading: 8.2,
+                  maxChars: 34,
+                  color: MUTED,
+                }
+              ) - 2;
+          }
 
-            if (item.period) {
-              txt(
+          if (item.period) {
+            contentY =
+              block(
                 c,
                 item.period,
                 innerX,
                 contentY,
-                6.6,
-                TEAL
-              );
-
-              contentY -= 14;
-            } else {
-              contentY -= 5;
-            }
+                {
+                  size: 6.6,
+                  leading: 7.6,
+                  maxChars: 34,
+                  color: TEAL,
+                }
+              ) - 5;
+          } else {
+            contentY -= 5;
           }
-        );
-
-        return contentY;
+        });
       },
     });
   }
@@ -972,48 +959,44 @@ function drawSidebar(
   // =======================================
 
   if (resume.certificates?.length) {
-    const items =
-      resume.certificates;
+    const items = resume.certificates;
 
-    const contentHeight =
-      items.reduce(
-        (sum, item) => {
-          const nameHeight =
-            item.name
-              ? textHeight(
-                  item.name,
-                  34,
-                  8.2
-                )
-              : 8.2;
+    const contentHeight = items.reduce(
+      (sum, item) => {
+        const nameHeight = item.name
+          ? textHeight(
+              item.name,
+              34,
+              8.2
+            )
+          : 8.2;
 
-          const meta = [
-            item.issuer,
-            item.year,
-          ]
-            .filter(Boolean)
-            .join(" - ");
+        const meta = [
+          item.issuer,
+          item.year,
+        ]
+          .filter(Boolean)
+          .join(" - ");
 
-          const metaHeight =
-            meta
-              ? textHeight(
-                  meta,
-                  34,
-                  7.6
-                )
-              : 0;
+        const metaHeight = meta
+          ? textHeight(
+              meta,
+              34,
+              7.6
+            )
+          : 0;
 
-          return (
-            sum +
-            nameHeight +
-            2 +
-            (meta
-              ? metaHeight + 7
-              : 4)
-          );
-        },
-        0
-      );
+        return (
+          sum +
+          nameHeight +
+          2 +
+          (meta
+            ? metaHeight + 7
+            : 4)
+        );
+      },
+      0
+    );
 
     const height =
       39 +
@@ -1025,55 +1008,49 @@ function drawSidebar(
       title: "Certificates",
       height,
 
-      drawContent: (
-        contentY
-      ) => {
-        items.forEach(
-          (item) => {
+      drawContent: (contentY) => {
+        items.forEach((item) => {
+          contentY =
+            block(
+              c,
+              item.name ||
+                "Certificate",
+              innerX,
+              contentY,
+              {
+                size: 7.3,
+                leading: 8.2,
+                maxChars: 34,
+                color: NAVY,
+                font: "F2",
+              }
+            ) - 2;
+
+          const meta = [
+            item.issuer,
+            item.year,
+          ]
+            .filter(Boolean)
+            .join(" - ");
+
+          if (meta) {
             contentY =
               block(
                 c,
-                item.name ||
-                  "Certificate",
+                meta,
                 innerX,
                 contentY,
                 {
-                  size: 7.3,
-                  leading: 8.2,
+                  size: 6.6,
+                  leading: 7.6,
                   maxChars: 34,
-                  color: NAVY,
-                  font: "F2",
+                  color: MUTED,
                 }
-              ) - 2;
-
-            const meta = [
-              item.issuer,
-              item.year,
-            ]
-              .filter(Boolean)
-              .join(" - ");
-
-            if (meta) {
-              contentY =
-                block(
-                  c,
-                  meta,
-                  innerX,
-                  contentY,
-                  {
-                    size: 6.6,
-                    leading: 7.6,
-                    maxChars: 34,
-                    color: MUTED,
-                  }
-                ) - 7;
-            } else {
-              contentY -= 4;
-            }
+              ) - 7;
+          } else {
+            contentY -= 4;
           }
-        );
-
-        return contentY;
+        });
       },
     });
   }
@@ -1083,41 +1060,56 @@ function drawSidebar(
   // =======================================
 
   if (resume.skills?.length) {
-    const items =
-      resume.skills;
+    const items = resume.skills;
 
-    const contentHeight =
-      items.reduce(
-        (sum, item) => {
-          const nameHeight =
-            item.name
-              ? textHeight(
-                  item.name,
-                  34,
-                  8.2
-                )
-              : 8.2;
+    /*
+     * IMPORTANT:
+     * The height calculation here now matches
+     * the way the skills are actually rendered.
+     *
+     * Long skill names and levels can wrap onto
+     * multiple lines without being clipped.
+     */
 
-          const levelHeight =
-            item.level
-              ? textHeight(
-                  item.level,
-                  34,
-                  7.6
-                )
-              : 0;
+    const contentHeight = items.reduce(
+      (sum, item) => {
+        const name = normalize(
+          item.name || "Skill"
+        );
 
-          return (
-            sum +
-            nameHeight +
-            (item.level
-              ? levelHeight + 2
-              : 0) +
-            7
-          );
-        },
-        0
-      );
+        const level = normalize(
+          item.level || ""
+        );
+
+        const nameLines = Math.max(
+          1,
+          wrap(name, 34).length
+        );
+
+        const levelLines = level
+          ? Math.max(
+              1,
+              wrap(level, 34).length
+            )
+          : 0;
+
+        const nameHeight =
+          nameLines * 8.4;
+
+        const levelHeight =
+          levelLines * 7.6;
+
+        return (
+          sum +
+          nameHeight +
+          (level
+            ? levelHeight + 2
+            : 0) +
+          7
+        );
+      },
+      0
+    );
 
     const height =
       39 +
@@ -1129,41 +1121,49 @@ function drawSidebar(
       title: "Professional Skills",
       height,
 
-      drawContent: (
-        contentY
-      ) => {
-        items.forEach(
-          (item) => {
-            txt(
+      drawContent: (contentY) => {
+        items.forEach((item) => {
+          const name =
+            item.name || "Skill";
+
+          const level =
+            item.level || "";
+
+          // Skill name
+          contentY =
+            block(
               c,
-              item.name || "Skill",
+              name,
               innerX,
               contentY,
-              7.2,
-              NAVY,
-              "F2"
-            );
+              {
+                size: 7.2,
+                leading: 8.4,
+                maxChars: 34,
+                color: NAVY,
+                font: "F2",
+              }
+            ) - 1;
 
-            contentY -= 10;
-
-            if (item.level) {
-              txt(
+          // Skill level
+          if (level) {
+            contentY =
+              block(
                 c,
-                item.level,
+                level,
                 innerX,
                 contentY,
-                6.5,
-                TEAL
-              );
-
-              contentY -= 13;
-            } else {
-              contentY -= 5;
-            }
+                {
+                  size: 6.5,
+                  leading: 7.6,
+                  maxChars: 34,
+                  color: TEAL,
+                }
+              ) - 7;
+          } else {
+            contentY -= 6;
           }
-        );
-
-        return contentY;
+        });
       },
     });
   }
@@ -1173,42 +1173,38 @@ function drawSidebar(
   // =======================================
 
   if (resume.languages?.length) {
-    const items =
-      resume.languages;
+    const items = resume.languages;
 
-    const contentHeight =
-      items.reduce(
-        (sum, item) => {
-          const nameHeight =
-            item.name
-              ? textHeight(
-                  item.name,
-                  20,
-                  8.2
-                )
-              : 8.2;
-
-          const levelHeight =
-            item.level
-              ? textHeight(
-                  item.level,
-                  15,
-                  7.6
-                )
-              : 0;
-
-          return (
-            sum +
-            Math.max(
-              nameHeight,
-              levelHeight,
+    const contentHeight = items.reduce(
+      (sum, item) => {
+        const nameHeight = item.name
+          ? textHeight(
+              item.name,
+              20,
               8.2
-            ) +
-            8
-          );
-        },
-        0
-      );
+            )
+          : 8.2;
+
+        const levelHeight = item.level
+          ? textHeight(
+              item.level,
+              15,
+              7.6
+            )
+          : 0;
+
+        return (
+          sum +
+          Math.max(
+            nameHeight,
+            levelHeight,
+            8.2
+          ) +
+          8
+        );
+      },
+      0
+    );
 
     const height =
       39 +
@@ -1220,56 +1216,49 @@ function drawSidebar(
       title: "Languages",
       height,
 
-      drawContent: (
-        contentY
-      ) => {
-        items.forEach(
-          (item) => {
-            const name =
-              item.name ||
-              "Language";
+      drawContent: (contentY) => {
+        items.forEach((item) => {
+          const name =
+            item.name || "Language";
 
-            const level =
-              item.level || "";
+          const level =
+            item.level || "";
+
+          txt(
+            c,
+            name,
+            innerX,
+            contentY,
+            7.2,
+            NAVY,
+            "F2"
+          );
+
+          if (level) {
+            const levelWidth =
+              Math.min(
+                50,
+                Math.max(
+                  30,
+                  level.length * 3.3
+                )
+              );
 
             txt(
               c,
-              name,
-              innerX,
+              level,
+              x +
+                width -
+                levelWidth -
+                10,
               contentY,
-              7.2,
-              NAVY,
-              "F2"
+              6.5,
+              TEAL
             );
-
-            if (level) {
-              const levelWidth =
-                Math.min(
-                  50,
-                  Math.max(
-                    30,
-                    level.length * 3.3
-                  )
-                );
-
-              txt(
-                c,
-                level,
-                x +
-                  width -
-                  levelWidth -
-                  10,
-                contentY,
-                6.5,
-                TEAL
-              );
-            }
-
-            contentY -= 16;
           }
-        );
 
-        return contentY;
+          contentY -= 16;
+        });
       },
     });
   }
@@ -1310,28 +1299,22 @@ function drawSidebar(
       title: "Connect",
       height,
 
-      drawContent: (
-        contentY
-      ) => {
-        links.forEach(
-          (link) => {
-            contentY =
-              block(
-                c,
-                link,
-                innerX,
-                contentY,
-                {
-                  size: 6.5,
-                  leading: 8,
-                  maxChars: 34,
-                  color: MUTED,
-                }
-              ) - 6;
-          }
-        );
-
-        return contentY;
+      drawContent: (contentY) => {
+        links.forEach((link) => {
+          contentY =
+            block(
+              c,
+              link,
+              innerX,
+              contentY,
+              {
+                size: 6.5,
+                leading: 8,
+                maxChars: 34,
+                color: MUTED,
+              }
+            ) - 6;
+        });
       },
     });
   }
