@@ -11,16 +11,13 @@ const skillSchema = new mongoose.Schema(
     category: {
       type: String,
       enum: [
-        "Software Developer",
+        "Frontend",
         "Backend",
         "Database",
-        "Mobile",
-        "Design",
-        "Tools",
+        "Tools & Technologies",
         "DevOps",
-        "Other",
       ],
-      default: "Software Developer",
+      default: "Frontend",
     },
 
     level: {
@@ -48,7 +45,7 @@ const skillSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 module.exports = mongoose.model("Skill", skillSchema);
