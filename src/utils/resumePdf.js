@@ -1,1803 +1,942 @@
-const PAGE_WIDTH = 595;
-const PAGE_HEIGHT = 842;
-const MARGIN = 42;
+// ============================================================
+// PROFESSIONAL RESUME PDF GENERATOR
+// Layout: A4, navy header, two-column body, clean Word-style fonts
+// Fonts: Helvetica / Helvetica-Bold (PDF standard Arial-style fonts)
+// ============================================================
 
-const NAVY = [0.055, 0.13, 0.20];
-const BLUE = [0.10, 0.32, 0.55];
-const TEAL = [0.04, 0.62, 0.55];
-const MINT = [0.20, 0.78, 0.70];
-const LIGHT = [0.84, 0.89, 0.91];
-const PALE = [0.965, 0.985, 0.985];
-const TEXT = [0.10, 0.18, 0.24];
-const MUTED = [0.36, 0.44, 0.49];
+const PAGE_WIDTH = 595.28;
+const PAGE_HEIGHT = 841.89;
 
-// =======================================
-// TEXT HELPERS
-// =======================================
+const COLORS = {
+  navy: [0.02, 0.13, 0.36],
+  navyText: [0.05, 0.16, 0.29],
+  text: [0.12, 0.14, 0.17],
+  muted: [0.36, 0.39, 0.43],
+  line: [0.84, 0.85, 0.87],
+  white: [1, 1, 1],
+};
 
-const normalize = (value) =>
-  String(value ?? "")
-    .replace(/\r\n/g, "\n")
-    .replace(/\r/g, "\n")
-    .trim();
+const FONT = {
+  regular: "F1",
+  bold: "F2",
+};
 
-const safeText = (value) =>
-  normalize(value)
-    .replace(/•/g, "-")
-    .replace(/[–—]/g, "-")
+const PAGE = {
+  margin: 36,
+  headerHeight: 118,
+  leftWidth: 158,
+  columnGap: 24,
+  bottom: 42,
+};
+
+const CONTENT_TOP = PAGE_HEIGHT - PAGE.headerHeight - 30;
+const LEFT_X = PAGE.margin;
+const RIGHT_X = PAGE.margin + PAGE.leftWidth + PAGE.columnGap;
+const RIGHT_WIDTH = PAGE_WIDTH - PAGE.margin - RIGHT_X;
+const LEFT_WIDTH = PAGE.leftWidth;
+
+// ------------------------------------------------------------
+// TEXT UTILITIES
+// ------------------------------------------------------------
+
+function normalizeText(value) {
+  return String(value ?? "")
+    .replace(/\r\n?/g, "\n")
+    .replace(/\u00a0/g, " ")
     .replace(/[“”]/g, '"')
     .replace(/[‘’]/g, "'")
-    .replace(/→/g, "->")
-    .replace(/[^\x20-\x7E\n\r\t]/g, "?");
+    .replace(/[–—]/g, "-")
+    .replace(/•/g, "-")
+    .replace(/…/g, "...")
+    .replace(/[^\x20-\x7E\n\t]/g, "");
+}
 
-const esc = (value) =>
-  safeText(value)
+function pdfEscape(value) {
+  return normalizeText(value)
     .replace(/\\/g, "\\\\")
     .replace(/\(/g, "\\(")
     .replace(/\)/g, "\\)");
+}
 
-function wrap(text, maxChars) {
+function approxTextWidth(text, fontSize) {
+  // Helvetica average character width approximation.
+  return normalizeText(text).length * fontSize * 0.51;
+}
+
+function wrapText(value, maxWidth, fontSize, font = FONT.regular) {
+  const text = normalizeText(value);
+  if (!text) return [];
+
   const lines = [];
 
-  safeText(text)
-    .split("\n")
-    .forEach((raw) => {
-      if (!raw.trim()) {
-        lines.push("");
-        return;
+  for (const paragraph of text.split("\n")) {
+    if (!paragraph.trim()) {
+      lines.push("");
+      continue;
+    }
+
+    let line = "";
+    for (const word of paragraph.trim().split(/\s+/)) {
+      const candidate = line ? `${line} ${word}` : word;
+
+      if (approxTextWidth(candidate, fontSize) <= maxWidth) {
+        line = candidate;
+        continue;
       }
 
-      let line = "";
+      if (line) lines.push(line);
 
-      raw.trim()
-        .split(/\s+/)
-        .forEach((word) => {
-          if (word.length > maxChars) {
-            if (line) {
-              lines.push(line);
-            }
-
-            line = "";
-
-            for (let i = 0; i < word.length; i += maxChars) {
-              lines.push(word.slice(i, i + maxChars));
-            }
-
-            return;
-          }
-
-          const next = line ? `${line} ${word}` : word;
-
-          if (next.length <= maxChars) {
-            line = next;
+      // Break a single exceptionally long word safely.
+      if (approxTextWidth(word, fontSize) > maxWidth) {
+        let fragment = "";
+        for (const char of word) {
+          const next = fragment + char;
+          if (fragment && approxTextWidth(next, fontSize) > maxWidth) {
+            lines.push(fragment);
+            fragment = char;
           } else {
-            if (line) {
-              lines.push(line);
-            }
-
-            line = word;
+            fragment = next;
           }
-        });
-
-      if (line) {
-        lines.push(line);
+        }
+        line = fragment;
+      } else {
+        line = word;
       }
-    });
+    }
+
+    if (line) lines.push(line);
+  }
 
   return lines;
 }
 
-function textHeight(text, maxChars, leading) {
-  return Math.max(1, wrap(text, maxChars).length) * leading;
+function colorCommand(color, stroke = false) {
+  return `${color.map((n) => Number(n.toFixed(3))).join(" ")} ${stroke ? "RG" : "rg"}`;
 }
 
-function colorString(color) {
-  return color.join(" ");
-}
+// ------------------------------------------------------------
+// PDF DRAWING PRIMITIVES
+// ------------------------------------------------------------
 
-// =======================================
-// PDF DRAWING HELPERS
-// =======================================
-
-function fill(c, x, y, w, h, color) {
-  c.push(
-    `${colorString(color)} rg`,
-    `${x} ${y} ${w} ${h} re f`
+function addRect(commands, x, y, width, height, color) {
+  commands.push(
+    colorCommand(color),
+    `${x.toFixed(2)} ${y.toFixed(2)} ${width.toFixed(2)} ${height.toFixed(2)} re f`,
   );
 }
 
-function strokeRect(
-  c,
-  x,
-  y,
-  w,
-  h,
-  color = LIGHT,
-  width = 0.7
-) {
-  c.push(
-    `${colorString(color)} RG`,
-    `${width} w ${x} ${y} ${w} ${h} re S`
-  );
-}
-
-function roundedRect(
-  c,
-  x,
-  y,
-  w,
-  h,
-  r,
-  fillColor,
-  strokeColor = null,
-  width = 0.7
-) {
-  const k = 0.5522848;
-  const kr = r * k;
-
-  const path = [
-    `${x + r} ${y} m`,
-    `${x + w - r} ${y} l`,
-    `${x + w - r + kr} ${y} ${
-      x + w
-    } ${y + r - kr} ${x + w} ${y + r} c`,
-    `${x + w} ${y + h - r} l`,
-    `${x + w} ${y + h - r + kr} ${
-      x + w - r + kr
-    } ${y + h} ${x + w - r} ${y + h} c`,
-    `${x + r} ${y + h} l`,
-    `${x + r - kr} ${y + h} ${
-      x
-    } ${y + h - r + kr} ${x} ${y + h - r} c`,
-    `${x} ${y + r} l`,
-    `${x} ${y + r - kr} ${
-      x + r - kr
-    } ${y} ${x + r} ${y} c`,
-    "h",
-  ].join(" ");
-
-  const parts = [];
-
-  if (fillColor) {
-    parts.push(`${colorString(fillColor)} rg`);
-  }
-
-  if (strokeColor) {
-    parts.push(
-      `${colorString(strokeColor)} RG`,
-      `${width} w`
-    );
-  }
-
-  const paint =
-    fillColor && strokeColor
-      ? "B"
-      : fillColor
-        ? "f"
-        : "S";
-
-  parts.push(`${path} ${paint}`);
-
-  c.push(parts.join("\n"));
-}
-
-function circle(
-  c,
-  cx,
-  cy,
-  r,
-  fillColor,
-  strokeColor = null,
-  width = 0.7
-) {
-  const k = 0.5522848;
-  const kr = r * k;
-
-  const path = [
-    `${cx + r} ${cy} m`,
-    `${cx + r} ${cy + kr} ${
-      cx + kr
-    } ${cy + r} ${cx} ${cy + r} c`,
-    `${cx - kr} ${cy + r} ${
-      cx - r
-    } ${cy + kr} ${cx - r} ${cy} c`,
-    `${cx - r} ${cy - kr} ${
-      cx - kr
-    } ${cy - r} ${cx} ${cy - r} c`,
-    `${cx + kr} ${cy - r} ${
-      cx + r
-    } ${cy - kr} ${cx + r} ${cy} c`,
-    "h",
-  ].join(" ");
-
-  const parts = [];
-
-  if (fillColor) {
-    parts.push(`${colorString(fillColor)} rg`);
-  }
-
-  if (strokeColor) {
-    parts.push(
-      `${colorString(strokeColor)} RG`,
-      `${width} w`
-    );
-  }
-
-  const paint =
-    fillColor && strokeColor
-      ? "B"
-      : fillColor
-        ? "f"
-        : "S";
-
-  parts.push(`${path} ${paint}`);
-
-  c.push(parts.join("\n"));
-}
-
-function rule(
-  c,
+function addLine(
+  commands,
   x1,
   y1,
   x2,
   y2,
-  color = LIGHT,
-  width = 0.7
+  color = COLORS.line,
+  thickness = 0.8,
 ) {
-  c.push(
-    `${colorString(color)} RG`,
-    `${width} w ${x1} ${y1} m ${x2} ${y2} l S`
+  commands.push(
+    colorCommand(color, true),
+    `${thickness} w ${x1.toFixed(2)} ${y1.toFixed(2)} m ${x2.toFixed(2)} ${y2.toFixed(2)} l S`,
   );
 }
 
-function txt(
-  c,
-  text,
+function addText(
+  commands,
+  value,
   x,
   y,
-  size,
-  color = TEXT,
-  font = "F1"
+  size = 9,
+  color = COLORS.text,
+  font = FONT.regular,
 ) {
-  if (!safeText(text)) return;
+  const text = normalizeText(value);
+  if (!text) return;
 
-  c.push(
-    `${colorString(color)} rg`,
-    `BT /${font} ${size} Tf ${x} ${y} Td (${esc(
-      text
-    )}) Tj ET`
+  commands.push(
+    colorCommand(color),
+    `BT /${font} ${size} Tf 1 0 0 1 ${x.toFixed(2)} ${y.toFixed(2)} Tm (${pdfEscape(text)}) Tj ET`,
   );
 }
 
-function block(c, text, x, y, options = {}) {
-  const size = options.size || 8;
-  const leading = options.leading || 10;
-  const maxChars = options.maxChars || 60;
-  const color = options.color || TEXT;
-  const font = options.font || "F1";
-
-  const lines = wrap(text, maxChars);
-
-  if (!lines.length) {
-    return y;
-  }
-
-  c.push(
-    `${colorString(color)} rg`,
-    `BT /${font} ${size} Tf ${x} ${y} Td`
-  );
+function addParagraph(commands, value, x, y, width, options = {}) {
+  const size = options.size ?? 9;
+  const leading = options.leading ?? 13;
+  const color = options.color ?? COLORS.text;
+  const font = options.font ?? FONT.regular;
+  const lines = wrapText(value, width, size, font);
 
   lines.forEach((line, index) => {
-    if (index) {
-      c.push(`0 -${leading} Td`);
-    }
-
-    c.push(`(${esc(line)}) Tj`);
+    addText(commands, line, x, y - index * leading, size, color, font);
   });
-
-  c.push("ET");
 
   return y - lines.length * leading;
 }
 
-// =======================================
-// SECTION HEADING
-// =======================================
-
-function sectionHeading(
-  c,
-  number,
-  title,
-  x,
-  y,
-  width,
-  baselineOffset = 0
-) {
-  const headingY = y - baselineOffset;
-
-  txt(
-    c,
-    String(number).padStart(2, "0"),
+function addSectionHeading(commands, title, x, y, width, compact = false) {
+  const size = compact ? 10 : 11;
+  addText(
+    commands,
+    String(title).toUpperCase(),
     x,
-    headingY,
-    7.1,
-    TEAL,
-    "F2"
-  );
-
-  txt(
-    c,
-    title.toUpperCase(),
-    x + 18,
-    headingY,
-    9.1,
-    NAVY,
-    "F2"
-  );
-
-  rule(
-    c,
-    x + 18,
-    headingY - 6,
-    x + width,
-    headingY - 6,
-    LIGHT,
-    0.7
-  );
-}
-
-// =======================================
-// HEADER
-// =======================================
-
-function header(c, resume, continuation = false) {
-  if (continuation) {
-    txt(
-      c,
-      "PROFESSIONAL RESUME",
-      MARGIN,
-      PAGE_HEIGHT - 42,
-      7.2,
-      TEAL,
-      "F2"
-    );
-
-    txt(
-      c,
-      resume.fullName || "Professional Resume",
-      MARGIN,
-      PAGE_HEIGHT - 65,
-      16,
-      BLUE,
-      "F2"
-    );
-
-    rule(
-      c,
-      MARGIN,
-      PAGE_HEIGHT - 78,
-      PAGE_WIDTH - MARGIN,
-      PAGE_HEIGHT - 78,
-      LIGHT,
-      0.8
-    );
-
-    return PAGE_HEIGHT - 105;
-  }
-
-  txt(
-    c,
-    "PROFESSIONAL RESUME",
-    MARGIN,
-    PAGE_HEIGHT - 42,
-    7.4,
-    TEAL,
-    "F2"
-  );
-
-  txt(
-    c,
-    resume.fullName || "Professional Resume",
-    MARGIN,
-    PAGE_HEIGHT - 78,
-    27,
-    BLUE,
-    "F2"
-  );
-
-  txt(
-    c,
-    resume.title || "Technology Professional",
-    MARGIN,
-    PAGE_HEIGHT - 98,
-    10.2,
-    TEAL,
-    "F2"
-  );
-
-  const contact = [
-    resume.email,
-    resume.phone,
-    resume.location,
-    resume.website,
-  ]
-    .filter(Boolean)
-    .join("   |   ");
-
-  if (contact) {
-    block(c, contact, MARGIN, PAGE_HEIGHT - 119, {
-      size: 6.6,
-      leading: 8,
-      maxChars: 115,
-      color: MUTED,
-    });
-  }
-
-  circle(
-    c,
-    PAGE_WIDTH - MARGIN - 24,
-    PAGE_HEIGHT - 67,
-    17,
-    MINT,
-    TEAL,
-    0.8
-  );
-
-  circle(
-    c,
-    PAGE_WIDTH - MARGIN - 24,
-    PAGE_HEIGHT - 67,
-    11,
-    [0.08, 0.70, 0.62],
-    null
-  );
-
-  return PAGE_HEIGHT - 150;
-}
-
-// =======================================
-// PROFILE
-// =======================================
-
-function drawProfile(c, resume, y, width) {
-  if (!resume.bio) {
-    return y;
-  }
-
-  sectionHeading(
-    c,
-    1,
-    "Profile",
-    MARGIN,
     y,
-    width
+    size,
+    COLORS.navyText,
+    FONT.bold,
   );
+  const lineY = y - 7;
+  addLine(commands, x, lineY, x + width, lineY, COLORS.line, 0.9);
+  return y - 23;
+}
 
-  y -= 22;
+function asArray(value) {
+  return Array.isArray(value) ? value : [];
+}
 
-  const lines = wrap(resume.bio, 108);
-
-  const h = Math.max(
-    40,
-    lines.length * 9.5 + 20
+function firstValue(...values) {
+  return values.find(
+    (value) =>
+      value !== undefined && value !== null && String(value).trim() !== "",
   );
+}
 
-  roundedRect(
-    c,
-    MARGIN,
-    y - h + 7,
-    width,
-    h,
-    5,
-    PALE,
-    LIGHT,
-    0.7
-  );
+function formatLocation(item) {
+  return [item?.city, item?.state, item?.location]
+    .filter(Boolean)
+    .map(normalizeText)
+    .join(", ");
+}
 
-  block(
-    c,
-    resume.bio,
-    MARGIN + 10,
-    y - 8,
-    {
-      size: 7.7,
-      leading: 9.5,
-      maxChars: 108,
-      color: MUTED,
+// ------------------------------------------------------------
+// HEADER
+// ------------------------------------------------------------
+
+function drawHeader(commands, resume, continuation = false) {
+  const height = continuation ? 78 : PAGE.headerHeight;
+  const y = PAGE_HEIGHT - height;
+
+  addRect(commands, 0, y, PAGE_WIDTH, height, COLORS.navy);
+
+  if (!continuation) {
+    const name = firstValue(resume.fullName, resume.name, "YOUR NAME");
+    const title = firstValue(
+      resume.title,
+      resume.professionalTitle,
+      "PROFESSIONAL TITLE",
+    );
+
+    const nameSize = name.length > 28 ? 25 : name.length > 19 ? 29 : 34;
+    const nameWidth = approxTextWidth(name, nameSize);
+    const nameX = Math.max(PAGE.margin, (PAGE_WIDTH - nameWidth) / 2);
+
+    addText(
+      commands,
+      name.toUpperCase(),
+      nameX,
+      PAGE_HEIGHT - 67,
+      nameSize,
+      COLORS.white,
+      FONT.bold,
+    );
+
+    const titleText = normalizeText(title).toUpperCase();
+    const titleWidth = approxTextWidth(titleText, 10);
+    addText(
+      commands,
+      titleText,
+      Math.max(PAGE.margin, (PAGE_WIDTH - titleWidth) / 2),
+      PAGE_HEIGHT - 94,
+      10,
+      COLORS.white,
+      FONT.bold,
+    );
+  } else {
+    const name = firstValue(resume.fullName, resume.name, "YOUR NAME");
+    addText(
+      commands,
+      name.toUpperCase(),
+      PAGE.margin,
+      PAGE_HEIGHT - 48,
+      19,
+      COLORS.white,
+      FONT.bold,
+    );
+    addText(
+      commands,
+      "PROFESSIONAL RESUME - CONTINUED",
+      PAGE.margin,
+      PAGE_HEIGHT - 65,
+      8,
+      COLORS.white,
+    );
+  }
+
+  return PAGE_HEIGHT - height - 28;
+}
+
+// ------------------------------------------------------------
+// SIDEBAR SECTIONS
+// ------------------------------------------------------------
+
+function drawContact(commands, resume, y) {
+  y = addSectionHeading(commands, "Contact", LEFT_X, y, LEFT_WIDTH, true);
+
+  const contacts = [
+    ["Phone", firstValue(resume.phone, resume.mobile)],
+    ["Email", resume.email],
+    ["Location", firstValue(resume.location, formatLocation(resume))],
+    ["Website", resume.website],
+    ["LinkedIn", resume.linkedin],
+    ["GitHub", resume.github],
+  ].filter(([, value]) => value);
+
+  if (!contacts.length) {
+    addText(commands, "Add contact details", LEFT_X, y, 8.5, COLORS.muted);
+    return y - 20;
+  }
+
+  contacts.forEach(([label, value]) => {
+    addText(commands, label, LEFT_X, y, 7.5, COLORS.muted, FONT.bold);
+    y -= 11;
+    y =
+      addParagraph(commands, value, LEFT_X, y, LEFT_WIDTH, {
+        size: 8.5,
+        leading: 11,
+        color: COLORS.text,
+      }) - 9;
+  });
+
+  return y;
+}
+
+function drawEducation(commands, resume, y) {
+  const education = asArray(resume.education);
+  if (!education.length) return y;
+
+  y = addSectionHeading(commands, "Education", LEFT_X, y, LEFT_WIDTH, true);
+
+  education.forEach((item) => {
+    const school = firstValue(
+      item.school,
+      item.institution,
+      item.schoolName,
+      item.name,
+    );
+    const degree = firstValue(
+      item.degree,
+      item.qualification,
+      item.course,
+      item.title,
+    );
+    const period = firstValue(item.period, item.year, item.date);
+    const location = firstValue(item.location, formatLocation(item));
+
+    if (school) {
+      y =
+        addParagraph(commands, school, LEFT_X, y, LEFT_WIDTH, {
+          size: 8.7,
+          leading: 11,
+          font: FONT.bold,
+          color: COLORS.text,
+        }) - 1;
     }
-  );
 
-  return y - h - 12;
-}
+    if (degree) {
+      y =
+        addParagraph(commands, degree, LEFT_X, y, LEFT_WIDTH, {
+          size: 8.2,
+          leading: 10.5,
+          color: COLORS.text,
+        }) - 1;
+    }
 
-// =======================================
-// EXPERIENCE
-// =======================================
-
-function experienceHeight(
-  item,
-  maxChars,
-  leading = 9.1,
-  width = 380
-) {
-  const position = safeText(
-    item.position || "Role"
-  );
-
-  const period = safeText(
-    item.period || ""
-  );
-
-  const periodWidth = Math.min(
-    92,
-    Math.max(52, period.length * 3.7)
-  );
-
-  const titleReserve =
-    width - periodWidth - 14;
-
-  const titleMaxChars = Math.max(
-    18,
-    Math.floor(titleReserve / 5.0)
-  );
-
-  const titleLines = Math.max(
-    1,
-    wrap(position, titleMaxChars).length
-  );
-
-  let h;
-
-  if (titleLines > 1 && period) {
-    h = titleLines * 10.5 + 12;
-  } else {
-    h = 12;
-  }
-
-  if (item.company) {
-    h += 12;
-  }
-
-  if (item.description) {
-    h +=
-      textHeight(
-        item.description,
-        maxChars,
-        leading
-      ) + 8;
-  }
-
-  return h;
-}
-
-function drawExperienceEntry(
-  c,
-  item,
-  x,
-  y,
-  width,
-  maxChars = 68
-) {
-  const position = safeText(
-    item.position || "Role"
-  );
-
-  const period = safeText(
-    item.period || ""
-  );
-
-  const periodWidth = Math.min(
-    92,
-    Math.max(52, period.length * 3.7)
-  );
-
-  const titleReserve =
-    width - periodWidth - 14;
-
-  const titleLines =
-    position.length > 0
-      ? wrap(
-          position,
-          Math.max(
-            18,
-            Math.floor(titleReserve / 5.0)
-          )
-        )
-      : ["Role"];
-
-  if (titleLines.length > 1 && period) {
-    block(
-      c,
-      position,
-      x,
-      y,
-      {
-        size: 9,
-        leading: 10.5,
-        maxChars: Math.max(
-          18,
-          Math.floor(titleReserve / 5.0)
-        ),
-        color: NAVY,
-        font: "F2",
-      }
-    );
-
-    y -= titleLines.length * 10.5;
-
-    txt(
-      c,
-      period,
-      x,
-      y,
-      6.7,
-      MUTED
-    );
-
-    y -= 12;
-  } else {
-    txt(
-      c,
-      position || "Role",
-      x,
-      y,
-      9,
-      NAVY,
-      "F2"
-    );
+    if (location) {
+      y =
+        addParagraph(commands, location, LEFT_X, y, LEFT_WIDTH, {
+          size: 7.8,
+          leading: 10,
+          color: COLORS.muted,
+        }) - 1;
+    }
 
     if (period) {
-      const periodX =
-        x + width - periodWidth;
-
-      txt(
-        c,
-        period,
-        Math.max(x, periodX),
-        y,
-        6.7,
-        MUTED
-      );
+      y =
+        addParagraph(commands, period, LEFT_X, y, LEFT_WIDTH, {
+          size: 7.8,
+          leading: 10,
+          color: COLORS.muted,
+        }) - 1;
     }
 
-    y -= 12;
-  }
+    y -= 9;
+  });
 
-  if (item.company) {
-    txt(
-      c,
-      item.company,
-      x,
-      y,
-      7.7,
-      TEAL,
-      "F2"
-    );
+  return y;
+}
 
-    y -= 12;
-  }
+function drawSkills(commands, resume, y) {
+  const skills = asArray(resume.skills);
+  if (!skills.length) return y;
 
-  if (item.description) {
+  y = addSectionHeading(commands, "Key Skills", LEFT_X, y, LEFT_WIDTH, true);
+
+  skills.forEach((skill) => {
+    const label =
+      typeof skill === "string"
+        ? skill
+        : firstValue(skill.name, skill.title, skill.skill, skill.label);
+
+    if (!label) return;
+
+    addText(commands, "-", LEFT_X + 1, y, 9, COLORS.navyText, FONT.bold);
     y =
-      block(
-        c,
-        item.description,
-        x,
-        y,
-        {
-          size: 7.35,
-          leading: 9.1,
-          maxChars,
-          color: MUTED,
-        }
-      ) - 8;
+      addParagraph(commands, label, LEFT_X + 12, y, LEFT_WIDTH - 12, {
+        size: 8.5,
+        leading: 11,
+        color: COLORS.text,
+      }) - 4;
+  });
+
+  return y;
+}
+
+function drawCertificates(commands, resume, y) {
+  const certificates = asArray(resume.certificates);
+  if (!certificates.length) return y;
+
+  y = addSectionHeading(commands, "Certificates", LEFT_X, y, LEFT_WIDTH, true);
+
+  certificates.forEach((item) => {
+    const name =
+      typeof item === "string"
+        ? item
+        : firstValue(item.name, item.title, item.certificate);
+
+    if (!name) return;
+
+    y =
+      addParagraph(commands, name, LEFT_X, y, LEFT_WIDTH, {
+        size: 8.3,
+        leading: 10.5,
+        font: FONT.bold,
+      }) - 1;
+
+    const meta = [item.issuer, item.year, item.date]
+      .filter(Boolean)
+      .join(" | ");
+    if (meta) {
+      y =
+        addParagraph(commands, meta, LEFT_X, y, LEFT_WIDTH, {
+          size: 7.6,
+          leading: 9.5,
+          color: COLORS.muted,
+        }) - 5;
+    } else {
+      y -= 5;
+    }
+  });
+
+  return y;
+}
+
+function drawLanguages(commands, resume, y) {
+  const languages = asArray(resume.languages);
+  if (!languages.length) return y;
+
+  y = addSectionHeading(commands, "Languages", LEFT_X, y, LEFT_WIDTH, true);
+
+  languages.forEach((item) => {
+    const name =
+      typeof item === "string" ? item : firstValue(item.name, item.language);
+    const level =
+      typeof item === "string" ? "" : firstValue(item.level, item.proficiency);
+    if (!name) return;
+
+    const line = level ? `${name} - ${level}` : name;
+    y =
+      addParagraph(commands, line, LEFT_X, y, LEFT_WIDTH, {
+        size: 8.2,
+        leading: 10.5,
+      }) - 4;
+  });
+
+  return y;
+}
+
+function drawSidebar(commands, resume, startY) {
+  let y = startY;
+  y = drawContact(commands, resume, y);
+  y -= 7;
+  y = drawEducation(commands, resume, y);
+  y -= 7;
+  y = drawSkills(commands, resume, y);
+  y -= 7;
+  y = drawCertificates(commands, resume, y);
+  y -= 7;
+  y = drawLanguages(commands, resume, y);
+  return y;
+}
+
+// ------------------------------------------------------------
+// MAIN COLUMN SECTIONS
+// ------------------------------------------------------------
+
+function drawSummary(commands, resume, y) {
+  const summary = firstValue(
+    resume.bio,
+    resume.summary,
+    resume.professionalSummary,
+  );
+  if (!summary) return y;
+
+  y = addSectionHeading(
+    commands,
+    "Professional Summary",
+    RIGHT_X,
+    y,
+    RIGHT_WIDTH,
+  );
+
+  y = addParagraph(commands, summary, RIGHT_X, y, RIGHT_WIDTH, {
+    size: 9,
+    leading: 13.2,
+    color: COLORS.text,
+  });
+
+  return y - 19;
+}
+
+function splitDescription(value) {
+  if (Array.isArray(value)) {
+    return value
+      .map((item) =>
+        normalizeText(
+          typeof item === "string"
+            ? item
+            : firstValue(item.text, item.description, item.name),
+        ),
+      )
+      .filter(Boolean);
+  }
+
+  const text = normalizeText(value);
+  if (!text) return [];
+
+  // Accept newline-separated responsibilities and common bullet characters.
+  const lines = text
+    .split(/\n|(?<=\.)\s+(?=[A-Z0-9-])/)
+    .map((line) => line.replace(/^\s*[-*•]\s*/, "").trim())
+    .filter(Boolean);
+
+  return lines.length ? lines : [text];
+}
+
+function drawExperienceItem(commands, item, y, width = RIGHT_WIDTH) {
+  const position = firstValue(
+    item.position,
+    item.jobTitle,
+    item.title,
+    "Position",
+  );
+  const period = firstValue(item.period, item.duration, item.date);
+  const company = firstValue(item.company, item.employer, item.organization);
+  const location = firstValue(item.location, formatLocation(item));
+
+  addText(
+    commands,
+    normalizeText(position).toUpperCase(),
+    RIGHT_X,
+    y,
+    9.5,
+    COLORS.navyText,
+    FONT.bold,
+  );
+
+  if (period) {
+    const periodWidth = approxTextWidth(period, 8);
+    const periodX = Math.max(RIGHT_X, RIGHT_X + width - periodWidth);
+    if (periodX > RIGHT_X + approxTextWidth(position, 9.5) + 10) {
+      addText(commands, period, periodX, y, 8, COLORS.muted);
+    } else {
+      y -= 12;
+      y = addParagraph(commands, period, RIGHT_X, y, width, {
+        size: 8,
+        leading: 10,
+        color: COLORS.muted,
+      });
+    }
+  }
+
+  y -= 13;
+
+  if (company || location) {
+    const companyLine = [company, location].filter(Boolean).join(" | ");
+    y =
+      addParagraph(commands, companyLine, RIGHT_X, y, width, {
+        size: 8.7,
+        leading: 11,
+        color: COLORS.text,
+        font: FONT.bold,
+      }) - 7;
+  }
+
+  const description = firstValue(
+    item.description,
+    item.responsibilities,
+    item.details,
+    item.summary,
+  );
+  const bullets = splitDescription(description);
+
+  bullets.forEach((bullet) => {
+    addText(commands, "-", RIGHT_X + 2, y, 9, COLORS.text, FONT.bold);
+    y =
+      addParagraph(commands, bullet, RIGHT_X + 14, y, width - 14, {
+        size: 8.7,
+        leading: 12,
+        color: COLORS.text,
+      }) - 3;
+  });
+
+  return y - 12;
+}
+
+function drawExperience(commands, resume, y) {
+  const experience = asArray(resume.experience);
+  if (!experience.length) return { y, used: 0 };
+
+  y = addSectionHeading(commands, "Experience", RIGHT_X, y, RIGHT_WIDTH);
+  let used = 0;
+
+  for (let index = 0; index < experience.length; index += 1) {
+    const required = estimateExperienceHeight(experience[index], RIGHT_WIDTH);
+    if (y - required < PAGE.bottom + 12 && used > 0) break;
+
+    y = drawExperienceItem(commands, experience[index], y);
+    used += 1;
+    if (y < PAGE.bottom + 12) break;
+  }
+
+  return { y, used };
+}
+
+function drawAdditionalSections(commands, resume, y) {
+  const projects = asArray(resume.projects);
+  if (projects.length) {
+    y = addSectionHeading(commands, "Projects", RIGHT_X, y, RIGHT_WIDTH);
+    projects.forEach((item) => {
+      const name = firstValue(item.name, item.title, "Project");
+      addText(commands, name, RIGHT_X, y, 9, COLORS.navyText, FONT.bold);
+      y -= 13;
+      const detail = firstValue(item.description, item.details);
+      if (detail) {
+        y =
+          addParagraph(commands, detail, RIGHT_X, y, RIGHT_WIDTH, {
+            size: 8.7,
+            leading: 12,
+          }) - 8;
+      }
+    });
   }
 
   return y;
 }
 
-function drawExperience(
-  c,
-  resume,
-  y,
-  width,
-  bottomLimit
-) {
-  const experience =
-    resume.experience || [];
+// ------------------------------------------------------------
+// PAGE BUILDING
+// ------------------------------------------------------------
 
-  if (!experience.length) {
-    return {
-      y,
-      used: 0,
-    };
-  }
-
-  sectionHeading(
-    c,
-    2,
-    "Experience",
-    MARGIN,
-    y,
-    width
+function drawFooter(commands, pageNumber, totalPages) {
+  addLine(
+    commands,
+    PAGE.margin,
+    30,
+    PAGE_WIDTH - PAGE.margin,
+    30,
+    COLORS.line,
+    0.6,
   );
-
-  y -= 25;
-
-  let used = 0;
-
-  for (
-    let i = 0;
-    i < experience.length;
-    i += 1
-  ) {
-    const item = experience[i];
-
-    const h = experienceHeight(
-      item,
-      68,
-      9.1,
-      width
-    );
-
-    if (
-      y - h < bottomLimit &&
-      used > 0
-    ) {
-      break;
-    }
-
-    y = drawExperienceEntry(
-      c,
-      item,
-      MARGIN,
-      y,
-      width,
-      68
-    );
-
-    if (
-      i < experience.length - 1
-    ) {
-      rule(
-        c,
-        MARGIN,
-        y + 3,
-        MARGIN + width,
-        y + 3,
-        LIGHT,
-        0.55
-      );
-
-      y -= 7;
-    }
-
-    used += 1;
-  }
-
-  return {
-    y,
-    used,
-  };
-}
-
-function drawSidebar(
-  c,
-  resume,
-  x,
-  y,
-  width
-) {
-  let sy = y;
-
-  const innerX = x + 10;
-  const innerW = width - 20;
-  const sectionGap = 8;
-
-  // =======================================
-  // GENERIC SIDEBAR CARD
-  // =======================================
-
-  const drawCard = ({
-    number,
-    title,
-    height,
-    drawContent,
-  }) => {
-    const cardTop = sy;
-    const cardBottom = cardTop - height;
-
-    roundedRect(
-      c,
-      x,
-      cardBottom,
-      width,
-      height,
-      5,
-      PALE,
-      LIGHT,
-      0.7
-    );
-
-    const headingBaseline = cardTop - 13;
-
-    txt(
-      c,
-      String(number).padStart(2, "0"),
-      innerX,
-      headingBaseline,
-      7.1,
-      TEAL,
-      "F2"
-    );
-
-    txt(
-      c,
-      title.toUpperCase(),
-      innerX + 18,
-      headingBaseline,
-      9.1,
-      NAVY,
-      "F2"
-    );
-
-    rule(
-      c,
-      innerX + 18,
-      headingBaseline - 7,
-      innerX + innerW,
-      headingBaseline - 7,
-      LIGHT,
-      0.7
-    );
-
-    let contentY = cardTop - 39;
-
-    drawContent(contentY);
-
-    sy = cardBottom - sectionGap;
-  };
-
-  // =======================================
-  // EDUCATION
-  // =======================================
-
-  if (resume.education?.length) {
-    const items = resume.education;
-
-    const contentHeight = items.reduce(
-      (sum, item) => {
-        let h = 11;
-
-        if (item.school) {
-          h +=
-            textHeight(
-              item.school,
-              34,
-              8.2
-            ) + 2;
-        }
-
-        h += item.period ? 14 : 5;
-
-        return sum + h;
-      },
-      0
-    );
-
-    const height =
-      39 +
-      contentHeight +
-      8;
-
-    drawCard({
-      number: 3,
-      title: "Education",
-      height,
-
-      drawContent: (contentY) => {
-        items.forEach((item) => {
-          if (item.qualification) {
-            contentY =
-              block(
-                c,
-                item.qualification,
-                innerX,
-                contentY,
-                {
-                  size: 7.7,
-                  leading: 8.5,
-                  maxChars: 34,
-                  color: NAVY,
-                  font: "F2",
-                }
-              ) - 2;
-          } else {
-            contentY -= 11;
-          }
-
-          if (item.school) {
-            contentY =
-              block(
-                c,
-                item.school,
-                innerX,
-                contentY,
-                {
-                  size: 7.1,
-                  leading: 8.2,
-                  maxChars: 34,
-                  color: MUTED,
-                }
-              ) - 2;
-          }
-
-          if (item.period) {
-            contentY =
-              block(
-                c,
-                item.period,
-                innerX,
-                contentY,
-                {
-                  size: 6.6,
-                  leading: 7.6,
-                  maxChars: 34,
-                  color: TEAL,
-                }
-              ) - 5;
-          } else {
-            contentY -= 5;
-          }
-        });
-      },
-    });
-  }
-
-  // =======================================
-  // CERTIFICATES
-  // =======================================
-
-  if (resume.certificates?.length) {
-    const items = resume.certificates;
-
-    const contentHeight = items.reduce(
-      (sum, item) => {
-        const nameHeight = item.name
-          ? textHeight(
-              item.name,
-              34,
-              8.2
-            )
-          : 8.2;
-
-        const meta = [
-          item.issuer,
-          item.year,
-        ]
-          .filter(Boolean)
-          .join(" - ");
-
-        const metaHeight = meta
-          ? textHeight(
-              meta,
-              34,
-              7.6
-            )
-          : 0;
-
-        return (
-          sum +
-          nameHeight +
-          2 +
-          (meta
-            ? metaHeight + 7
-            : 4)
-        );
-      },
-      0
-    );
-
-    const height =
-      39 +
-      contentHeight +
-      8;
-
-    drawCard({
-      number: 4,
-      title: "Certificates",
-      height,
-
-      drawContent: (contentY) => {
-        items.forEach((item) => {
-          contentY =
-            block(
-              c,
-              item.name ||
-                "Certificate",
-              innerX,
-              contentY,
-              {
-                size: 7.3,
-                leading: 8.2,
-                maxChars: 34,
-                color: NAVY,
-                font: "F2",
-              }
-            ) - 2;
-
-          const meta = [
-            item.issuer,
-            item.year,
-          ]
-            .filter(Boolean)
-            .join(" - ");
-
-          if (meta) {
-            contentY =
-              block(
-                c,
-                meta,
-                innerX,
-                contentY,
-                {
-                  size: 6.6,
-                  leading: 7.6,
-                  maxChars: 34,
-                  color: MUTED,
-                }
-              ) - 7;
-          } else {
-            contentY -= 4;
-          }
-        });
-      },
-    });
-  }
-
-  // =======================================
-  // PROFESSIONAL SKILLS
-  // =======================================
-
-  if (resume.skills?.length) {
-    const items = resume.skills;
-
-    /*
-     * IMPORTANT:
-     * The height calculation here now matches
-     * the way the skills are actually rendered.
-     *
-     * Long skill names and levels can wrap onto
-     * multiple lines without being clipped.
-     */
-
-    const contentHeight = items.reduce(
-      (sum, item) => {
-        const name = normalize(
-          item.name || "Skill"
-        );
-
-        const level = normalize(
-          item.level || ""
-        );
-
-        const nameLines = Math.max(
-          1,
-          wrap(name, 34).length
-        );
-
-        const levelLines = level
-          ? Math.max(
-              1,
-              wrap(level, 34).length
-            )
-          : 0;
-
-        const nameHeight =
-          nameLines * 8.4;
-
-        const levelHeight =
-          levelLines * 7.6;
-
-        return (
-          sum +
-          nameHeight +
-          (level
-            ? levelHeight + 2
-            : 0) +
-          7
-        );
-      },
-      0
-    );
-
-    const height =
-      39 +
-      contentHeight +
-      8;
-
-    drawCard({
-      number: 5,
-      title: "Professional Skills",
-      height,
-
-      drawContent: (contentY) => {
-        items.forEach((item) => {
-          const name =
-            item.name || "Skill";
-
-          const level =
-            item.level || "";
-
-          // Skill name
-          contentY =
-            block(
-              c,
-              name,
-              innerX,
-              contentY,
-              {
-                size: 7.2,
-                leading: 8.4,
-                maxChars: 34,
-                color: NAVY,
-                font: "F2",
-              }
-            ) - 1;
-
-          // Skill level
-          if (level) {
-            contentY =
-              block(
-                c,
-                level,
-                innerX,
-                contentY,
-                {
-                  size: 6.5,
-                  leading: 7.6,
-                  maxChars: 34,
-                  color: TEAL,
-                }
-              ) - 7;
-          } else {
-            contentY -= 6;
-          }
-        });
-      },
-    });
-  }
-
-  // =======================================
-  // LANGUAGES
-  // =======================================
-
-  if (resume.languages?.length) {
-    const items = resume.languages;
-
-    const contentHeight = items.reduce(
-      (sum, item) => {
-        const nameHeight = item.name
-          ? textHeight(
-              item.name,
-              20,
-              8.2
-            )
-          : 8.2;
-
-        const levelHeight = item.level
-          ? textHeight(
-              item.level,
-              15,
-              7.6
-            )
-          : 0;
-
-        return (
-          sum +
-          Math.max(
-            nameHeight,
-            levelHeight,
-            8.2
-          ) +
-          8
-        );
-      },
-      0
-    );
-
-    const height =
-      39 +
-      contentHeight +
-      8;
-
-    drawCard({
-      number: 6,
-      title: "Languages",
-      height,
-
-      drawContent: (contentY) => {
-        items.forEach((item) => {
-          const name =
-            item.name || "Language";
-
-          const level =
-            item.level || "";
-
-          txt(
-            c,
-            name,
-            innerX,
-            contentY,
-            7.2,
-            NAVY,
-            "F2"
-          );
-
-          if (level) {
-            const levelWidth =
-              Math.min(
-                50,
-                Math.max(
-                  30,
-                  level.length * 3.3
-                )
-              );
-
-            txt(
-              c,
-              level,
-              x +
-                width -
-                levelWidth -
-                10,
-              contentY,
-              6.5,
-              TEAL
-            );
-          }
-
-          contentY -= 16;
-        });
-      },
-    });
-  }
-
-  // =======================================
-  // CONNECT
-  // =======================================
-
-  const links = [
-    resume.github &&
-      `GitHub: ${resume.github}`,
-
-    resume.linkedin &&
-      `LinkedIn: ${resume.linkedin}`,
-  ].filter(Boolean);
-
-  if (links.length) {
-    const contentHeight =
-      links.reduce(
-        (sum, item) =>
-          sum +
-          textHeight(
-            item,
-            34,
-            8
-          ) +
-          6,
-        0
-      );
-
-    const height =
-      39 +
-      contentHeight +
-      8;
-
-    drawCard({
-      number: 7,
-      title: "Connect",
-      height,
-
-      drawContent: (contentY) => {
-        links.forEach((link) => {
-          contentY =
-            block(
-              c,
-              link,
-              innerX,
-              contentY,
-              {
-                size: 6.5,
-                leading: 8,
-                maxChars: 34,
-                color: MUTED,
-              }
-            ) - 6;
-        });
-      },
-    });
-  }
-
-  return sy;
-}
-
-// =======================================
-// FOOTER
-// =======================================
-
-function drawFooter(
-  c,
-  resume,
-  page,
-  total
-) {
-  rule(
-    c,
-    MARGIN,
-    48,
-    PAGE_WIDTH - MARGIN,
-    48,
-    LIGHT,
-    0.7
-  );
-
-  txt(
-    c,
-    "Available for creative technology opportunities",
-    MARGIN,
-    35,
-    6.3,
-    MUTED
-  );
-
-  if (resume.website) {
-    const website =
-      safeText(resume.website);
-
-    txt(
-      c,
-      website,
-      PAGE_WIDTH -
-        MARGIN -
-        Math.min(
-          150,
-          website.length * 3.2
-        ),
-      35,
-      6.1,
-      MUTED
-    );
-  }
-
-  txt(
-    c,
-    `${page} / ${total}`,
-    PAGE_WIDTH -
-      MARGIN -
-      24,
-    29,
-    5.6,
-    MUTED
-  );
-}
-
-// =======================================
-// PAGE FRAME
-// =======================================
-
-function drawPageFrame(c) {
-  roundedRect(
-    c,
-    24,
-    24,
-    PAGE_WIDTH - 48,
-    PAGE_HEIGHT - 48,
+  addText(commands, "PROFESSIONAL RESUME", PAGE.margin, 18, 7, COLORS.muted);
+  addText(
+    commands,
+    `${pageNumber} / ${totalPages}`,
+    PAGE_WIDTH - PAGE.margin - 28,
+    18,
     7,
-    null,
-    NAVY,
-    0.9
+    COLORS.muted,
   );
 }
 
-// =======================================
-// BUILD PAGES
-// =======================================
-
-function buildPages(resume) {
+function buildDocumentPages(resume) {
   const pages = [];
+  const firstPage = [];
+  const contentTop = drawHeader(firstPage, resume, false);
 
-  const contentWidth =
-    PAGE_WIDTH - MARGIN * 2;
-
-  const gap = 18;
-
-  const rightWidth = 160;
-
-  const leftWidth =
-    contentWidth -
-    rightWidth -
-    gap;
-
-  const rightX =
-    MARGIN +
-    leftWidth +
-    gap;
-
-  // =======================================
-  // FIRST PAGE
-  // =======================================
-
-  const first = [];
-
-  drawPageFrame(first);
-
-  let y = header(
-    first,
-    resume,
-    false
+  addLine(
+    firstPage,
+    LEFT_X + LEFT_WIDTH + PAGE.columnGap / 2,
+    PAGE.bottom,
+    LEFT_X + LEFT_WIDTH + PAGE.columnGap / 2,
+    contentTop + 4,
+    COLORS.line,
+    0.8,
   );
 
-  y = drawProfile(
-    first,
-    resume,
-    y,
-    contentWidth
-  );
+  drawSidebar(firstPage, resume, contentTop);
 
-  const columnsY = y;
+  const mainY = drawSummary(firstPage, resume, contentTop);
+  const experienceResult = drawExperience(firstPage, resume, mainY);
+  drawAdditionalSections(firstPage, resume, experienceResult.y);
+  pages.push(firstPage);
 
-  const bottom = 56;
+  const experiences = asArray(resume.experience);
+  let index = experienceResult.used;
 
-  drawSidebar(
-    first,
-    resume,
-    rightX,
-    columnsY,
-    rightWidth
-  );
-
-  const experienceResult =
-    drawExperience(
-      first,
-      resume,
-      columnsY,
-      leftWidth,
-      bottom
+  while (index < experiences.length) {
+    const page = [];
+    let y = drawHeader(page, resume, true);
+    y = addSectionHeading(
+      page,
+      "Professional Experience - Continued",
+      PAGE.margin,
+      y,
+      PAGE_WIDTH - 2 * PAGE.margin,
     );
 
-  pages.push({
-    commands: first,
-    remainingExperience:
-      (
-        resume.experience || []
-      ).slice(
-        experienceResult.used
-      ),
+    const startIndex = index;
+
+    while (index < experiences.length) {
+      const required = estimateExperienceHeight(
+        experiences[index],
+        PAGE_WIDTH - 2 * PAGE.margin,
+      );
+
+      if (y - required < PAGE.bottom + 12 && index > startIndex) break;
+
+      y = drawExperienceItemAt(
+        page,
+        experiences[index],
+        PAGE.margin,
+        y,
+        PAGE_WIDTH - 2 * PAGE.margin,
+      );
+      index += 1;
+      if (y < PAGE.bottom + 12) break;
+    }
+
+    if (index === startIndex) {
+      y = drawExperienceItemAt(
+        page,
+        experiences[index],
+        PAGE.margin,
+        y,
+        PAGE_WIDTH - 2 * PAGE.margin,
+      );
+      index += 1;
+    }
+
+    pages.push(page);
+  }
+
+  return pages;
+}
+
+function estimateExperienceHeight(item, width) {
+  const description = firstValue(
+    item.description,
+    item.responsibilities,
+    item.details,
+    item.summary,
+  );
+  const bullets = splitDescription(description);
+  const position = firstValue(
+    item.position,
+    item.jobTitle,
+    item.title,
+    "Position",
+  );
+  const company = firstValue(item.company, item.employer, item.organization);
+  let height = 34;
+  height += wrapText(position, width, 9.5, FONT.bold).length * 12;
+  if (company)
+    height += wrapText(company, width, 8.7, FONT.bold).length * 11 + 4;
+  bullets.forEach((bullet) => {
+    height += wrapText(bullet, width - 14, 8.7).length * 12 + 3;
+  });
+  return height + 12;
+}
+
+function drawExperienceItemAt(commands, item, x, y, width) {
+  const position = firstValue(
+    item.position,
+    item.jobTitle,
+    item.title,
+    "Position",
+  );
+  const period = firstValue(item.period, item.duration, item.date);
+  const company = firstValue(item.company, item.employer, item.organization);
+  const location = firstValue(item.location, formatLocation(item));
+
+  y = addParagraph(
+    commands,
+    normalizeText(position).toUpperCase(),
+    x,
+    y,
+    width,
+    {
+      size: 10,
+      leading: 12,
+      font: FONT.bold,
+      color: COLORS.navyText,
+    },
+  );
+
+  if (period) {
+    y =
+      addParagraph(commands, period, x, y, width, {
+        size: 8.5,
+        leading: 11,
+        color: COLORS.muted,
+      }) - 1;
+  }
+
+  if (company || location) {
+    y =
+      addParagraph(
+        commands,
+        [company, location].filter(Boolean).join(" | "),
+        x,
+        y,
+        width,
+        {
+          size: 9,
+          leading: 12,
+          font: FONT.bold,
+        },
+      ) - 6;
+  }
+
+  const description = firstValue(
+    item.description,
+    item.responsibilities,
+    item.details,
+    item.summary,
+  );
+  splitDescription(description).forEach((bullet) => {
+    addText(commands, "-", x + 2, y, 9, COLORS.text, FONT.bold);
+    y =
+      addParagraph(commands, bullet, x + 15, y, width - 15, {
+        size: 9,
+        leading: 13,
+      }) - 3;
   });
 
-  // =======================================
-  // REMAINING EXPERIENCE
-  // =======================================
-
-  let remaining =
-    (
-      resume.experience || []
-    ).slice(
-      experienceResult.used
-    );
-
-  while (remaining.length) {
-    const page = [];
-
-    drawPageFrame(page);
-
-    let py = header(
-      page,
-      resume,
-      true
-    );
-
-    sectionHeading(
-      page,
-      2,
-      "Experience Continued",
-      MARGIN,
-      py,
-      contentWidth
-    );
-
-    py -= 25;
-
-    let consumed = 0;
-
-    for (
-      let i = 0;
-      i < remaining.length;
-      i += 1
-    ) {
-      const h =
-        experienceHeight(
-          remaining[i],
-          102,
-          9.1,
-          contentWidth
-        );
-
-      if (
-        py - h < bottom &&
-        consumed > 0
-      ) {
-        break;
-      }
-
-      py =
-        drawExperienceEntry(
-          page,
-          remaining[i],
-          MARGIN,
-          py,
-          contentWidth,
-          102
-        );
-
-      if (
-        i <
-        remaining.length - 1
-      ) {
-        rule(
-          page,
-          MARGIN,
-          py + 3,
-          PAGE_WIDTH - MARGIN,
-          py + 3,
-          LIGHT,
-          0.55
-        );
-
-        py -= 7;
-      }
-
-      consumed += 1;
-    }
-
-    if (!consumed) {
-      consumed = 1;
-    }
-
-    pages.push({
-      commands: page,
-      remainingExperience: [],
-    });
-
-    remaining =
-      remaining.slice(consumed);
-  }
-
-  return pages.map(
-    (page) => page.commands
-  );
+  return y - 13;
 }
 
-// =======================================
-// BUILD PDF
-// =======================================
+// ------------------------------------------------------------
+// PDF SERIALIZATION
+// ------------------------------------------------------------
 
-function buildPdf(resume) {
-  const safeResume =
-    resume || {};
-
-  const pages =
-    buildPages(safeResume);
-
-  const total =
-    pages.length;
-
+function createPdf(pages) {
   const objects = [];
   const offsets = [];
 
-  const add = (body) => {
+  const addObject = (body) => {
     objects.push(body);
-    offsets.push(0);
-
     return objects.length;
   };
 
-  const catalog =
-    add(
-      "<< /Type /Catalog /Pages 2 0 R >>"
-    );
+  const catalogId = addObject("");
+  const pagesId = addObject("");
 
-  const pagesObject =
-    add("");
-
-  const regular =
-    add(
-      "<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>"
-    );
-
-  const bold =
-    add(
-      "<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>"
-    );
-
-  const pageRefs = [];
-
-  pages.forEach(
-    (commands, index) => {
-      drawFooter(
-        commands,
-        safeResume,
-        index + 1,
-        total
-      );
-
-      const stream =
-        commands.join("\n") +
-        "\n";
-
-      const byteLength =
-        typeof Buffer !==
-        "undefined"
-          ? Buffer.byteLength(
-              stream,
-              "latin1"
-            )
-          : new TextEncoder().encode(
-              stream
-            ).length;
-
-      const content =
-        add(
-          `<< /Length ${byteLength} >>\nstream\n${stream}endstream`
-        );
-
-      pageRefs.push(
-        add(
-          `<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${PAGE_WIDTH} ${PAGE_HEIGHT}] /Resources << /Font << /F1 ${regular} 0 R /F2 ${bold} 0 R >> >> /Contents ${content} 0 R >>`
-        )
-      );
-    }
+  // Standard PDF Type 1 fonts. Helvetica is the standard PDF equivalent
+  // of Arial; Helvetica-Bold provides the familiar Word bold treatment.
+  const regularFontId = addObject(
+    "<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>",
+  );
+  const boldFontId = addObject(
+    "<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>",
   );
 
-  objects[pagesObject - 1] =
-    `<< /Type /Pages /Kids [${pageRefs
-      .map(
-        (ref) =>
-          `${ref} 0 R`
-      )
-      .join(" ")}] /Count ${pageRefs.length} >>`;
+  const pageIds = [];
 
-  let pdf =
-    "%PDF-1.4\n%\xFF\xFF\xFF\xFF\n";
+  pages.forEach((commands, index) => {
+    const withFooter = [...commands];
+    drawFooter(withFooter, index + 1, pages.length);
 
-  objects.forEach(
-    (body, index) => {
-      offsets[index] =
-        typeof Buffer !==
-        "undefined"
-          ? Buffer.byteLength(
-              pdf,
-              "latin1"
-            )
-          : new TextEncoder().encode(
-              pdf
-            ).length;
+    const stream = `${withFooter.join("\n")}\n`;
+    const streamLength = new TextEncoder().encode(stream).length;
 
-      pdf +=
-        `${index + 1} 0 obj\n` +
-        `${body}\n` +
-        `endobj\n`;
-    }
-  );
+    const contentId = addObject(
+      `<< /Length ${streamLength} >>\nstream\n${stream}endstream`,
+    );
 
-  const xref =
-    typeof Buffer !==
-    "undefined"
-      ? Buffer.byteLength(
-          pdf,
-          "latin1"
-        )
-      : new TextEncoder().encode(
-          pdf
-        ).length;
+    const pageId = addObject(
+      `<< /Type /Page /Parent ${pagesId} 0 R ` +
+        `/MediaBox [0 0 ${PAGE_WIDTH} ${PAGE_HEIGHT}] ` +
+        `/Resources << /Font << /F1 ${regularFontId} 0 R /F2 ${boldFontId} 0 R >> >> ` +
+        `/Contents ${contentId} 0 R >>`,
+    );
+
+    pageIds.push(pageId);
+  });
+
+  objects[catalogId - 1] = `<< /Type /Catalog /Pages ${pagesId} 0 R >>`;
+  objects[pagesId - 1] =
+    `<< /Type /Pages /Kids [${pageIds.map((id) => `${id} 0 R`).join(" ")}] /Count ${pageIds.length} >>`;
+
+  let pdf = "%PDF-1.4\n";
+  const encoder = new TextEncoder();
+
+  objects.forEach((body, index) => {
+    offsets.push(encoder.encode(pdf).length);
+    pdf += `${index + 1} 0 obj\n${body}\nendobj\n`;
+  });
+
+  const xrefOffset = encoder.encode(pdf).length;
+  pdf += `xref\n0 ${objects.length + 1}\n`;
+  pdf += "0000000000 65535 f \n";
+
+  offsets.forEach((offset) => {
+    pdf += `${String(offset).padStart(10, "0")} 00000 n \n`;
+  });
 
   pdf +=
-    `xref\n` +
-    `0 ${objects.length + 1}\n` +
-    `0000000000 65535 f \n`;
+    `trailer\n<< /Size ${objects.length + 1} /Root ${catalogId} 0 R >>\n` +
+    `startxref\n${xrefOffset}\n%%EOF`;
 
-  offsets.forEach(
-    (offset) => {
-      pdf +=
-        `${String(offset).padStart(
-          10,
-          "0"
-        )} 00000 n \n`;
-    }
-  );
-
-  pdf +=
-    `trailer\n` +
-    `<< /Size ${
-      objects.length + 1
-    } /Root ${catalog} 0 R >>\n` +
-    `startxref\n` +
-    `${xref}\n` +
-    `%%EOF`;
-
-  return typeof Buffer !==
-    "undefined"
-    ? Buffer.from(
-        pdf,
-        "latin1"
-      )
-    : new TextEncoder().encode(
-        pdf
-      );
+  return encoder.encode(pdf);
 }
 
-// =======================================
-// DOWNLOAD PDF
-// =======================================
+// ------------------------------------------------------------
+// PUBLIC DOWNLOAD FUNCTION
+// ------------------------------------------------------------
 
-export function downloadResumePdf(
-  resume
-) {
-  const bytes =
-    buildPdf(
-      resume || {}
-    );
+function buildPdf(resume) {
+  const safeResume = resume && typeof resume === "object" ? resume : {};
+  const pages = buildDocumentPages(safeResume);
+  return createPdf(pages);
+}
 
-  const blob =
-    new Blob(
-      [bytes],
-      {
-        type: "application/pdf",
-      }
-    );
+export function downloadResumePdf(resume) {
+  const bytes = buildPdf(resume || {});
+  const blob = new Blob([bytes], { type: "application/pdf" });
+  const url = URL.createObjectURL(blob);
 
-  const url =
-    URL.createObjectURL(blob);
-
-  const name =
-    safeText(
-      resume?.fullName ||
-        "Professional-Resume"
+  const safeName =
+    normalizeText(
+      firstValue(resume?.fullName, resume?.name, "Professional-Resume"),
     )
-      .replace(
-        /[^a-z0-9]+/gi,
-        "-"
-      )
-      .replace(
-        /^-+|-+$/g,
-        "" 
-      ) ||
-    "Professional-Resume";
+      .replace(/[^a-z0-9]+/gi, "-")
+      .replace(/^-+|-+$/g, "") || "Professional-Resume";
 
-  const anchor =
-    document.createElement(
-      "a"
-    );
-
+  const anchor = document.createElement("a");
   anchor.href = url;
+  anchor.download = `${safeName}-Resume.pdf`;
 
-  anchor.download =
-    `${name}-Resume.pdf`;
-
-  document.body.appendChild(
-    anchor
-  );
-
+  document.body.appendChild(anchor);
   anchor.click();
-
   anchor.remove();
 
-  window.setTimeout(
-    () =>
-      URL.revokeObjectURL(
-        url
-      ),
-    1500
-  );
+  window.setTimeout(() => URL.revokeObjectURL(url), 1500);
 }
