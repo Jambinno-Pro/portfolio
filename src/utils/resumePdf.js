@@ -1,18 +1,20 @@
 // ============================================================
 // PROFESSIONAL RESUME PDF GENERATOR
-// Layout: A4, navy header, two-column body, clean Word-style fonts
-// Fonts: Helvetica / Helvetica-Bold (PDF standard Arial-style fonts)
+// Layout: A4, monochrome header, two-column body
+// Design: Black, white and subtle grey
+// Fonts: Helvetica / Helvetica-Bold
 // ============================================================
 
 const PAGE_WIDTH = 595.28;
 const PAGE_HEIGHT = 841.89;
 
 const COLORS = {
-  navy: [0.02, 0.13, 0.36],
-  navyText: [0.05, 0.16, 0.29],
-  text: [0.12, 0.14, 0.17],
-  muted: [0.36, 0.39, 0.43],
-  line: [0.84, 0.85, 0.87],
+  black: [0, 0, 0],
+  heading: [15, 15, 15],
+  text: [38, 38, 38],
+  muted: [85, 85, 85],
+  line: [205, 205, 205],
+  light: [242, 242, 242],
   white: [1, 1, 1],
 };
 
@@ -22,18 +24,17 @@ const FONT = {
 };
 
 const PAGE = {
-  margin: 36,
-  headerHeight: 118,
-  leftWidth: 158,
-  columnGap: 24,
-  bottom: 42,
+  margin: 38,
+  headerHeight: 132,
+  leftWidth: 164,
+  columnGap: 25,
+  bottom: 48,
 };
 
-const CONTENT_TOP = PAGE_HEIGHT - PAGE.headerHeight - 30;
 const LEFT_X = PAGE.margin;
+const LEFT_WIDTH = PAGE.leftWidth;
 const RIGHT_X = PAGE.margin + PAGE.leftWidth + PAGE.columnGap;
 const RIGHT_WIDTH = PAGE_WIDTH - PAGE.margin - RIGHT_X;
-const LEFT_WIDTH = PAGE.leftWidth;
 
 // ------------------------------------------------------------
 // TEXT UTILITIES
@@ -59,7 +60,6 @@ function pdfEscape(value) {
 }
 
 function approxTextWidth(text, fontSize) {
-  // Helvetica average character width approximation.
   return normalizeText(text).length * fontSize * 0.51;
 }
 
@@ -76,6 +76,7 @@ function wrapText(value, maxWidth, fontSize, font = FONT.regular) {
     }
 
     let line = "";
+
     for (const word of paragraph.trim().split(/\s+/)) {
       const candidate = line ? `${line} ${word}` : word;
 
@@ -86,11 +87,12 @@ function wrapText(value, maxWidth, fontSize, font = FONT.regular) {
 
       if (line) lines.push(line);
 
-      // Break a single exceptionally long word safely.
       if (approxTextWidth(word, fontSize) > maxWidth) {
         let fragment = "";
+
         for (const char of word) {
           const next = fragment + char;
+
           if (fragment && approxTextWidth(next, fontSize) > maxWidth) {
             lines.push(fragment);
             fragment = char;
@@ -98,6 +100,7 @@ function wrapText(value, maxWidth, fontSize, font = FONT.regular) {
             fragment = next;
           }
         }
+
         line = fragment;
       } else {
         line = word;
@@ -111,7 +114,9 @@ function wrapText(value, maxWidth, fontSize, font = FONT.regular) {
 }
 
 function colorCommand(color, stroke = false) {
-  return `${color.map((n) => Number(n.toFixed(3))).join(" ")} ${stroke ? "RG" : "rg"}`;
+  return `${color.map((n) => Number(n.toFixed(3))).join(" ")} ${
+    stroke ? "RG" : "rg"
+  }`;
 }
 
 // ------------------------------------------------------------
@@ -145,7 +150,7 @@ function addText(
   value,
   x,
   y,
-  size = 9,
+  size = 10,
   color = COLORS.text,
   font = FONT.regular,
 ) {
@@ -159,10 +164,11 @@ function addText(
 }
 
 function addParagraph(commands, value, x, y, width, options = {}) {
-  const size = options.size ?? 9;
-  const leading = options.leading ?? 13;
+  const size = options.size ?? 10;
+  const leading = options.leading ?? 14;
   const color = options.color ?? COLORS.text;
   const font = options.font ?? FONT.regular;
+
   const lines = wrapText(value, width, size, font);
 
   lines.forEach((line, index) => {
@@ -173,19 +179,23 @@ function addParagraph(commands, value, x, y, width, options = {}) {
 }
 
 function addSectionHeading(commands, title, x, y, width, compact = false) {
-  const size = compact ? 10 : 11;
+  const size = compact ? 11.5 : 13;
+
   addText(
     commands,
     String(title).toUpperCase(),
     x,
     y,
     size,
-    COLORS.navyText,
+    COLORS.black,
     FONT.bold,
   );
-  const lineY = y - 7;
-  addLine(commands, x, lineY, x + width, lineY, COLORS.line, 0.9);
-  return y - 23;
+
+  const lineY = y - 8;
+
+  addLine(commands, x, lineY, x + width, lineY, COLORS.black, 1);
+
+  return y - 27;
 }
 
 function asArray(value) {
@@ -211,70 +221,89 @@ function formatLocation(item) {
 // ------------------------------------------------------------
 
 function drawHeader(commands, resume, continuation = false) {
-  const height = continuation ? 78 : PAGE.headerHeight;
+  const height = continuation ? 82 : PAGE.headerHeight;
   const y = PAGE_HEIGHT - height;
 
-  addRect(commands, 0, y, PAGE_WIDTH, height, COLORS.navy);
+  // Solid black header
+  addRect(commands, 0, y, PAGE_WIDTH, height, COLORS.black);
 
   if (!continuation) {
     const name = firstValue(resume.fullName, resume.name, "YOUR NAME");
+
     const title = firstValue(
       resume.title,
       resume.professionalTitle,
       "PROFESSIONAL TITLE",
     );
 
-    const nameSize = name.length > 28 ? 25 : name.length > 19 ? 29 : 34;
+    const nameSize = name.length > 30 ? 25 : name.length > 21 ? 29 : 34;
+
     const nameWidth = approxTextWidth(name, nameSize);
+
     const nameX = Math.max(PAGE.margin, (PAGE_WIDTH - nameWidth) / 2);
 
     addText(
       commands,
       name.toUpperCase(),
       nameX,
-      PAGE_HEIGHT - 67,
+      PAGE_HEIGHT - 65,
       nameSize,
       COLORS.white,
       FONT.bold,
     );
 
     const titleText = normalizeText(title).toUpperCase();
-    const titleWidth = approxTextWidth(titleText, 10);
+    const titleSize = 12;
+    const titleWidth = approxTextWidth(titleText, titleSize);
+
     addText(
       commands,
       titleText,
       Math.max(PAGE.margin, (PAGE_WIDTH - titleWidth) / 2),
       PAGE_HEIGHT - 94,
-      10,
+      titleSize,
       COLORS.white,
       FONT.bold,
     );
+
+    addLine(
+      commands,
+      PAGE_WIDTH * 0.35,
+      PAGE_HEIGHT - 108,
+      PAGE_WIDTH * 0.65,
+      PAGE_HEIGHT - 108,
+      [0.75, 0.75, 0.75],
+      0.7,
+    );
   } else {
     const name = firstValue(resume.fullName, resume.name, "YOUR NAME");
+
     addText(
       commands,
       name.toUpperCase(),
       PAGE.margin,
-      PAGE_HEIGHT - 48,
-      19,
+      PAGE_HEIGHT - 49,
+      21,
       COLORS.white,
       FONT.bold,
     );
+
     addText(
       commands,
       "PROFESSIONAL RESUME - CONTINUED",
       PAGE.margin,
-      PAGE_HEIGHT - 65,
-      8,
+      PAGE_HEIGHT - 68,
+      9,
       COLORS.white,
+      FONT.regular,
     );
   }
 
-  return PAGE_HEIGHT - height - 28;
+  return PAGE_HEIGHT - height - 32;
 }
 
 // ------------------------------------------------------------
-// SIDEBAR SECTIONS
+// CONTACT DETAILS
 // ------------------------------------------------------------
 
 function drawContact(commands, resume, y) {
@@ -290,23 +319,29 @@ function drawContact(commands, resume, y) {
   ].filter(([, value]) => value);
 
   if (!contacts.length) {
-    addText(commands, "Add contact details", LEFT_X, y, 8.5, COLORS.muted);
-    return y - 20;
+    addText(commands, "Add contact details", LEFT_X, y, 9, COLORS.muted);
+    return y - 22;
   }
 
   contacts.forEach(([label, value]) => {
-    addText(commands, label, LEFT_X, y, 7.5, COLORS.muted, FONT.bold);
-    y -= 11;
+    addText(commands, label, LEFT_X, y, 8.5, COLORS.black, FONT.bold);
+
+    y -= 13;
+
     y =
       addParagraph(commands, value, LEFT_X, y, LEFT_WIDTH, {
-        size: 8.5,
-        leading: 11,
+        size: 9.5,
+        leading: 12,
         color: COLORS.text,
-      }) - 9;
+      }) - 10;
   });
 
   return y;
 }
+
+// ------------------------------------------------------------
+// EDUCATION
+// ------------------------------------------------------------
 
 function drawEducation(commands, resume, y) {
   const education = asArray(resume.education);
@@ -321,57 +356,64 @@ function drawEducation(commands, resume, y) {
       item.schoolName,
       item.name,
     );
+
     const degree = firstValue(
       item.degree,
       item.qualification,
       item.course,
       item.title,
     );
+
     const period = firstValue(item.period, item.year, item.date);
+
     const location = firstValue(item.location, formatLocation(item));
 
     if (school) {
       y =
         addParagraph(commands, school, LEFT_X, y, LEFT_WIDTH, {
-          size: 8.7,
-          leading: 11,
+          size: 9.5,
+          leading: 12,
           font: FONT.bold,
-          color: COLORS.text,
-        }) - 1;
+          color: COLORS.black,
+        }) - 2;
     }
 
     if (degree) {
       y =
         addParagraph(commands, degree, LEFT_X, y, LEFT_WIDTH, {
-          size: 8.2,
-          leading: 10.5,
+          size: 9,
+          leading: 11.5,
           color: COLORS.text,
-        }) - 1;
+        }) - 2;
     }
 
     if (location) {
       y =
         addParagraph(commands, location, LEFT_X, y, LEFT_WIDTH, {
-          size: 7.8,
-          leading: 10,
+          size: 8.5,
+          leading: 11,
           color: COLORS.muted,
-        }) - 1;
+        }) - 2;
     }
 
     if (period) {
       y =
         addParagraph(commands, period, LEFT_X, y, LEFT_WIDTH, {
-          size: 7.8,
-          leading: 10,
+          size: 8.5,
+          leading: 11,
           color: COLORS.muted,
-        }) - 1;
+        }) - 2;
     }
 
-    y -= 9;
+    y -= 11;
   });
 
   return y;
 }
+
+// ------------------------------------------------------------
+// SKILLS
+// ------------------------------------------------------------
 
 function drawSkills(commands, resume, y) {
   const skills = asArray(resume.skills);
@@ -387,17 +429,22 @@ function drawSkills(commands, resume, y) {
 
     if (!label) return;
 
-    addText(commands, "-", LEFT_X + 1, y, 9, COLORS.navyText, FONT.bold);
+    addText(commands, "-", LEFT_X + 1, y, 10, COLORS.black, FONT.bold);
+
     y =
-      addParagraph(commands, label, LEFT_X + 12, y, LEFT_WIDTH - 12, {
-        size: 8.5,
-        leading: 11,
+      addParagraph(commands, label, LEFT_X + 13, y, LEFT_WIDTH - 13, {
+        size: 9.2,
+        leading: 12,
         color: COLORS.text,
-      }) - 4;
+      }) - 5;
   });
 
   return y;
 }
+
+// ------------------------------------------------------------
+// CERTIFICATES
+// ------------------------------------------------------------
 
 function drawCertificates(commands, resume, y) {
   const certificates = asArray(resume.certificates);
@@ -415,28 +462,35 @@ function drawCertificates(commands, resume, y) {
 
     y =
       addParagraph(commands, name, LEFT_X, y, LEFT_WIDTH, {
-        size: 8.3,
-        leading: 10.5,
+        size: 9,
+        leading: 12,
         font: FONT.bold,
-      }) - 1;
+        color: COLORS.black,
+      }) - 2;
 
-    const meta = [item.issuer, item.year, item.date]
-      .filter(Boolean)
-      .join(" | ");
+    const meta =
+      typeof item === "string"
+        ? ""
+        : [item.issuer, item.year, item.date].filter(Boolean).join(" | ");
+
     if (meta) {
       y =
         addParagraph(commands, meta, LEFT_X, y, LEFT_WIDTH, {
-          size: 7.6,
-          leading: 9.5,
+          size: 8.3,
+          leading: 11,
           color: COLORS.muted,
-        }) - 5;
+        }) - 7;
     } else {
-      y -= 5;
+      y -= 7;
     }
   });
 
   return y;
 }
+
+// ------------------------------------------------------------
+// LANGUAGES
+// ------------------------------------------------------------
 
 function drawLanguages(commands, resume, y) {
   const languages = asArray(resume.languages);
@@ -447,37 +501,51 @@ function drawLanguages(commands, resume, y) {
   languages.forEach((item) => {
     const name =
       typeof item === "string" ? item : firstValue(item.name, item.language);
+
     const level =
       typeof item === "string" ? "" : firstValue(item.level, item.proficiency);
+
     if (!name) return;
 
     const line = level ? `${name} - ${level}` : name;
+
     y =
       addParagraph(commands, line, LEFT_X, y, LEFT_WIDTH, {
-        size: 8.2,
-        leading: 10.5,
-      }) - 4;
+        size: 9,
+        leading: 12,
+        color: COLORS.text,
+      }) - 5;
   });
 
   return y;
 }
 
+// ------------------------------------------------------------
+// SIDEBAR
+// ------------------------------------------------------------
+
 function drawSidebar(commands, resume, startY) {
   let y = startY;
+
   y = drawContact(commands, resume, y);
-  y -= 7;
+  y -= 9;
+
   y = drawEducation(commands, resume, y);
-  y -= 7;
+  y -= 9;
+
   y = drawSkills(commands, resume, y);
-  y -= 7;
+  y -= 9;
+
   y = drawCertificates(commands, resume, y);
-  y -= 7;
+  y -= 9;
+
   y = drawLanguages(commands, resume, y);
+
   return y;
 }
 
 // ------------------------------------------------------------
-// MAIN COLUMN SECTIONS
+// PROFESSIONAL SUMMARY
 // ------------------------------------------------------------
 
 function drawSummary(commands, resume, y) {
@@ -486,6 +554,7 @@ function drawSummary(commands, resume, y) {
     resume.summary,
     resume.professionalSummary,
   );
+
   if (!summary) return y;
 
   y = addSectionHeading(
@@ -497,13 +566,17 @@ function drawSummary(commands, resume, y) {
   );
 
   y = addParagraph(commands, summary, RIGHT_X, y, RIGHT_WIDTH, {
-    size: 9,
-    leading: 13.2,
+    size: 10,
+    leading: 14.5,
     color: COLORS.text,
   });
 
-  return y - 19;
+  return y - 22;
 }
+
+// ------------------------------------------------------------
+// EXPERIENCE UTILITIES
+// ------------------------------------------------------------
 
 function splitDescription(value) {
   if (Array.isArray(value)) {
@@ -521,7 +594,6 @@ function splitDescription(value) {
   const text = normalizeText(value);
   if (!text) return [];
 
-  // Accept newline-separated responsibilities and common bullet characters.
   const lines = text
     .split(/\n|(?<=\.)\s+(?=[A-Z0-9-])/)
     .map((line) => line.replace(/^\s*[-*•]\s*/, "").trim())
@@ -530,147 +602,258 @@ function splitDescription(value) {
   return lines.length ? lines : [text];
 }
 
-function drawExperienceItem(commands, item, y, width = RIGHT_WIDTH) {
-  const position = firstValue(
-    item.position,
-    item.jobTitle,
-    item.title,
-    "Position",
-  );
-  const period = firstValue(item.period, item.duration, item.date);
-  const company = firstValue(item.company, item.employer, item.organization);
-  const location = firstValue(item.location, formatLocation(item));
+function getExperienceDetails(item) {
+  return {
+    position: firstValue(item.position, item.jobTitle, item.title, "Position"),
+    period: firstValue(item.period, item.duration, item.date),
+    company: firstValue(item.company, item.employer, item.organization),
+    location: firstValue(item.location, formatLocation(item)),
+    description: firstValue(
+      item.description,
+      item.responsibilities,
+      item.details,
+      item.summary,
+    ),
+  };
+}
 
-  addText(
-    commands,
-    normalizeText(position).toUpperCase(),
-    RIGHT_X,
-    y,
-    9.5,
-    COLORS.navyText,
-    FONT.bold,
-  );
+// ------------------------------------------------------------
+// EXPERIENCE HEIGHT ESTIMATION
+// ------------------------------------------------------------
 
-  if (period) {
-    const periodWidth = approxTextWidth(period, 8);
-    const periodX = Math.max(RIGHT_X, RIGHT_X + width - periodWidth);
-    if (periodX > RIGHT_X + approxTextWidth(position, 9.5) + 10) {
-      addText(commands, period, periodX, y, 8, COLORS.muted);
-    } else {
-      y -= 12;
-      y = addParagraph(commands, period, RIGHT_X, y, width, {
-        size: 8,
-        leading: 10,
-        color: COLORS.muted,
-      });
-    }
+function estimateExperienceHeight(item, width) {
+  const details = getExperienceDetails(item);
+  const bullets = splitDescription(details.description);
+
+  let height = 48;
+
+  height += wrapText(details.position, width, 10.5, FONT.bold).length * 13;
+
+  if (details.period) {
+    height += 12;
   }
 
-  y -= 13;
+  const companyLine = [details.company, details.location]
+    .filter(Boolean)
+    .join(" | ");
 
-  if (company || location) {
-    const companyLine = [company, location].filter(Boolean).join(" | ");
+  if (companyLine) {
+    height += wrapText(companyLine, width, 9.5, FONT.bold).length * 12 + 5;
+  }
+
+  bullets.forEach((bullet) => {
+    height += wrapText(bullet, width - 17, 9.5).length * 13.5 + 4;
+  });
+
+  return height + 12;
+}
+
+// ------------------------------------------------------------
+// EXPERIENCE ITEM
+// ------------------------------------------------------------
+
+function drawExperienceItem(
+  commands,
+  item,
+  y,
+  x = RIGHT_X,
+  width = RIGHT_WIDTH,
+) {
+  const details = getExperienceDetails(item);
+
+  // Position / job title
+  y = addParagraph(
+    commands,
+    normalizeText(details.position).toUpperCase(),
+    x,
+    y,
+    width,
+    {
+      size: 10.5,
+      leading: 13,
+      font: FONT.bold,
+      color: COLORS.black,
+    },
+  );
+
+  // Employment period
+  if (details.period) {
     y =
-      addParagraph(commands, companyLine, RIGHT_X, y, width, {
-        size: 8.7,
+      addParagraph(commands, details.period, x, y - 1, width, {
+        size: 8.8,
         leading: 11,
-        color: COLORS.text,
+        color: COLORS.muted,
+      }) - 2;
+  }
+
+  // Company and location
+  const companyLine = [details.company, details.location]
+    .filter(Boolean)
+    .join(" | ");
+
+  if (companyLine) {
+    y =
+      addParagraph(commands, companyLine, x, y, width, {
+        size: 9.5,
+        leading: 12,
         font: FONT.bold,
+        color: COLORS.text,
       }) - 7;
   }
 
-  const description = firstValue(
-    item.description,
-    item.responsibilities,
-    item.details,
-    item.summary,
-  );
-  const bullets = splitDescription(description);
+  // Responsibilities / description
+  const bullets = splitDescription(details.description);
 
   bullets.forEach((bullet) => {
-    addText(commands, "-", RIGHT_X + 2, y, 9, COLORS.text, FONT.bold);
+    addText(commands, "-", x + 2, y, 10, COLORS.black, FONT.bold);
+
     y =
-      addParagraph(commands, bullet, RIGHT_X + 14, y, width - 14, {
-        size: 8.7,
-        leading: 12,
+      addParagraph(commands, bullet, x + 16, y, width - 16, {
+        size: 9.5,
+        leading: 13.5,
         color: COLORS.text,
-      }) - 3;
+      }) - 4;
   });
 
-  return y - 12;
+  return y - 13;
 }
+
+// ------------------------------------------------------------
+// PROFESSIONAL EXPERIENCE
+// ------------------------------------------------------------
 
 function drawExperience(commands, resume, y) {
   const experience = asArray(resume.experience);
-  if (!experience.length) return { y, used: 0 };
 
-  y = addSectionHeading(commands, "Experience", RIGHT_X, y, RIGHT_WIDTH);
+  if (!experience.length) {
+    return { y, used: 0 };
+  }
+
+  y = addSectionHeading(
+    commands,
+    "Professional Experience",
+    RIGHT_X,
+    y,
+    RIGHT_WIDTH,
+  );
+
   let used = 0;
 
   for (let index = 0; index < experience.length; index += 1) {
     const required = estimateExperienceHeight(experience[index], RIGHT_WIDTH);
-    if (y - required < PAGE.bottom + 12 && used > 0) break;
+
+    if (y - required < PAGE.bottom + 12 && used > 0) {
+      break;
+    }
 
     y = drawExperienceItem(commands, experience[index], y);
+
     used += 1;
+
     if (y < PAGE.bottom + 12) break;
   }
 
   return { y, used };
 }
 
+// ------------------------------------------------------------
+// ADDITIONAL SECTIONS
+// ------------------------------------------------------------
+
 function drawAdditionalSections(commands, resume, y) {
   const projects = asArray(resume.projects);
-  if (projects.length) {
-    y = addSectionHeading(commands, "Projects", RIGHT_X, y, RIGHT_WIDTH);
-    projects.forEach((item) => {
-      const name = firstValue(item.name, item.title, "Project");
-      addText(commands, name, RIGHT_X, y, 9, COLORS.navyText, FONT.bold);
-      y -= 13;
-      const detail = firstValue(item.description, item.details);
-      if (detail) {
-        y =
-          addParagraph(commands, detail, RIGHT_X, y, RIGHT_WIDTH, {
-            size: 8.7,
-            leading: 12,
-          }) - 8;
-      }
+
+  if (!projects.length) return y;
+
+  y = addSectionHeading(commands, "Projects", RIGHT_X, y, RIGHT_WIDTH);
+
+  projects.forEach((item) => {
+    const name = firstValue(item.name, item.title, "Project");
+
+    y = addParagraph(commands, name, RIGHT_X, y, RIGHT_WIDTH, {
+      size: 10,
+      leading: 13,
+      font: FONT.bold,
+      color: COLORS.black,
     });
-  }
+
+    const detail = firstValue(item.description, item.details);
+
+    if (detail) {
+      y =
+        addParagraph(commands, detail, RIGHT_X, y - 2, RIGHT_WIDTH, {
+          size: 9.5,
+          leading: 13.5,
+          color: COLORS.text,
+        }) - 10;
+    } else {
+      y -= 10;
+    }
+  });
 
   return y;
 }
 
 // ------------------------------------------------------------
-// PAGE BUILDING
+// FOOTER
 // ------------------------------------------------------------
 
 function drawFooter(commands, pageNumber, totalPages) {
   addLine(
     commands,
     PAGE.margin,
-    30,
+    32,
     PAGE_WIDTH - PAGE.margin,
-    30,
+    32,
     COLORS.line,
-    0.6,
+    0.7,
   );
-  addText(commands, "PROFESSIONAL RESUME", PAGE.margin, 18, 7, COLORS.muted);
+
+  addText(commands, "PROFESSIONAL RESUME", PAGE.margin, 19, 8, COLORS.muted);
+
   addText(
     commands,
     `${pageNumber} / ${totalPages}`,
-    PAGE_WIDTH - PAGE.margin - 28,
-    18,
-    7,
+    PAGE_WIDTH - PAGE.margin - 35,
+    19,
+    8,
     COLORS.muted,
   );
 }
 
+// ------------------------------------------------------------
+// PAGE BUILDING
+// ------------------------------------------------------------
+
 function buildDocumentPages(resume) {
   const pages = [];
+
+  // FIRST PAGE
   const firstPage = [];
   const contentTop = drawHeader(firstPage, resume, false);
 
+  // Vertical column separator
+  addLine(
+    firstPage,
+    LEFT_X + LEFT_WIDTH + PAGE.columnGap / 2,
+    PAGE.bottom,
+    LEFT_X + LEFT_WIDTH + PAGE.columnGap / 2,
+    contentTop + 4,
+    COLORS.line,
+    0.8,
+  );
+
+  // Subtle sidebar background
+  addRect(
+    firstPage,
+    LEFT_X - 8,
+    PAGE.bottom + 8,
+    LEFT_WIDTH + 16,
+    contentTop - PAGE.bottom - 4,
+    COLORS.light,
+  );
+
+  // Draw separator again above the background
   addLine(
     firstPage,
     LEFT_X + LEFT_WIDTH + PAGE.columnGap / 2,
@@ -684,16 +867,22 @@ function buildDocumentPages(resume) {
   drawSidebar(firstPage, resume, contentTop);
 
   const mainY = drawSummary(firstPage, resume, contentTop);
+
   const experienceResult = drawExperience(firstPage, resume, mainY);
+
   drawAdditionalSections(firstPage, resume, experienceResult.y);
+
   pages.push(firstPage);
 
+  // CONTINUATION PAGES
   const experiences = asArray(resume.experience);
   let index = experienceResult.used;
 
   while (index < experiences.length) {
     const page = [];
+
     let y = drawHeader(page, resume, true);
+
     y = addSectionHeading(
       page,
       "Professional Experience - Continued",
@@ -710,27 +899,33 @@ function buildDocumentPages(resume) {
         PAGE_WIDTH - 2 * PAGE.margin,
       );
 
-      if (y - required < PAGE.bottom + 12 && index > startIndex) break;
+      if (y - required < PAGE.bottom + 12 && index > startIndex) {
+        break;
+      }
 
-      y = drawExperienceItemAt(
+      y = drawExperienceItem(
         page,
         experiences[index],
-        PAGE.margin,
         y,
+        PAGE.margin,
         PAGE_WIDTH - 2 * PAGE.margin,
       );
+
       index += 1;
+
       if (y < PAGE.bottom + 12) break;
     }
 
+    // Ensure an unusually long item does not cause an empty page loop.
     if (index === startIndex) {
-      y = drawExperienceItemAt(
+      y = drawExperienceItem(
         page,
         experiences[index],
-        PAGE.margin,
         y,
+        PAGE.margin,
         PAGE_WIDTH - 2 * PAGE.margin,
       );
+
       index += 1;
     }
 
@@ -738,99 +933,6 @@ function buildDocumentPages(resume) {
   }
 
   return pages;
-}
-
-function estimateExperienceHeight(item, width) {
-  const description = firstValue(
-    item.description,
-    item.responsibilities,
-    item.details,
-    item.summary,
-  );
-  const bullets = splitDescription(description);
-  const position = firstValue(
-    item.position,
-    item.jobTitle,
-    item.title,
-    "Position",
-  );
-  const company = firstValue(item.company, item.employer, item.organization);
-  let height = 34;
-  height += wrapText(position, width, 9.5, FONT.bold).length * 12;
-  if (company)
-    height += wrapText(company, width, 8.7, FONT.bold).length * 11 + 4;
-  bullets.forEach((bullet) => {
-    height += wrapText(bullet, width - 14, 8.7).length * 12 + 3;
-  });
-  return height + 12;
-}
-
-function drawExperienceItemAt(commands, item, x, y, width) {
-  const position = firstValue(
-    item.position,
-    item.jobTitle,
-    item.title,
-    "Position",
-  );
-  const period = firstValue(item.period, item.duration, item.date);
-  const company = firstValue(item.company, item.employer, item.organization);
-  const location = firstValue(item.location, formatLocation(item));
-
-  y = addParagraph(
-    commands,
-    normalizeText(position).toUpperCase(),
-    x,
-    y,
-    width,
-    {
-      size: 10,
-      leading: 12,
-      font: FONT.bold,
-      color: COLORS.navyText,
-    },
-  );
-
-  if (period) {
-    y =
-      addParagraph(commands, period, x, y, width, {
-        size: 8.5,
-        leading: 11,
-        color: COLORS.muted,
-      }) - 1;
-  }
-
-  if (company || location) {
-    y =
-      addParagraph(
-        commands,
-        [company, location].filter(Boolean).join(" | "),
-        x,
-        y,
-        width,
-        {
-          size: 9,
-          leading: 12,
-          font: FONT.bold,
-        },
-      ) - 6;
-  }
-
-  const description = firstValue(
-    item.description,
-    item.responsibilities,
-    item.details,
-    item.summary,
-  );
-  splitDescription(description).forEach((bullet) => {
-    addText(commands, "-", x + 2, y, 9, COLORS.text, FONT.bold);
-    y =
-      addParagraph(commands, bullet, x + 15, y, width - 15, {
-        size: 9,
-        leading: 13,
-      }) - 3;
-  });
-
-  return y - 13;
 }
 
 // ------------------------------------------------------------
@@ -849,11 +951,10 @@ function createPdf(pages) {
   const catalogId = addObject("");
   const pagesId = addObject("");
 
-  // Standard PDF Type 1 fonts. Helvetica is the standard PDF equivalent
-  // of Arial; Helvetica-Bold provides the familiar Word bold treatment.
   const regularFontId = addObject(
     "<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>",
   );
+
   const boldFontId = addObject(
     "<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>",
   );
@@ -862,6 +963,7 @@ function createPdf(pages) {
 
   pages.forEach((commands, index) => {
     const withFooter = [...commands];
+
     drawFooter(withFooter, index + 1, pages.length);
 
     const stream = `${withFooter.join("\n")}\n`;
@@ -882,18 +984,22 @@ function createPdf(pages) {
   });
 
   objects[catalogId - 1] = `<< /Type /Catalog /Pages ${pagesId} 0 R >>`;
-  objects[pagesId - 1] =
-    `<< /Type /Pages /Kids [${pageIds.map((id) => `${id} 0 R`).join(" ")}] /Count ${pageIds.length} >>`;
+
+  objects[pagesId - 1] = `<< /Type /Pages /Kids [${pageIds
+    .map((id) => `${id} 0 R`)
+    .join(" ")}] /Count ${pageIds.length} >>`;
 
   let pdf = "%PDF-1.4\n";
   const encoder = new TextEncoder();
 
   objects.forEach((body, index) => {
     offsets.push(encoder.encode(pdf).length);
-    pdf += `${index + 1} 0 obj\n${body}\nendobj\n`;
+
+    pdf += `${index + 1} 0 obj\n` + `${body}\n` + `endobj\n`;
   });
 
   const xrefOffset = encoder.encode(pdf).length;
+
   pdf += `xref\n0 ${objects.length + 1}\n`;
   pdf += "0000000000 65535 f \n";
 
@@ -909,18 +1015,22 @@ function createPdf(pages) {
 }
 
 // ------------------------------------------------------------
-// PUBLIC DOWNLOAD FUNCTION
+// PUBLIC PDF FUNCTIONS
 // ------------------------------------------------------------
 
 function buildPdf(resume) {
   const safeResume = resume && typeof resume === "object" ? resume : {};
+
   const pages = buildDocumentPages(safeResume);
+
   return createPdf(pages);
 }
 
 export function downloadResumePdf(resume) {
   const bytes = buildPdf(resume || {});
+
   const blob = new Blob([bytes], { type: "application/pdf" });
+
   const url = URL.createObjectURL(blob);
 
   const safeName =
@@ -931,6 +1041,7 @@ export function downloadResumePdf(resume) {
       .replace(/^-+|-+$/g, "") || "Professional-Resume";
 
   const anchor = document.createElement("a");
+
   anchor.href = url;
   anchor.download = `${safeName}-Resume.pdf`;
 
